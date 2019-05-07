@@ -157,15 +157,12 @@
     </Modal>
     <!-- 头部搜索 按钮 -->
     <Card shadow style="margin-top: 5px">
-<<<<<<< HEAD
       <h3 slot="extra" >
           公摊总天数：999
       </h3>
-=======
  <!--      <h3 slot="extra" >
           公摊总天数：999
       </h3> -->
->>>>>>> first commit??
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="20">
           <Select v-model="select_kitchen_id" style="width: 200px;margin-right:10px;" @on-change="selectKitchen">
