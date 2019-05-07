@@ -532,7 +532,10 @@ export default {
                 on: {
                   click: () => {
                     this.connectTable_removeItem(params.index)
+<<<<<<< HEAD
                     this.getTableSum()
+=======
+>>>>>>> first commit??
                   }
                 }
               }, '删除')
@@ -546,7 +549,11 @@ export default {
   methods: {
     // 删除
     end_table_removeItem(index) {
+<<<<<<< HEAD
       this.connectTable.splice(index, 1)
+=======
+      this.end_tableData.splice(index, 1)
+>>>>>>> first commit??
     },
     // 删除表格信息
     connectTable_removeItem (index) {

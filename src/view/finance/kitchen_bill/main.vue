@@ -157,9 +157,15 @@
     </Modal>
     <!-- 头部搜索 按钮 -->
     <Card shadow style="margin-top: 5px">
+<<<<<<< HEAD
       <h3 slot="extra" >
           公摊总天数：999
       </h3>
+=======
+ <!--      <h3 slot="extra" >
+          公摊总天数：999
+      </h3> -->
+>>>>>>> first commit??
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="20">
           <Select v-model="select_kitchen_id" style="width: 200px;margin-right:10px;" @on-change="selectKitchen">
@@ -293,7 +299,11 @@ export default {
         {title: '月份', key: 'month'},
         {title: '商户', key: 'store_name'},
         {title: '档口号', key: 'store_no'},
+<<<<<<< HEAD
         {title: '公摊天数', key: 'day_number'},
+=======
+        // {title: '公摊天数', key: 'day_number'},
+>>>>>>> first commit??
         { title: '经营费用',
           render: (h, params) => {
             let operate_fee = params.row.operate_fee;
@@ -310,6 +320,7 @@ export default {
             return h('span', fee)
           }
         },
+<<<<<<< HEAD
         {title: '往期未缴', 
           render: (h, params) => {
             let is_new = params.row.new*1;
@@ -331,6 +342,58 @@ export default {
               return h('span', { style: {color: '#2d8cf0'}}, store_account)
             }else{
               return h('span', { style: {color: '#19be6b'}}, store_account)
+=======
+        // {title: '往期未缴', 
+        //   render: (h, params) => {
+        //     let is_new = params.row.new*1;
+        //     let arrears_fee = '';
+        //     if(is_new == 1){
+        //       arrears_fee = params.row.arrears_fee;
+        //     }else{
+        //       arrears_fee = '----';
+        //     }
+        //     return h('span', arrears_fee)
+        //   }
+        // },
+        {title: '往期未缴', 
+          render: (h, params) => {
+            let arrears_fee = params.row.arrears_fee;
+            return h('span', arrears_fee)
+          }
+        },
+        // { title: '总未缴款',
+        //   render: (h, params) => {
+        //     let store_account = params.row.store_account;
+        //     if(store_account*1 > 1000){
+        //       return h('span', { style: {color: '#ff9900'}}, store_account)
+        //     }else if( store_account*1 > 0){
+        //       return h('span', { style: {color: '#2d8cf0'}}, store_account)
+        //     }else{
+        //       return h('span', { style: {color: '#19be6b'}}, store_account)
+        //     }
+        //   }
+        // },
+        { title: '总未缴款',
+          key: 'unpaid_fee',
+          render: (h, params) => {
+            let operate_fee = params.row.operate_fee;
+            let operate_overdue_fee = params.row.operate_overdue_fee;
+            let fee1 = (operate_fee*1 + operate_overdue_fee*1).toFixed(2);
+
+            let rent_fee = params.row.rent_fee;
+            let rent_overdue_fee = params.row.rent_overdue_fee;
+            let fee2 = (rent_fee*1 + rent_overdue_fee*1).toFixed(2);
+
+
+
+            let unpaid_fee =(fee1*1 + fee2*1 + params.row.arrears_fee*1).toFixed(2);
+            if(unpaid_fee*1 > 1000){
+              return h('span', { style: {color: '#ff9900'}}, unpaid_fee)
+            }else if( unpaid_fee*1 > 0){
+              return h('span', { style: {color: '#2d8cf0'}}, unpaid_fee)
+            }else{
+              return h('span', { style: {color: '#19be6b'}}, unpaid_fee)
+>>>>>>> first commit??
             }
           }
         },

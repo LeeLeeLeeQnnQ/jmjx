@@ -114,6 +114,10 @@
 
 <script>
 import Tables from '_c/tables'
+<<<<<<< HEAD
+=======
+import merge from 'webpack-merge'
+>>>>>>> first commit??
 // 权限
 // /api/Kitchen/index,/api/StoreLease/index
 import { getKitchenList } from '@/api/setting'
