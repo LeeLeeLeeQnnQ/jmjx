@@ -296,11 +296,7 @@ export default {
         {title: '月份', key: 'month'},
         {title: '商户', key: 'store_name'},
         {title: '档口号', key: 'store_no'},
-<<<<<<< HEAD
-        {title: '公摊天数', key: 'day_number'},
-=======
         // {title: '公摊天数', key: 'day_number'},
->>>>>>> first commit??
         { title: '经营费用',
           render: (h, params) => {
             let operate_fee = params.row.operate_fee;
@@ -317,29 +313,6 @@ export default {
             return h('span', fee)
           }
         },
-<<<<<<< HEAD
-        {title: '往期未缴', 
-          render: (h, params) => {
-            let is_new = params.row.new*1;
-            let arrears_fee = '';
-            if(is_new == 1){
-              arrears_fee = params.row.arrears_fee;
-            }else{
-              arrears_fee = '----';
-            }
-            return h('span', arrears_fee)
-          }
-        },
-        { title: '总未缴款',
-          render: (h, params) => {
-            let store_account = params.row.store_account;
-            if(store_account*1 > 1000){
-              return h('span', { style: {color: '#ff9900'}}, store_account)
-            }else if( store_account*1 > 0){
-              return h('span', { style: {color: '#2d8cf0'}}, store_account)
-            }else{
-              return h('span', { style: {color: '#19be6b'}}, store_account)
-=======
         // {title: '往期未缴', 
         //   render: (h, params) => {
         //     let is_new = params.row.new*1;
@@ -390,7 +363,6 @@ export default {
               return h('span', { style: {color: '#2d8cf0'}}, unpaid_fee)
             }else{
               return h('span', { style: {color: '#19be6b'}}, unpaid_fee)
->>>>>>> first commit??
             }
           }
         },

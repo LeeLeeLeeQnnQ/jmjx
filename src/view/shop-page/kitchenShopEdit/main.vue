@@ -358,12 +358,7 @@ export default {
                 },
                 on: {
                   click: () => {
-<<<<<<< HEAD
-                    this.removeItem(params.index)
-                    this.getTableSum()
-=======
                     this.connectTable_removeItem(params.index)
->>>>>>> first commit??
                   }
                 }
               }, '删除')
@@ -375,13 +370,10 @@ export default {
     }
   },
   methods: {
-<<<<<<< HEAD
-=======
     // 删除表格信息
     connectTable_removeItem (index) {
       this.connectTable.splice(index, 1)
     },
->>>>>>> first commit??
     // 基本资料卡片
     // 提交基本卡片
     baseinfoSubmit(){

@@ -143,15 +143,9 @@
     </Modal>
     <!-- 头部搜索 按钮 -->
     <Card shadow style="margin-top: 5px">
-<<<<<<< HEAD
-      <h3 slot="extra" >
-          公摊总天数：999
-      </h3>
-=======
 <!--       <h3 slot="extra" >
           公摊总天数：999
       </h3> -->
->>>>>>> first commit??
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="20">
           <Select v-model="select_kitchen_id" style="width: 200px;margin-right:10px;" @on-change="selectKitchen">
@@ -224,12 +218,10 @@
                     <Input v-model="paymentItem.base_number" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
-<<<<<<< HEAD
             </Row>
 
 
             <Row type="flex" justify="start" align="middle" :gutter="20">
-=======
               <i-col span="4">
                 <FormItem label="公摊天数">
                     <span>{{paymentItem.day_number}}</span>
@@ -239,7 +231,6 @@
 
 
             <!-- <Row type="flex" justify="start" align="middle" :gutter="20">
->>>>>>> first commit??
               <i-col span="8">
                 <FormItem label="开始日期">
                   <DatePicker type="date" placeholder="开始日期" style="width: 200px"></DatePicker>
@@ -260,11 +251,8 @@
               <FormItem>
                 <Alert type="warning">修改公摊日期会更改全部厨房账单金额！保存后查看厨房账单变更数据！</Alert>
               </FormItem>
-<<<<<<< HEAD
             </Row>
-=======
             </Row> -->
->>>>>>> first commit??
             
           </Card>
           <Card style="border:1px solid #2db7f5;margin-top: 5px;" title="周期性费用">
@@ -463,11 +451,7 @@ export default {
         {title: '月份', key: 'month'},
         {title: '商户', key: 'store_name'},
         {title: '档口号', key: 'store_no'},
-<<<<<<< HEAD
-        {title: '公摊天数', key: 'day_number'},
-=======
         // {title: '公摊天数', key: 'day_number'},
->>>>>>> first commit??
         { title: '经营费用',
           render: (h, params) => {
             let operate_fee = params.row.operate_fee;
@@ -484,29 +468,6 @@ export default {
             return h('span', fee)
           }
         },
-<<<<<<< HEAD
-        {title: '往期未缴', 
-          render: (h, params) => {
-            let is_new = params.row.new*1;
-            let arrears_fee = '';
-            if(is_new == 1){
-              arrears_fee = params.row.arrears_fee;
-            }else{
-              arrears_fee = '----';
-            }
-            return h('span', arrears_fee)
-          }
-        },
-        { title: '总未缴款',
-          render: (h, params) => {
-            let store_account = params.row.store_account;
-            if(store_account*1 > 1000){
-              return h('span', { style: {color: '#ff9900'}}, store_account)
-            }else if( store_account*1 > 0){
-              return h('span', { style: {color: '#2d8cf0'}}, store_account)
-            }else{
-              return h('span', { style: {color: '#19be6b'}}, store_account)
-=======
         // {title: '往期未缴', 
         //   render: (h, params) => {
         //     let is_new = params.row.new*1;
@@ -557,7 +518,6 @@ export default {
               return h('span', { style: {color: '#2d8cf0'}}, unpaid_fee)
             }else{
               return h('span', { style: {color: '#19be6b'}}, unpaid_fee)
->>>>>>> first commit??
             }
           }
         },
