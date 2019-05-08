@@ -139,16 +139,16 @@ export default [
         },
         component: () => import('@/view/kitchen-data/kitchen_detail/main.vue')
       },
-      {
-        path: '/kitchen_data_store_sale',
-        name: 'kitchen_data_store_sale',
-        meta: {
-          icon: '_zitigui',
-          title: '销控分析',
-          // access: [204]
-        },
-        component: () => import('@/view/kitchen-data/store_sale/main.vue')
-      },
+      // {
+      //   path: '/kitchen_data_store_sale',
+      //   name: 'kitchen_data_store_sale',
+      //   meta: {
+      //     icon: '_zitigui',
+      //     title: '销控分析',
+      //     // access: [204]
+      //   },
+      //   component: () => import('@/view/kitchen-data/store_sale/main.vue')
+      // },
     ]
   },
   // 商户管理
@@ -349,16 +349,16 @@ export default [
         },
         component: () => import('@/view/canvass/web_book/main.vue')
       },
-      {
-        path: '/canvass_sign_analysis',
-        name: 'canvass_sign_analysis',
-        meta: {
-          icon: '_yingyongchengxu-xianxing',
-          title: '签约分析',
-          // access: [406]
-        },
-        component: () => import('@/view/canvass/sign_analysis/main.vue')
-      },
+      // {
+      //   path: '/canvass_sign_analysis',
+      //   name: 'canvass_sign_analysis',
+      //   meta: {
+      //     icon: '_yingyongchengxu-xianxing',
+      //     title: '签约分析',
+      //     // access: [406]
+      //   },
+      //   component: () => import('@/view/canvass/sign_analysis/main.vue')
+      // },
     ]
   },
   // 财务管理

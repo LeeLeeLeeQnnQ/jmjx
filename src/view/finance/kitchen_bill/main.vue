@@ -157,9 +157,6 @@
     </Modal>
     <!-- 头部搜索 按钮 -->
     <Card shadow style="margin-top: 5px">
-      <h3 slot="extra" >
-          公摊总天数：999
-      </h3>
  <!--      <h3 slot="extra" >
           公摊总天数：999
       </h3> -->
@@ -356,7 +353,7 @@ export default {
 
 
 
-            let unpaid_fee =(fee1*1 + fee2*1 + params.row.arrears_fee*1).toFixed(2);
+            let unpaid_fee =(fee1*1 + fee2*1 - params.row.pay_fee*1).toFixed(2);
             if(unpaid_fee*1 > 1000){
               return h('span', { style: {color: '#ff9900'}}, unpaid_fee)
             }else if( unpaid_fee*1 > 0){

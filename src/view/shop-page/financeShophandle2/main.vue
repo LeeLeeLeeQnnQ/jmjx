@@ -70,8 +70,8 @@
                 <i-col span="24">
                   <FormItem>
                     <Button type="primary" @click="addEndTableData">增加一条</Button>
-                    <Button type="primary" style="margin-left: 5px;" @click="computerRefund">退租计算</Button>
-                    <Alert type="warning" style="margin:5px 0;width: 400px;">只会计算退还押金、退还租金、商户未缴款</Alert>
+                    <!-- <Button type="primary" style="margin-left: 5px;" @click="computerRefund">退租计算</Button>
+                    <Alert type="warning" style="margin:5px 0;width: 400px;">只会计算退还押金、退还租金、商户未缴款</Alert> -->
                   </FormItem>
                 </i-col>
                 <i-col span="22" style="margin-top:8px;">

@@ -511,7 +511,7 @@ export default {
 
 
 
-            let unpaid_fee =(fee1*1 + fee2*1 + params.row.arrears_fee*1).toFixed(2);
+            let unpaid_fee =(fee1*1 + fee2*1 - params.row.pay_fee*1).toFixed(2);
             if(unpaid_fee*1 > 1000){
               return h('span', { style: {color: '#ff9900'}}, unpaid_fee)
             }else if( unpaid_fee*1 > 0){
