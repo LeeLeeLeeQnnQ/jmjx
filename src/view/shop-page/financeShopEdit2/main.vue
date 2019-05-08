@@ -217,6 +217,8 @@
                 <i-col span="24">
                   <FormItem>
                     <Button type="primary" @click="addEndTableData">增加一条</Button>
+                    <Button type="primary" style="margin-left: 5px;" @click="computerRefund">退款计算</Button>
+                    <Alert type="warning" style="margin:5px 0;width: 400px;">只会计算退还押金、退还租金、商户未缴款</Alert>
                   </FormItem>
                 </i-col>
                 <i-col span="22" style="margin-top:8px;">
@@ -385,55 +387,6 @@ export default {
       ],
 
       // 退租相关
-      end_letter:[],
-      end_other:[],
-      end_tableData:[],
-      end_tableColumns: [
-        {
-          title: '名称',
-          key: 'title'
-        },
-        {
-          title: '收支',
-          key: 'rent_type',
-          render: (h, params) => {
-            return h('strong', params.row.rent_type*1 == 1 ? '收入' : '支出')
-          }
-        },
-        {
-          title: '数量',
-          key: 'quantity'
-        },
-        {
-          title: '金额',
-          key: 'money'
-        },
-        {
-          title: '备注',
-          key: 'remark'
-        },
-        {
-          title: '操作',
-          key: 'handle',
-          width: 150,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.removeItem(params.index)
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ],
       end_modalItem:{},
       end_showModal:false,
       end_workCategoryList:[],
@@ -783,6 +736,14 @@ export default {
         }
         this.end_tableData =  dbody.data.rent || [];
       })
+    },
+    // 删除表格信息
+    removeItem (index) {
+      this.end_tableData.splice(index, 1)
+    },
+    // 退款计算
+    computerRefund(){
+
     },
     // 保存起租表格信息
     saveEndModalInfo(){

@@ -6,6 +6,7 @@ export default {
 
   kitchen_data: '厨房管理',
   kitchen_data_kitchen_list:'厨房管理',
+  kitchen_data_store_sale:'销控分析',
 
   kitchen: '店内运营管理',
   kitchen_total_inspect_list:'日检列表',
@@ -28,6 +29,7 @@ export default {
   canvass_store_view:'带看管理',
   view_analysis_body:'带看分析',
   canvass_web_book:'网站预约',
+  canvass_sign_analysis:'签约分析',
   
   permission: '设置',
   member_list:'人员列表',
