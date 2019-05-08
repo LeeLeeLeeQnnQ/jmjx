@@ -18,6 +18,14 @@
             <FormItem label="厨房名称" class="cellTit">
                 <span>{{viewItem.kitchen_name}}</span>
             </FormItem>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+            <FormItem label="开始时间" class="cellTit">
+                <span>{{viewItem.start_date}}</span>
+            </FormItem>
+            <FormItem label="结束时间" class="cellTit">
+                <span>{{viewItem.end_date}}</span>
+            </FormItem>
             <FormItem label="公摊天数" class="cellTit">
                 <span>{{viewItem.day_number}}</span>
             </FormItem>
@@ -143,9 +151,9 @@
     </Modal>
     <!-- 头部搜索 按钮 -->
     <Card shadow style="margin-top: 5px">
-<!--       <h3 slot="extra" >
-          公摊总天数：999
-      </h3> -->
+      <h3 slot="extra" >
+          公摊总天数：{{count_days}}
+      </h3>
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="20">
           <Select v-model="select_kitchen_id" style="width: 200px;margin-right:10px;" @on-change="selectKitchen">
@@ -219,26 +227,15 @@
                 </FormItem>
               </i-col>
             </Row>
-
-
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="4">
-                <FormItem label="公摊天数">
-                    <span>{{paymentItem.day_number}}</span>
-                </FormItem>
-              </i-col>
-            </Row>
-
-
-            <!-- <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="8">
                 <FormItem label="开始日期">
-                  <DatePicker type="date" placeholder="开始日期" style="width: 200px"></DatePicker>
+                  <DatePicker :value="paymentItem.start_date" @on-change="selectStartDate" type="date" placeholder="开始日期" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
               <i-col span="8">
                 <FormItem label="结束日期">
-                  <DatePicker type="date" placeholder="结束日期" style="width: 200px"></DatePicker>
+                  <DatePicker :value="paymentItem.end_date" @on-change="selectEndDate" type="date" placeholder="结束日期" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
               <i-col span="4">
@@ -252,7 +249,6 @@
                 <Alert type="warning">修改公摊日期会更改全部厨房账单金额！保存后查看厨房账单变更数据！</Alert>
               </FormItem>
             </Row>
-            </Row> -->
             
           </Card>
           <Card style="border:1px solid #2db7f5;margin-top: 5px;" title="周期性费用">
@@ -411,11 +407,11 @@
         @data-view="viewEnergyBill"
         @data-edit-rent="showEditStoreRentBill"
         @data-edit-run="showEditStoreRunBill"></tables>
-      <Page
+     <!--  <Page
         :total="page.total"
         :page-size="page.list_rows"
         @on-change="getNewPage"
-        style="margin-top:10px;"/>
+        style="margin-top:10px;"/> -->
     </Card>
   </div>
 </template>
@@ -423,7 +419,7 @@
 <script>
 import Tables from '_c/tables'
 // 权限
-// /api/Kitchen/index,/api/StoreBill/index,/api/StoreCharge/queryList,/api/StoreBill/edit,/api/StoreCharge/add
+// Kitchen/index,StoreBill/queryList,StoreCharge/queryList,StoreBill/edit,StoreCharge/add
 import { getKitchenList } from '@/api/setting'
 import { getStoreBillList , getStoreChargeItem , editStoreBillItem , addStoreCharge } from '@/api/kitchen'
 export default {
@@ -451,7 +447,7 @@ export default {
         {title: '月份', key: 'month'},
         {title: '商户', key: 'store_name'},
         {title: '档口号', key: 'store_no'},
-        // {title: '公摊天数', key: 'day_number'},
+        {title: '公摊天数', key: 'day_number'},
         { title: '经营费用',
           render: (h, params) => {
             let operate_fee = params.row.operate_fee;
@@ -468,39 +464,21 @@ export default {
             return h('span', fee)
           }
         },
-        // {title: '往期未缴', 
-        //   render: (h, params) => {
-        //     let is_new = params.row.new*1;
-        //     let arrears_fee = '';
-        //     if(is_new == 1){
-        //       arrears_fee = params.row.arrears_fee;
-        //     }else{
-        //       arrears_fee = '----';
-        //     }
-        //     return h('span', arrears_fee)
-        //   }
-        // },
         {title: '往期未缴', 
           render: (h, params) => {
-            let arrears_fee = params.row.arrears_fee;
-            return h('span', arrears_fee)
+            let is_new = params.row.new*1;
+            let store_account = '';
+            if(is_new == 1){
+              store_account = params.row.store_account;
+            }else{
+              store_account = '----';
+            }
+            return h('span', store_account)
           }
         },
-        // { title: '总未缴款',
-        //   render: (h, params) => {
-        //     let store_account = params.row.store_account;
-        //     if(store_account*1 > 1000){
-        //       return h('span', { style: {color: '#ff9900'}}, store_account)
-        //     }else if( store_account*1 > 0){
-        //       return h('span', { style: {color: '#2d8cf0'}}, store_account)
-        //     }else{
-        //       return h('span', { style: {color: '#19be6b'}}, store_account)
-        //     }
-        //   }
-        // },
         { title: '总未缴款',
-          key: 'unpaid_fee',
           render: (h, params) => {
+            
             let operate_fee = params.row.operate_fee;
             let operate_overdue_fee = params.row.operate_overdue_fee;
             let fee1 = (operate_fee*1 + operate_overdue_fee*1).toFixed(2);
@@ -509,15 +487,16 @@ export default {
             let rent_overdue_fee = params.row.rent_overdue_fee;
             let fee2 = (rent_fee*1 + rent_overdue_fee*1).toFixed(2);
 
+            let store_account = params.row.store_account || 0;
+            let pay_fee = params.row.pay_fee || 0;
 
-
-            let unpaid_fee =(fee1*1 + fee2*1 - params.row.pay_fee*1).toFixed(2);
-            if(unpaid_fee*1 > 1000){
-              return h('span', { style: {color: '#ff9900'}}, unpaid_fee)
-            }else if( unpaid_fee*1 > 0){
-              return h('span', { style: {color: '#2d8cf0'}}, unpaid_fee)
+            let unpaiy = (fee1*1 + fee2*1 + store_account*1 - pay_fee*1).toFixed(2);
+            if(unpaiy*1 > 1000){
+              return h('span', { style: {color: '#ff9900'}}, unpaiy)
+            }else if( unpaiy*1 > 0){
+              return h('span', { style: {color: '#2d8cf0'}}, unpaiy)
             }else{
-              return h('span', { style: {color: '#19be6b'}}, unpaid_fee)
+              return h('span', { style: {color: '#19be6b'}}, unpaiy)
             }
           }
         },
@@ -591,6 +570,8 @@ export default {
         },
       ],
       bill_list:[],
+      // 总公摊天出
+      count_days:0,
       // 编辑商户账单
       storeRentBill:{},
       showEditStoreRentBillModal:false,
@@ -623,9 +604,9 @@ export default {
       this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
     },
     // 选择新页面
-    getNewPage(page){
-      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page :page })
-    },
+    // getNewPage(page){
+    //   this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page :page })
+    // },
     // 显示弹窗
     showEditStoreRentBill(params){
       this.storeRentBill = {}
@@ -643,6 +624,20 @@ export default {
       data.month = this.paymentItem.row.month;
       data.operate_fee = (this.paymentItem.total*1 - this.paymentItem.overdue_fee*1).toFixed(2);
       data.operate_overdue_fee = this.paymentItem.overdue_fee;
+      if(!this.paymentItem.start_date || !this.paymentItem.end_date){
+        this.$Notice.warning({
+          title: "日期信息有误！",
+        })
+        return;
+      }
+      let oDate1 = new Date(this.paymentItem.start_date);
+      let oDate2 = new Date(this.paymentItem.end_date);
+      if(oDate1.getTime() > oDate2.getTime()){
+        this.$Notice.warning({
+          title: "日期信息有误！",
+        })
+        return;
+      };
       editStoreBillItem( data ).then(res => {
         const dbody = res.data
         if(dbody.code != 0){
@@ -757,11 +752,8 @@ export default {
           })
           return
         }
-        if(!dbody.data.list){
-          this.bill_list = [];
-        }else{
-          this.bill_list = dbody.data.list;
-        }
+        this.bill_list = dbody.data.list || [];
+        this.count_days = dbody.data.days || 0;
       });
     },
     // 显示弹窗
@@ -794,6 +786,14 @@ export default {
       this.paymentItem.row = params.row;
       this.paymentItem.total = this.getPayItemTotal(stroe);
       this.paymentModal = true;
+    },
+    // 账单开始时间
+    selectStartDate(date){
+      this.paymentItem.start_date;
+    },
+    // 账单开始时间
+    selectEndDate(date){
+      this.paymentItem.end_date;
     },
     // 获取本年月份列表
     getDayMany ( year, month ) {

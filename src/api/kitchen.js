@@ -10,7 +10,7 @@ import axios from '@/libs/api.request'
 */
 export const getStoreBillList = ( data ) => {
   return axios.request({
-    url: '/api/StoreBill/index',
+    url: '/api/StoreBill/queryList',
     params: data,
     method: 'get'
   })

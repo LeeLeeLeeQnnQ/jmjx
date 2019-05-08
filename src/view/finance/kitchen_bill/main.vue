@@ -18,6 +18,14 @@
             <FormItem label="厨房名称" class="cellTit">
                 <span>{{viewItem.kitchen_name}}</span>
             </FormItem>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+            <FormItem label="开始时间" class="cellTit">
+                <span>{{viewItem.start_date}}</span>
+            </FormItem>
+            <FormItem label="结束时间" class="cellTit">
+                <span>{{viewItem.end_date}}</span>
+            </FormItem>
             <FormItem label="公摊天数" class="cellTit">
                 <span>{{viewItem.day_number}}</span>
             </FormItem>
@@ -157,9 +165,9 @@
     </Modal>
     <!-- 头部搜索 按钮 -->
     <Card shadow style="margin-top: 5px">
- <!--      <h3 slot="extra" >
-          公摊总天数：999
-      </h3> -->
+      <h3 slot="extra" >
+          公摊总天数：{{count_days}}
+      </h3>
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="20">
           <Select v-model="select_kitchen_id" style="width: 200px;margin-right:10px;" @on-change="selectKitchen">
@@ -242,7 +250,7 @@
         @data-print-energy="printEnergyBill"
         @data-print-rent="printRentBill"
         @data-view-list="showEditStoreBudget" ></tables>
-      <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
+<!--       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/> -->
     </Card>
     <!-- 打印部分 -->
     <!-- <div> -->
@@ -261,7 +269,7 @@ import printJS from 'print-js'
 import PrintEnergy from '_c/print-energy'
 import PrintRent from '_c/print-rent'
 // 权限
-// /api/Index/getKitchenList,/api/StoreBill/index,/api/StoreCharge/queryList,/api/StoreBill/queryPayList,/api/StoreBill/addStoreBillPay,/api/StoreBill/deleteStoreBillPay
+// Index/getKitchenList,StoreBill/queryList,StoreCharge/queryList,StoreBill/queryPayList,StoreBill/addStoreBillPay,StoreBill/deleteStoreBillPay
 import { getKitchenList  } from '@/api/data'
 import { getStoreBillList , getStoreChargeItem } from '@/api/kitchen'
 import { getStoreBillPayList , addStoreBillPay  , deleteStoreBillPay } from '@/api/finance'
@@ -293,7 +301,7 @@ export default {
         {title: '月份', key: 'month'},
         {title: '商户', key: 'store_name'},
         {title: '档口号', key: 'store_no'},
-        // {title: '公摊天数', key: 'day_number'},
+        {title: '公摊天数', key: 'day_number'},
         { title: '经营费用',
           render: (h, params) => {
             let operate_fee = params.row.operate_fee;
@@ -310,39 +318,21 @@ export default {
             return h('span', fee)
           }
         },
-        // {title: '往期未缴', 
-        //   render: (h, params) => {
-        //     let is_new = params.row.new*1;
-        //     let arrears_fee = '';
-        //     if(is_new == 1){
-        //       arrears_fee = params.row.arrears_fee;
-        //     }else{
-        //       arrears_fee = '----';
-        //     }
-        //     return h('span', arrears_fee)
-        //   }
-        // },
         {title: '往期未缴', 
           render: (h, params) => {
-            let arrears_fee = params.row.arrears_fee;
-            return h('span', arrears_fee)
+            let is_new = params.row.new*1;
+            let store_account = '';
+            if(is_new == 1){
+              store_account = params.row.store_account;
+            }else{
+              store_account = '----';
+            }
+            return h('span', store_account)
           }
         },
-        // { title: '总未缴款',
-        //   render: (h, params) => {
-        //     let store_account = params.row.store_account;
-        //     if(store_account*1 > 1000){
-        //       return h('span', { style: {color: '#ff9900'}}, store_account)
-        //     }else if( store_account*1 > 0){
-        //       return h('span', { style: {color: '#2d8cf0'}}, store_account)
-        //     }else{
-        //       return h('span', { style: {color: '#19be6b'}}, store_account)
-        //     }
-        //   }
-        // },
         { title: '总未缴款',
-          key: 'unpaid_fee',
           render: (h, params) => {
+            
             let operate_fee = params.row.operate_fee;
             let operate_overdue_fee = params.row.operate_overdue_fee;
             let fee1 = (operate_fee*1 + operate_overdue_fee*1).toFixed(2);
@@ -351,15 +341,16 @@ export default {
             let rent_overdue_fee = params.row.rent_overdue_fee;
             let fee2 = (rent_fee*1 + rent_overdue_fee*1).toFixed(2);
 
+            let store_account = params.row.store_account || 0;
+            let pay_fee = params.row.pay_fee || 0;
 
-
-            let unpaid_fee =(fee1*1 + fee2*1 - params.row.pay_fee*1).toFixed(2);
-            if(unpaid_fee*1 > 1000){
-              return h('span', { style: {color: '#ff9900'}}, unpaid_fee)
-            }else if( unpaid_fee*1 > 0){
-              return h('span', { style: {color: '#2d8cf0'}}, unpaid_fee)
+            let unpaiy = (fee1*1 + fee2*1 + store_account*1 - pay_fee*1).toFixed(2);
+            if(unpaiy*1 > 1000){
+              return h('span', { style: {color: '#ff9900'}}, unpaiy)
+            }else if( unpaiy*1 > 0){
+              return h('span', { style: {color: '#2d8cf0'}}, unpaiy)
             }else{
-              return h('span', { style: {color: '#19be6b'}}, unpaid_fee)
+              return h('span', { style: {color: '#19be6b'}}, unpaiy)
             }
           }
         },
@@ -471,6 +462,8 @@ export default {
         },
       ],
       bill_list:[],
+      // 总公摊天出
+      count_days:0,
       // 编辑商户账单
       storeBill:{},
       showAddStorePayModal:false,
@@ -600,9 +593,9 @@ export default {
       this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
     },
     // 选择新页面
-    getNewPage(page){
-      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page :page })
-    },
+    // getNewPage(page){
+    //   this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page :page })
+    // },
     // 显示弹窗
     showAddStorePay(params){
       this.uploadLetter = [];
@@ -806,11 +799,8 @@ export default {
           })
           return
         }
-        if(!dbody.data.list){
-          this.bill_list = [];
-        }else{
-          this.bill_list = dbody.data.list;
-        }
+        this.bill_list = dbody.data.list || [];
+        this.count_days = dbody.data.days;
       });
     },
     //初始化
