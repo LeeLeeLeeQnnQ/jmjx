@@ -26,12 +26,12 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
             <FormItem label="本月公摊开始日期" class="cellTit">
-                <span>{{viewItem.start_date}}</span>
+                <span>{{viewItem.share_start_date}}</span>
             </FormItem>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
             <FormItem label="本月公摊结束日期" class="cellTit">
-                <span>{{viewItem.end_date}}</span>
+                <span>{{viewItem.share_end_date}}</span>
             </FormItem>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
@@ -92,7 +92,7 @@
                 <span>{{viewItem.operate_overdue_fee}}</span>
             </FormItem>
             <FormItem label="代运营费" class="cellTit">
-                <span>{{viewItem.operate_fee}}</span>
+                <span>{{viewItem.operating_fee}}</span>
             </FormItem>
             <FormItem label="其他费用" class="cellTit">
                 <span>{{viewItem.other_fee}}</span>
@@ -240,12 +240,12 @@
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="8">
                 <FormItem label="本月公摊开始日期">
-                    <span>{{paymentItem.start_date}}</span>
+                    <span>{{paymentItem.share_start_date}}</span>
                 </FormItem>
               </i-col>
               <i-col span="8">
                 <FormItem label="本月公摊结束日期">
-                    <span>{{paymentItem.end_date}}</span>
+                    <span>{{paymentItem.share_end_date}}</span>
                 </FormItem>
               </i-col>
             </Row>
@@ -662,7 +662,6 @@ export default {
     },
     // 编辑经营费用
     editStoreRunBill(params){
-      this.paymentItem = {};
       delete this.paymentItem.create_time
       delete this.paymentItem.operate_fee
       delete this.paymentItem.rent_fee
@@ -679,7 +678,7 @@ export default {
         this.$Notice.warning({
           title: "修改成功！",
         })
-        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page : this.page.current_page })
+        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
       });
     },
     // 编辑商户月租金
@@ -707,7 +706,7 @@ export default {
         this.$Notice.warning({
           title: "修改成功！",
         })
-        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page : this.page.current_page })
+        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
       });
     },
     // 查看能源账单

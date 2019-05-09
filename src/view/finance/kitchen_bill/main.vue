@@ -26,10 +26,10 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
             <FormItem label="本月公摊开始日期" class="cellTit">
-                <span>{{viewItem.start_date}}</span>
+                <span>{{viewItem.share_start_date}}</span>
             </FormItem>
             <FormItem label="本月公摊结束日期" class="cellTit">
-                <span>{{viewItem.end_date}}</span>
+                <span>{{viewItem.share_end_date}}</span>
             </FormItem>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">

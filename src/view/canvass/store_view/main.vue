@@ -525,7 +525,7 @@ export default {
       }
       let info = {
         contact:this.userPhone.trim(),
-        sources:this.sources,
+        source:this.sources,
         employee_id:this.employee_id,
         kitchen_id:this.kitchen_id,
         start_area:this.start_area,
@@ -551,7 +551,7 @@ export default {
       }
       let info = {
         contact:this.userPhone.trim(),
-        sources:this.sources,
+        source:this.sources,
         employee_id:this.employee_id,
         kitchen_id:this.kitchen_id,
         start_area:this.start_area,
@@ -647,7 +647,7 @@ export default {
     getNewPage(page){
       let info = {
         contact:!!this.userPhone?this.userPhone.trim() : '',
-        sources:this.sources,
+        source:this.sources,
         employee_id:this.employee_id,
         kitchen_id:this.kitchen_id,
         start_area:this.start_area,
