@@ -6,8 +6,8 @@
       <p slot="title">
         {{kitchen_name}}  {{store_no}}  {{store_name}}
       </p>
-      <Tabs :animated="false" style="margin-top: 5px;" class="h100">
-        <TabPane label="基本资料" style="min-height: 450px;">
+      <Tabs :animated="false" style="margin-top: 5px;" class="h100" :value="tabValue">
+        <TabPane label="基本资料" style="min-height: 450px;"name="1">
           <Form :label-width="100">
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -37,7 +37,7 @@
             </Row>
           </Form>
         </TabPane>
-        <TabPane label="起租相关">
+        <TabPane label="起租相关" name="2">
           <Form :label-width="120">
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -69,6 +69,11 @@
                   <DatePicker type="date" placeholder="选择租金结算日期" :value="leaseinfo.entrance_date" @on-change="getEntranceDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="店铺收费基数">
+                  <Input v-model="leaseinfo.pay_base" placeholder="输入店铺收费基数" style="width: 200px"></Input>
+                </FormItem>
+              </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -86,7 +91,7 @@
             </Row>
           </Form>
         </TabPane>
-        <TabPane label="退租相关">
+        <TabPane label="退租相关" name="3">
           <Modal v-model="end_showModal" title="起租表格编辑" @on-ok="saveEndModalInfo">
             <Form :model="end_modalItem" :label-width="80">
               <FormItem label="项目名称">
@@ -228,7 +233,7 @@
             </FormItem>
           </Form>
         </TabPane>
-        <TabPane label="人员列表">
+        <TabPane label="人员列表" name="4">
           <Modal v-model="showModal" title="登记人员" @on-ok="saveModalInfo">
               <Form :model="modalItem" :label-width="80">
                 <FormItem label="姓名">
@@ -268,7 +273,7 @@
             <tables ref="tables" v-model="memberList" :columns="memberListColumns" @data-dele="handleDataDele" @data-edit="handleDataEdit"/>
           </Card>
         </TabPane>
-        <TabPane label="设备清单">
+        <TabPane label="设备清单" name="5">
           <Modal v-model="c_showModal" title="增加设备" @on-ok="savec_ModalInfo">
             <Form :model="c_modalItem" :label-width="80">
               <FormItem label="设备名称">
@@ -368,6 +373,8 @@ export default {
       kitchen_id:'',
       // store_id
       store_id: '',
+      // tabValue
+      tabValue:'1',
       // 名称显示
       kitchen_name:'',
       store_name: '',
@@ -638,6 +645,8 @@ export default {
       this.leaseinfo.entrance_date = data.entrance_date || '';
       // 电表开始
       this.leaseinfo.start_energy = data.start_energy || '';
+      // 店铺收费基数
+      this.leaseinfo.pay_base = data.pay_base || '1';
       // 水表开始
       this.leaseinfo.start_water = data.start_water || '';
       // 库房费
@@ -1155,6 +1164,7 @@ export default {
   created: function () {
     let id = this.$route.query.id
     let kitchen_id = this.$route.query.kitchen_id
+    this.tabValue = this.$route.query.tabValue || "1"
     let that = this
     this.store_id = id
     this.kitchen_id = kitchen_id

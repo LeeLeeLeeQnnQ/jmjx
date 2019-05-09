@@ -194,95 +194,104 @@
           </Row>
         </Form>
       </Modal>
-      <Modal v-model="paymentModal" scrollable @on-ok="editStoreRunBill" fullscreen>
-        <Form ref="paymentForm" :model="paymentItem" :label-width="110">
+      <Modal v-model="paymentModal" scrollable @on-ok="editStoreRunBill" width="900">
+        <Form ref="paymentForm" :model="paymentItem">
           <Card style="border:1px solid #2db7f5;">
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="8">
+              <i-col span="12">
                 <FormItem label="店铺名称">
                     <span>{{paymentItem.store_name}}</span>
                 </FormItem>
               </i-col>
-              <i-col span="8">
+              <i-col span="12">
                 <FormItem label="档口编号">
                     <span>{{paymentItem.store_no}}</span>
                 </FormItem>
               </i-col>
             </Row>
-
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="账单月份">
                     <span>{{paymentItem.month}}</span>
                 </FormItem>
               </i-col>
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="厨房名称">
                     <span>{{paymentItem.kitchen_name}}</span>
                 </FormItem>
               </i-col>
-              <i-col span="4">
-                <FormItem label="收费基数">
-                    <Input v-model="paymentItem.base_number" @on-change="updateComputedPaper"></Input>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="8">
-                <FormItem label="开始日期">
-                  <DatePicker :value="paymentItem.start_date" @on-change="selectStartDate" type="date" placeholder="开始日期" style="width: 200px"></DatePicker>
-                </FormItem>
-              </i-col>
-              <i-col span="8">
-                <FormItem label="结束日期">
-                  <DatePicker :value="paymentItem.end_date" @on-change="selectEndDate" type="date" placeholder="结束日期" style="width: 200px"></DatePicker>
-                </FormItem>
-              </i-col>
-              <i-col span="4">
                 <FormItem label="公摊天数">
                     <span>{{paymentItem.day_number}}</span>
                 </FormItem>
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <FormItem>
-                <Alert type="warning">修改公摊日期会更改全部厨房账单金额！保存后查看厨房账单变更数据！</Alert>
-              </FormItem>
+              <i-col span="8">
+                <FormItem label="店铺收费基数">
+                    <span>{{paymentItem.base_number}}</span>
+                </FormItem>
+              </i-col>
             </Row>
-            
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="8">
+                <FormItem label="本月公摊开始日期">
+                    <span>{{paymentItem.start_date}}</span>
+                </FormItem>
+              </i-col>
+              <i-col span="8">
+                <FormItem label="本月公摊结束日期">
+                    <span>{{paymentItem.end_date}}</span>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="24">
+                <FormItem>
+                  <Button type="primary" @click="goKitchenShopEdit2">编辑店铺信息</Button>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="24">
+                <FormItem>
+                  <Alert type="warning">修改店铺公摊开始日期与结束日期会影响本月账单公摊！修改完毕后请刷新页面！</Alert>
+                </FormItem>
+              </i-col>
+            </Row>
           </Card>
           <Card style="border:1px solid #2db7f5;margin-top: 5px;" title="周期性费用">
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="4">
                 <FormItem label="垃圾及隔油池">
-                    <Input v-model="paymentItem.garbage_fee" @on-change="updateComputedPaper"></Input>
+                    <span>{{paymentItem.garbage_fee}}</span>
                 </FormItem>
               </i-col>
               <i-col span="4">
                 <FormItem label="烟道清洗">
-                    <Input v-model="paymentItem.flue_fee" @on-change="updateComputedPaper"></Input>
+                    <span>{{paymentItem.flue_fee}}</span>
                 </FormItem>
               </i-col>
               <i-col span="4">
                 <FormItem label="消杀">
-                    <Input v-model="paymentItem.kill_fee" @on-change="updateComputedPaper"></Input>
+                    <span>{{paymentItem.kill_fee}}</span>
                 </FormItem>
               </i-col>
               <i-col span="4">
                 <FormItem label="网络使用费">
-                    <Input v-model="paymentItem.network_fee" @on-change="updateComputedPaper"></Input>
+                    <span>{{paymentItem.network_fee}}</span>
                 </FormItem>
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="4">
                 <FormItem label="库房费">
-                    <Input v-model="paymentItem.storage_fee" @on-change="updateComputedPaper"></Input>
+                  <span>{{paymentItem.storage_fee}}</span>
                 </FormItem>
               </i-col>
               <i-col span="4">
                 <FormItem label="卫生费">
-                    <Input v-model="paymentItem.health_fee" @on-change="updateComputedPaper"></Input>
+                  <span>{{paymentItem.health_fee}}</span>
                 </FormItem>
               </i-col>
             </Row>
@@ -291,96 +300,126 @@
             <i-col span="12">
               <Card style="border:1px solid #2db7f5;margin-top: 5px;" title="电费">
                 <Row type="flex" justify="start" align="middle" :gutter="20">
-                  <FormItem label="公摊电费">
-                      <Input v-model="paymentItem.energy_share_fee" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
-                  <FormItem label="商户电费">
-                      <Input v-model="paymentItem.energy_fee" readonly></Input>
-                  </FormItem>
+                  <i-col span="24">
+                    <FormItem label="公摊电费" style="width: 100%'">
+                      <span>{{paymentItem.energy_share_fee}}</span>
+                    </FormItem>
+                  </i-col>
                 </Row>
                 <Row type="flex" justify="start" align="middle" :gutter="20">
-                  <FormItem label="电表起始值">
-                      <Input v-model="paymentItem.energy_start" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
-                  <FormItem label="电表结束值">
-                      <Input v-model="paymentItem.energy_end" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
+                  <i-col span="8">
+                    <FormItem label="商户电费">
+                      <span>{{paymentItem.energy_fee}}</span>
+                    </FormItem>
+                  </i-col>
+                  <i-col span="8">
+                    <FormItem label="电表起始值">
+                      <span>{{paymentItem.energy_start}}</span>
+                    </FormItem>
+                  </i-col>
+                  <i-col span="8">
+                    <FormItem label="电表结束值">
+                      <span>{{paymentItem.energy_end}}</span>
+                    </FormItem>
+                  </i-col>
                 </Row>
                 <Row type="flex" justify="start" align="middle" :gutter="20">
-                  <FormItem label="电表倍率">
-                      <Input v-model="paymentItem.energy_multiple" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
+                  <i-col span="24">
+                    <FormItem label="电表倍率">
+                      <span>{{paymentItem.energy_multiple}}</span>
+                    </FormItem>
+                  </i-col>
                 </Row>
               </Card>
             </i-col>
             <i-col span="12">
               <Card style="border:1px solid #2db7f5;margin-top: 5px;" title="水费">
                 <Row type="flex" justify="start" align="middle" :gutter="20">
-                  <FormItem label="公摊水费">
-                      <Input v-model="paymentItem.water_share_fee" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
-                  <FormItem label="商户水费">
-                      <Input v-model="paymentItem.water_fee" readonly></Input>
-                  </FormItem>
+                  <i-col span="24">
+                    <FormItem label="公摊水费">
+                      <span>{{paymentItem.water_share_fee}}</span>
+                    </FormItem>
+                  </i-col>
                 </Row>
                 <Row type="flex" justify="start" align="middle" :gutter="20">
-                  <FormItem label="水表起始值">
-                      <Input v-model="paymentItem.water_start" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
-                  <FormItem label="水表结束值">
-                      <Input v-model="paymentItem.water_end" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
+                  <i-col span="8">
+                    <FormItem label="商户水费">
+                      <span>{{paymentItem.water_fee}}</span>
+                    </FormItem>
+                  </i-col>
+                  <i-col span="8">
+                    <FormItem label="水表起始值">
+                      <span>{{paymentItem.water_start}}</span>
+                    </FormItem>
+                  </i-col>
+                  <i-col span="8">
+                    <FormItem label="水表结束值">
+                      <span>{{paymentItem.water_end}}</span>
+                    </FormItem>
+                  </i-col>
                 </Row>
                 <Row type="flex" justify="start" align="middle" :gutter="20">
-                  <FormItem label="水表倍率">
-                      <Input v-model="paymentItem.water_multiple" @on-change="updateComputedPaper"></Input>
-                  </FormItem>
+                  <i-col span="24">
+                    <FormItem label="水表倍率">
+                      <span>{{paymentItem.water_multiple}}</span>
+                    </FormItem>
+                  </i-col>
                 </Row>
               </Card>
+            </i-col>
+            <i-col span="24" style="margin-top: 10px;">
+              <FormItem>
+                <Button type="primary" @click="goKitchenRecord">修改抄表信息</Button>
+              </FormItem>
+            </i-col>
+            <i-col span="24">
+              <FormItem>
+                <Alert type="warning">修改抄表信息会影响本月账单公摊！修改完毕后请刷新页面！</Alert>
+              </FormItem>
             </i-col>
           </Row>
           <Card style="border:1px solid #2db7f5;margin-top: 5px;" title="其他">
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="工程增项">
                     <Input v-model="paymentItem.project_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="罚款">
                     <Input v-model="paymentItem.fine_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="一次性费用">
                     <Input v-model="paymentItem.one_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="滞纳金">
                   <Input v-model="paymentItem.overdue_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="代运营费">
                   <Input v-model="paymentItem.operate_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="代收税费">
                     <Input v-model="paymentItem.taxes_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="物业管理费">
                     <Input v-model="paymentItem.manage_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
-              <i-col span="4">
+              <i-col span="8">
                 <FormItem label="其他费用">
                     <Input v-model="paymentItem.other_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
@@ -873,6 +912,18 @@ export default {
       this.showInfo.health_fee = info.health_fee;
       // 活跃档口数量
       this.showInfo.store_count  = info.store_count;
+    },
+    // 跳转商户编辑
+    goKitchenShopEdit2(){
+      let id = this.paymentItem.row.store_id;
+      let kitchen_id = this.paymentItem.row.kitchen_id;
+      const href = "./kitchenShopEdit2?id="+ id +"&kitchen_id="+ kitchen_id +"&tabValue=2";
+      window.open(href, '_blank')
+    },
+    // 跳转抄表界面
+    goKitchenRecord(){
+      const href = "./kitchen_record";
+      window.open(href, '_blank')
     },
     //初始化
     initData( info ){
