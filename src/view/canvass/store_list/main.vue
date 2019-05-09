@@ -136,7 +136,8 @@ export default {
         {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
-        {title: '提交人', key: 'employee_name'},
+        {title: '建档时间', key: 'create_time',sortable: 'custom'},
+        {title: '最后操作人', key: 'employee_name'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
         { title: '店铺状态',
@@ -217,7 +218,8 @@ export default {
         {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
-        {title: '提交人', key: 'employee_name'},
+        {title: '起租时间', key: 'start_date',sortable: 'custom'},
+        {title: '最后操作人', key: 'employee_name'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
         { title: '店铺状态',
@@ -298,7 +300,8 @@ export default {
         {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
-        {title: '提交人', key: 'employee_name'},
+        {title: '申请退租时间', key: 'apply_date',sortable: 'custom'},
+        {title: '最后操作人', key: 'employee_name'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
         { title: '店铺状态',
@@ -379,7 +382,8 @@ export default {
         {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
-        {title: '提交人', key: 'employee_name'},
+        {title: '租金结束时间', key: 'settle_date',sortable: 'custom'},
+        {title: '最后操作人', key: 'employee_name'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
         { title: '店铺状态',
@@ -460,7 +464,13 @@ export default {
         {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
-        {title: '提交人', key: 'employee_name'},
+        {title: '归档时间',
+          render: (h, params) => {
+            let archive_time = params.row.archive_time*1
+            return h('span', this.getdate(archive_time))
+          },sortable: 'custom'
+        },
+        {title: '最后操作人', key: 'employee_name'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
         { title: '店铺状态',
@@ -618,6 +628,14 @@ export default {
     }
   },
   methods: {
+    // 时间转换
+    getdate() {
+        var now = new Date(),
+            y = now.getFullYear(),
+            m = ("0" + (now.getMonth() + 1)).slice(-2),
+            d = ("0" + now.getDate()).slice(-2);
+        return y + "-" + m + "-" + d + " " + now.toTimeString().substr(0, 8);
+    },
     // 模糊查询店铺
     sreachKeyword(){
       let keyword = this.keyword || '';

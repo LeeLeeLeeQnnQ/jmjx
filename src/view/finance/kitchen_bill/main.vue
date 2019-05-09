@@ -2,7 +2,7 @@
   <div>
     <!-- 展示模版 -->
     <Modal title="账单信息" v-model="viewModal" scrollable>
-      <Form :label-width="90">
+      <Form :label-width="110">
         <Row type="flex" justify="start" align="middle" :gutter="20">
             <FormItem label="店铺名称" class="cellTit">
                 <span>{{viewItem.store_name}}</span>
@@ -20,14 +20,21 @@
             </FormItem>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="开始时间" class="cellTit">
-                <span>{{viewItem.start_date}}</span>
-            </FormItem>
-            <FormItem label="结束时间" class="cellTit">
-                <span>{{viewItem.end_date}}</span>
-            </FormItem>
             <FormItem label="公摊天数" class="cellTit">
                 <span>{{viewItem.day_number}}</span>
+            </FormItem>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+            <FormItem label="本月公摊开始日期" class="cellTit">
+                <span>{{viewItem.start_date}}</span>
+            </FormItem>
+            <FormItem label="本月公摊结束日期" class="cellTit">
+                <span>{{viewItem.end_date}}</span>
+            </FormItem>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+            <FormItem label="本月公摊结束日期" class="cellTit">
+                <span>{{viewItem.end_date}}</span>
             </FormItem>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
