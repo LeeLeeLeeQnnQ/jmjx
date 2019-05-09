@@ -89,7 +89,7 @@
                 <span>{{viewItem.taxes_fee}}</span>
             </FormItem>
             <FormItem label="滞纳金" class="cellTit">
-                <span>{{viewItem.overdue_fee}}</span>
+                <span>{{viewItem.operate_overdue_fee}}</span>
             </FormItem>
             <FormItem label="代运营费" class="cellTit">
                 <span>{{viewItem.operate_fee}}</span>
@@ -403,12 +403,12 @@
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="8">
                 <FormItem label="滞纳金">
-                  <Input v-model="paymentItem.overdue_fee" @on-change="updateComputedPaper"></Input>
+                  <Input v-model="paymentItem.operate_overdue_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
               <i-col span="8">
                 <FormItem label="代运营费">
-                  <Input v-model="paymentItem.operate_fee" @on-change="updateComputedPaper"></Input>
+                  <Input v-model="paymentItem.operating_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
               <i-col span="8">
@@ -661,27 +661,14 @@ export default {
       this.showEditStoreRentBillModal = true;
     },
     // 编辑经营费用
-    editStoreRunBill(){
-      let data = {};
-      data.id = this.paymentItem.row.id;
-      data.month = this.paymentItem.row.month;
-      data.operate_fee = (this.paymentItem.total*1 - this.paymentItem.overdue_fee*1).toFixed(2);
-      data.operate_overdue_fee = this.paymentItem.overdue_fee;
-      if(!this.paymentItem.start_date || !this.paymentItem.end_date){
-        this.$Notice.warning({
-          title: "日期信息有误！",
-        })
-        return;
-      }
-      let oDate1 = new Date(this.paymentItem.start_date);
-      let oDate2 = new Date(this.paymentItem.end_date);
-      if(oDate1.getTime() > oDate2.getTime()){
-        this.$Notice.warning({
-          title: "日期信息有误！",
-        })
-        return;
-      };
-      editStoreBillItem( data ).then(res => {
+    editStoreRunBill(params){
+      this.paymentItem = {};
+      delete this.paymentItem.create_time
+      delete this.paymentItem.operate_fee
+      delete this.paymentItem.rent_fee
+      delete this.paymentItem.rent_overdue_fee
+      delete this.paymentItem.update_time
+      editStoreBillItem( this.paymentItem ).then(res => {
         const dbody = res.data
         if(dbody.code != 0){
           this.$Notice.warning({
@@ -689,22 +676,10 @@ export default {
           })
           return
         }
-        delete this.paymentItem.create_time
-        delete this.paymentItem.update_time
-        delete this.paymentItem.id
-        addStoreCharge(this.paymentItem).then(res => {
-          const dbody = res.data
-          if(dbody.code != 0){
-            this.$Notice.warning({
-              title: dbody.msg,
-            })
-            return;
-          }
-          this.$Notice.warning({
-            title: "修改成功！"
-          })
-          this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page : this.page.current_page })
+        this.$Notice.warning({
+          title: "修改成功！",
         })
+        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page : this.page.current_page })
       });
     },
     // 编辑商户月租金
@@ -738,29 +713,11 @@ export default {
     // 查看能源账单
     viewEnergyBill(params){
       this.viewItem = {};
-      let store_id = params.row.store_id;
-      let data = { month : this.select_time , kitchen_id:this.select_kitchen_id , store_id: store_id};
-      getStoreChargeItem( data ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        if(dbody.data.length > 0){
-          this.viewItem = {};
-          this.viewItem = dbody.data[0];
-          this.viewItem.water_value = this.viewItem.water_start - this.viewItem.water_end;
-          this.viewItem.energy_value = this.viewItem.water_value - this.viewItem.energy_end;
-          this.viewItem.total = this.getPayItemTotal(this.viewItem);
-          this.viewModal = true;
-        }else{
-          this.$Notice.warning({
-            title: "抄表记录不完善！"
-          })
-        }
-      });
+      this.viewItem = params.row;
+      this.viewItem.water_value = this.viewItem.water_start - this.viewItem.water_end;
+      this.viewItem.energy_value = this.viewItem.water_value - this.viewItem.energy_end;
+      this.viewItem.total = this.getPayItemTotal(this.viewItem);
+      this.viewModal = true;
     },
     // 计算合计
     getPayItemTotal( info ){
@@ -778,10 +735,10 @@ export default {
       total = info.fine_fee*1 + total;
       total = info.one_fee*1 + total;
       total = info.other_fee*1 + total;
-      total = info.operate_fee*1 + total;
+      total = info.operating_fee*1 + total;
       total = info.project_fee*1 + total;
       total = info.taxes_fee*1 + total;
-      total = info.overdue_fee*1 + total;
+      total = info.operate_overdue_fee*1 + total;
       return total.toFixed(2);
     },
     // 获取账单列表
@@ -801,33 +758,8 @@ export default {
     },
     // 显示弹窗
     showEditStoreRunBill(params){
-      let store_id = params.row.store_id;
-      let data = { month : this.select_time , kitchen_id:this.select_kitchen_id , store_id: store_id};
-      getStoreChargeItem( data ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        if(dbody.data.length > 0){
-          this.buildPayment(dbody.data[0],params)
-        }else{
-          this.$Notice.warning({
-            title: "抄表信息不全！"
-          })
-        }
-      });
-    },
-    // 编辑一个条目
-    buildPayment( stroe , params ){
-      let that = this;
-      // 初始化数据
-      this.paymentItem = {};
-      this.paymentItem = stroe;
-      this.paymentItem.row = params.row;
-      this.paymentItem.total = this.getPayItemTotal(stroe);
+      this.paymentItem = Object.assign({}, params.row);;
+      this.paymentItem.total = this.getPayItemTotal(this.paymentItem);
       this.paymentModal = true;
     },
     // 账单开始时间
@@ -919,8 +851,8 @@ export default {
     },
     // 跳转商户编辑
     goKitchenShopEdit2(){
-      let id = this.paymentItem.row.store_id;
-      let kitchen_id = this.paymentItem.row.kitchen_id;
+      let id = this.paymentItem.store_id;
+      let kitchen_id = this.paymentItem.kitchen_id;
       const href = "./kitchenShopEdit2?id="+ id +"&kitchen_id="+ kitchen_id +"&tabValue=2";
       window.open(href, '_blank')
     },
