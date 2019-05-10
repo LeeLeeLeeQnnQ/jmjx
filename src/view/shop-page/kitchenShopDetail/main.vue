@@ -85,41 +85,7 @@
                   <span v-show="!leaseinfo.entrance_fee" class="noData">未填写</span>
                 </FormItem>
               </i-col>
-            <!--   <i-col span="10" offset="2">
-                <FormItem label="其他费用(元)" class="cellTit">
-                  <span v-show="!!leaseinfo.other_fee">{{leaseinfo.other_fee}}</span>
-                  <span v-show="!leaseinfo.other_fee" class="noData">未填写</span>
-                </FormItem>
-              </i-col> -->
             </Row>
-<!--             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="增容费(元)" class="cellTit">
-                  <span v-show="!!leaseinfo.zr_fee">{{leaseinfo.zr_fee}}</span>
-                  <span v-show="!leaseinfo.zr_fee" class="noData">未填写</span>
-                </FormItem>
-              </i-col>
-              <i-col span="10" offset="2">
-                <FormItem label="燃气费(元)" class="cellTit">
-                  <span v-show="!!leaseinfo.gas_fee">{{leaseinfo.gas_fee}}</span>
-                  <span v-show="!leaseinfo.gas_fee" class="noData">未填写</span>
-                </FormItem>
-              </i-col>
-            </Row> -->
-            <!-- <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="库房费用(元)" class="cellTit">
-                  <span v-show="!!leaseinfo.storage_fee">{{leaseinfo.storage_fee}}</span>
-                  <span v-show="!leaseinfo.storage_fee" class="noData">未填写</span>
-                </FormItem>
-              </i-col>
-              <i-col span="10" offset="2">
-                <FormItem label="一次性费用(元)" class="cellTit">
-                  <span v-show="!!leaseinfo.one_fee">{{leaseinfo.one_fee}}</span>
-                  <span v-show="!leaseinfo.one_fee" class="noData">未填写</span>
-                </FormItem>
-              </i-col>
-            </Row> -->
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="上线日期" class="cellTit">
@@ -129,12 +95,6 @@
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
-<!--               <i-col span="10">
-                <FormItem label="免租期(天)" class="cellTit">
-                  <span v-show="leaseinfo.free_day*1 >= 0">{{leaseinfo.free_day}}</span>
-                  <span v-show="leaseinfo.free_day*1 < 0" class="noData">未填写</span>
-                </FormItem>
-              </i-col> -->
               <i-col span="10">
                 <FormItem label="到期时间" class="cellTit">
                   <span v-show="!!leaseinfo.end_date">{{leaseinfo.end_date}}</span>
@@ -405,8 +365,18 @@
           </Form>
         </TabPane>
         <TabPane label="店铺缴费">
-          <DatePicker type="daterange" format="yyyy/MM/dd" split-panels placeholder="选择时间" style="width: 200px;margin-bottom: 10px;" @on-change="selectBudgetListDaterange"></DatePicker>
-          <tables  ref="tables" v-model="budget_list" :columns="budgetColumns" @voucher-view="showStoreBudgetVoucher" style="min-height: 220px;"/></tables>
+          <Modal v-model="showEditStoreBudgetModal" title="本月上缴" :mask-closable="false" width="80%">
+            <tables
+            :columns="storeBudget_columns"
+            v-model="storeBudgetList"
+            @voucher-view="showStoreBudgetVoucher"></tables>
+          </Modal>
+          <tables
+            ref="tables"
+            v-model="budget_list"
+            :columns="budgetColumns"
+            style="min-height: 220px;"
+            @data-view-list="showEditStoreBudget"/></tables>
           <Page :total="budget_list_page.total" :page-size="budget_list_page.list_rows" style="margin-top:10px;" @on-change="getNewBudgetListPage"/>
           <Modal title="凭证预览" v-model="showStoreBudgetList">
             <div class="img-upload-list" v-for="item in storeBudgetImgList">
@@ -425,11 +395,11 @@
 
 <script>
   //权限
-  //  StoreLease/show,StoreEmployee/index,StoreDevice/show,StoreBill/queryPayPage
+  //  StoreLease/show,StoreEmployee/index,StoreDevice/show,StoreBill/index,
 import Tables from '_c/tables'
 import { getShopDetail } from '@/api/data'
-import { getStoreEmployeeList , showStoreDevice  } from '@/api/kitchen'
-import { getStoreBillPayPage } from '@/api/finance'
+import { getStoreEmployeeList , showStoreDevice , getStoreBillListPage  } from '@/api/kitchen'
+import { getStoreBillPayPage , getStoreBillPayList } from '@/api/finance'
 export default {
   name: 'kitchen_shop_detail',
   components: {
@@ -537,9 +507,95 @@ export default {
         total: 0
       },
       budgetColumns: [
+        {title: '厨房', key: 'kitchen_name'},
+        {title: '月份', key: 'month'},
+        {title: '商户', key: 'store_name'},
+        {title: '档口号', key: 'store_no'},
+        {title: '公摊天数', key: 'day_number'},
+        { title: '经营费用',
+          render: (h, params) => {
+            let operate_fee = params.row.operate_fee;
+            let operate_overdue_fee = params.row.operate_overdue_fee;
+            let fee = (operate_fee*1 + operate_overdue_fee*1).toFixed(2);
+            return h('span', fee)
+          }
+        },
+        { title: '房租',
+          render: (h, params) => {
+            let rent_fee = params.row.rent_fee;
+            let rent_overdue_fee = params.row.rent_overdue_fee;
+            let fee = (rent_fee*1 + rent_overdue_fee*1).toFixed(2);
+            return h('span', fee)
+          }
+        },
+        {title: '往期未缴', 
+          render: (h, params) => {
+            let is_new = params.row.new*1;
+            let store_account = '';
+            if(is_new == 1){
+              store_account = params.row.store_account;
+            }else{
+              store_account = '----';
+            }
+            return h('span', store_account)
+          }
+        },
+        {
+          title: '编辑',
+          key: 'handle',
+          width :90,
+          button: [
+            (h, params, vm) => {
+              return h('Button', {
+                style: {},
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-view-list', params)
+                  }
+                }},
+              '缴费列表')
+            }
+          ]
+        },
+        // {title: '操作人', key: 'employee_name'},
+        // {title: '创建时间', key: 'create_time'},
+        // {title: '缴费金额', key: 'money'},
+        // {
+        //   title: '查看凭证',
+        //   key: 'handle',
+        //   button: [
+        //     (h, params, vm) => {
+        //       return h('Button', {
+        //         style: {},
+        //         props: {
+        //           type: 'primary',
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'click': () => {
+        //             vm.$emit('voucher-view', params)
+        //           }
+        //         }},
+        //       '查看凭证')
+        //     }
+        //   ]
+        // },
+      ],
+      // 展示收支
+      showEditStoreBudgetModal:false,
+      // 凭证
+      showStoreBudgetList:false,
+      storeBudgetList:[],
+      // 收支表格
+      storeBudget_columns:[
+        {title: '金额', key: 'money'},
+        {title: '操作时间', key: 'create_time'},
         {title: '操作人', key: 'employee_name'},
-        {title: '创建时间', key: 'create_time'},
-        {title: '缴费金额', key: 'money'},
+        {title: '备注', key: 'remark'},
         {
           title: '查看凭证',
           key: 'handle',
@@ -561,7 +617,7 @@ export default {
           ]
         },
       ],
-      showStoreBudgetList:false,
+      // 照片凭证
       storeBudgetImgList:[],
       // 图片
       imgUrl: '',
@@ -707,7 +763,7 @@ export default {
     },
     // 获取商铺缴费列表
     initStoreBillinfo( data ){
-      getStoreBillPayPage( data ).then(res => {
+      getStoreBillListPage( data ).then(res => {
         const dbody = res.data
         if(dbody.code != 0){
           this.$Notice.warning({
@@ -719,24 +775,27 @@ export default {
         this.budget_list_page = dbody.data.page;
       })
     },
+    // 展示收支列表
+    showEditStoreBudget(params){
+      let id = params.row.id;
+      getStoreBillPayList( { bill_id : id } ).then(res => {
+        const dbody = res.data
+        if(dbody.code != 0){
+          this.$Notice.warning({
+            title: dbody.msg,
+          })
+          return
+        }
+        this.storeBudgetList = dbody.data;
+        this.showEditStoreBudgetModal = true;
+      })
+    },
     // 获取新页面
     getNewBudgetListPage( page ){
       let data = {
         store_id:this.store_id,
+        kitchen_id:this.kitchen_id,
         page : page
-      }
-      this.initStoreBillinfo( data );
-    },
-    // 选择时间
-    selectBudgetListDaterange( dateArr ){
-      if(!dateArr[0] || !dateArr[1]){
-        this.initStoreBillinfo( { store_id:this.store_id } );
-        return
-      }
-      let data = {
-        store_id:this.store_id,
-        start_time:dateArr[0],
-        end_time:dateArr[1],
       }
       this.initStoreBillinfo( data );
     },
@@ -758,7 +817,7 @@ export default {
       this.initVoucherinfo(data);
       this.initMemberinfo();
       this.initEquipmentinfo();
-      this.initStoreBillinfo({store_id:this.store_id,});
+      this.initStoreBillinfo({kitchen_id:this.kitchen_id,store_id:this.store_id,});
     }
   },
   computed: {

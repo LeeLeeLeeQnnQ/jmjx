@@ -17,6 +17,22 @@ export const getStoreBillList = ( data ) => {
 }
 
 
+// 获取本月商户账单 分页
+/*
+  store_id
+*/
+/*
+  
+*/
+export const getStoreBillListPage = ( data ) => {
+  return axios.request({
+    url: '/api/StoreBill/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+
 // 查询商户每月能源费用
 /*
   month : this.select_time , kitchen_id:this.select_kitchen_id , store_id: store_id

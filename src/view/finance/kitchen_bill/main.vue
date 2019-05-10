@@ -535,7 +535,7 @@ export default {
       viewItem:{},
       // 打印经营费用数据
       print_energy_info:{},
-      print_energy_str:"@page{size:A4;margin:0}@media print{*{font-size:9pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.page{box-sizing:border-box;padding:22px;padding-top:35px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:.9em}.page_head_left,.page_head_right{display:inline-block;width:50%;float:left}.table_box table{width:100%;border-spacing:0;border-collapse:collapse;border:1px solid gray;margin-top:5px}.table_box table th{border:1px solid gray;padding:3px}.table_box table td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr td{border:0;border-top:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr .total_td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .last_tr{border-top:1px solid gray}.page_footer{padding:5px;line-height:.9em}.page_footer .zhanghao{overflow:hidden;margin-bottom:10px}.page_footer .zhanghao>div{display:inline-block;float:left}.page_footer .zhanghao .line_box{float:right;margin-right:100px;text-align:center}.page_footer .zhanghao .line_box .line{width:240px;height:14px;border-bottom:1px solid #000;margin-bottom:5px}.page_footer .contect p{margin-top:8px;width:50%;display:inline-block}",
+      print_energy_str:"@page{size:A4;margin:0}@media print{*{font-size:9pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.page{box-sizing:border-box;padding:22px;padding-top:20px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:.9em}.page_head_left,.page_head_right{display:inline-block;width:50%;float:left}.table_box table{width:100%;border-spacing:0;border-collapse:collapse;border:1px solid gray;margin-top:5px}.table_box table th{border:1px solid gray;padding:3px}.table_box table td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr td{border:0;border-top:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr .total_td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .last_tr{border-top:1px solid gray}.page_footer{padding:5px;line-height:.9em}.page_footer .zhanghao{overflow:hidden;margin-bottom:10px}.page_footer .zhanghao>div{display:inline-block;float:left}.page_footer .zhanghao .line_box{float:right;margin-right:100px;text-align:center}.page_footer .zhanghao .line_box .line{width:240px;height:14px;border-bottom:1px solid #000;margin-bottom:5px}.page_footer .contect p{margin-top:8px;width:50%;display:inline-block}",
       print_rent_info:{},
       print_rent_str:"@page{size:A4;margin:0}@media print{*{font-size:10pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.ti2{text-indent:2em}.page{box-sizing:border-box;padding:90px 110px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:12pt}.page_main .page_main_item{text-indent:2em;display:flex;justify-content:flex-start;align-items:center;height:3em}.page_main .page_main_item span{width:150px}.page_main .page_main_item i{font-style:normal;font-weight:400}.page_main .page_main_item p{border-bottom:1px solid #000;text-align:center;text-indent:0;padding-bottom:2px;width:300px}.page_footer{padding:5px;line-height:.9em}.page_footer_top{text-indent:2em;line-height:12pt;margin:2em 0}.page_footer_main{line-height:15pt;margin:2em 0}.page_footer_bottom{line-height:15pt;text-align:right}"
     }
@@ -605,7 +605,13 @@ export default {
     showAddStorePay(params){
       this.uploadLetter = [];
       this.storeBill = {}
-      this.storeBill = params.row;
+      this.storeBill.id = params.row.id;
+      this.storeBill.store_id = params.row.store_id;
+      this.storeBill.month = params.row.month;
+      this.storeBill.store_name = params.row.store_name;
+      this.storeBill.store_account = params.row.store_account;
+      this.storeBill.money = '';
+      this.storeBill.remark = '';
       this.showAddStorePayModal = true;
     },
     // 编辑商户账单

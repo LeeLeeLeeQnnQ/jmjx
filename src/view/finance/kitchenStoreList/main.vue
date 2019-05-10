@@ -1040,6 +1040,7 @@ export default {
       obj.kitchen_id = this.sreach_kitchen_id;
       obj.lease_type = 2;
       obj.apply_date = this.curentTime();
+      obj.is_start = 1;
       quitKitchen(obj).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
@@ -1087,6 +1088,7 @@ export default {
         this.$Notice.warning({
           title: "操作完成！"
         })
+        this.storeRefundModal = false;
         this.initData(this.sreach_kitchen_id);
       })
     },
