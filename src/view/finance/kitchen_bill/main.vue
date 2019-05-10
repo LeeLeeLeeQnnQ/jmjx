@@ -28,13 +28,10 @@
             <FormItem label="本月公摊开始日期" class="cellTit">
                 <span>{{viewItem.share_start_date}}</span>
             </FormItem>
-            <FormItem label="本月公摊结束日期" class="cellTit">
-                <span>{{viewItem.share_end_date}}</span>
-            </FormItem>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
             <FormItem label="本月公摊结束日期" class="cellTit">
-                <span>{{viewItem.end_date}}</span>
+                <span>{{viewItem.share_end_date}}</span>
             </FormItem>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
@@ -643,7 +640,7 @@ export default {
         this.$Notice.warning({
           title: "添加成功！",
         })
-        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page : this.page.current_page })
+        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
       })
     },
     // 展示收支列表
@@ -683,7 +680,7 @@ export default {
         this.$Notice.warning({
           title: "删除成功！"
         })
-        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page : this.page.current_page })
+        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
         getStoreBillPayList( { bill_id : bill_id } ).then(res => {
           const dbody = res.data
           if(dbody.code != 0){
@@ -699,29 +696,11 @@ export default {
     // 查看能源账单
     viewEnergyBill(params){
       this.viewItem = {};
-      let store_id = params.row.store_id;
-      let data = { month : this.select_time , kitchen_id:this.select_kitchen_id , store_id: store_id};
-      getStoreChargeItem( data ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        if(dbody.data.length > 0){
-          this.viewItem = {};
-          this.viewItem = dbody.data[0];
-          this.viewItem.water_value = this.viewItem.water_start - this.viewItem.water_end;
-          this.viewItem.energy_value = this.viewItem.water_value - this.viewItem.energy_end;
-          this.viewItem.total = this.getPayItemTotal(this.viewItem);
-          this.viewModal = true;
-        }else{
-          this.$Notice.warning({
-            title: "抄表信息不全！"
-          })
-        }
-      });
+      this.viewItem = params.row;
+      this.viewItem.water_value = this.viewItem.water_start - this.viewItem.water_end;
+      this.viewItem.energy_value = this.viewItem.water_value - this.viewItem.energy_end;
+      this.viewItem.total = this.getPayItemTotal(this.viewItem);
+      this.viewModal = true;
     },
     // 打印能源账单
     printEnergyBill(params){
