@@ -757,7 +757,7 @@ export default {
     },
     // 显示弹窗
     showEditStoreRunBill(params){
-      this.paymentItem = Object.assign({}, params.row);;
+      this.paymentItem = Object.assign({}, params.row);
       this.paymentItem.total = this.getPayItemTotal(this.paymentItem);
       this.paymentModal = true;
     },

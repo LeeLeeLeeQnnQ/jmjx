@@ -152,6 +152,14 @@
                 <td></td>
                 <td>{{print_info.taxes_fee}}</td>
               </tr>
+              <tr align="left">
+                <td>代运营费</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{print_info.operating_fee}}</td>
+              </tr>
               <tr align="left" class="last_tr">
                 <td>合计缴款</td>
                 <td></td>

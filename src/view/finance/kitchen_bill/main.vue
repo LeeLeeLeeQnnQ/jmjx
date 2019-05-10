@@ -704,37 +704,21 @@ export default {
     },
     // 打印能源账单
     printEnergyBill(params){
-      let store_id = params.row.store_id;
-      let data = { month : this.select_time , kitchen_id:this.select_kitchen_id , store_id: store_id};
-      getStoreChargeItem( data ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        if(dbody.data.length > 0){
-          this.print_energy_info = {};
-          this.print_energy_info = dbody.data[0];
-          let that = this;
-          setTimeout(function(argument) {
-            printJS({
-              printable: 'printEnergy',
-              documentTitle: '橘猫精选',
-              type: 'html',
-              targetStyle: ['*'],
-              maxWidth: 1200,
-              gridStyle:'border: 1px solid lightgray; margin-bottom: -1px;',
-              style: that.print_energy_str,
-            })
-          },500)
-        }else{
-          this.$Notice.warning({
-            title: "抄表信息不全！"
-          })
-        }
-      });
+      this.print_energy_info = {};
+      this.print_energy_info =  params.row;
+      this.print_energy_info.total_fee = this.print_energy_info.operate_fee*1+this.print_energy_info.operate_overdue_fee*1;
+      let that = this;
+      setTimeout(function(argument) {
+        printJS({
+          printable: 'printEnergy',
+          documentTitle: '橘猫精选',
+          type: 'html',
+          targetStyle: ['*'],
+          maxWidth: 1200,
+          gridStyle:'border: 1px solid lightgray; margin-bottom: -1px;',
+          style: that.print_energy_str,
+        })
+      },500)
     },
     // 打印租金账单
     printRentBill(params){
@@ -772,6 +756,7 @@ export default {
       total = info.other_fee*1 + total;
       total = info.project_fee*1 + total;
       total = info.taxes_fee*1 + total;
+      total = info.operate_overdue_fee*1 + total;
       return total.toFixed(2);
     },
     // 获取账单列表

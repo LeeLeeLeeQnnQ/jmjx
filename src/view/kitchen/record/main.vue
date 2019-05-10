@@ -188,7 +188,7 @@ export default {
     // 编辑电表
     handleMeter( params ){
       this.editMeterItem = {};
-      this.editMeterItem = params.row;
+      this.editMeterItem = Object.assign({}, params.row);
       this.editMeterModal = true;
     },
     // saveEditMeter 保存修改
@@ -212,6 +212,7 @@ export default {
         this.$Notice.warning({
           title: "修改成功！"
         })
+        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id })
       })
     },
     // 初始化
