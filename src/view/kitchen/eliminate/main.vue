@@ -150,7 +150,7 @@
           </i-col>
           <i-col span="22">
             <FormItem>
-              <Table :columns="tableColumns" :data="tableData">
+              <Table :stripe="true" :columns="tableColumns" :data="tableData">
                 <div slot="footer" class="tableFooter">
                   <h3>总计： {{ tableTotal }}</h3>
                 </div>

@@ -64,7 +64,7 @@
       <a href="#" slot="extra" @click.prevent="showAddModalFn">
           添加一个罚款
       </a>
-      <tables ref="tables" v-model="fineList" :columns="columns" @data-view="handleItemView" @data-dele="handleDele" />
+      <tables :stripe="true" ref="tables" v-model="fineList" :columns="columns" @data-view="handleItemView" @data-dele="handleDele" />
       <Page :total="page.total" :page-size="page.list_rows" style="margin-top:10px;" @on-change="getNewPage"/>
     </Card>
     <Modal v-model="showModal" title="罚款登记">

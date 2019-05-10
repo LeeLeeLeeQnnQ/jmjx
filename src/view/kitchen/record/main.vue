@@ -29,11 +29,11 @@
       <Tabs>
         <TabPane label="电表">
           <Card shadow>
-            <tables :columns="energy_record_columns" v-model="energy_record_list" @data-edit="handleMeter"></tables>
+            <tables :stripe="true" :columns="energy_record_columns" v-model="energy_record_list" @data-edit="handleMeter"></tables>
           </Card>
         </TabPane>
         <TabPane label="水表">
-            <tables :columns="water_record_columns" v-model="water_record_list" @data-edit="handleMeter"></tables>
+            <tables :stripe="true" :columns="water_record_columns" v-model="water_record_list" @data-edit="handleMeter"></tables>
         </TabPane>
       </Tabs>
     </Card>

@@ -160,6 +160,14 @@
                 <td></td>
                 <td>{{print_info.operating_fee}}</td>
               </tr>
+              <tr align="left">
+                <td>其他费用</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{print_info.operating_fee}}</td>
+              </tr>
               <tr align="left" class="last_tr">
                 <td>合计缴款</td>
                 <td></td>
@@ -171,6 +179,7 @@
           </tbody>
         </table>
     </div>
+    <p>备注：{{print_info.remark}}</p>
     <div class="page_footer">
         <p>请以下列形式付款：</p>
         <p>汇款至下列账户：</p>
@@ -272,7 +281,7 @@ export default {
     .page{
         box-sizing: border-box;
         padding: 22px;
-        padding-top: 90px;
+        padding-top: 85px;
     }
     .page h4{
         text-align: center;

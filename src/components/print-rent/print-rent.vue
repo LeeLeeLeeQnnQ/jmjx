@@ -6,21 +6,21 @@
       <p class="ti2">您好！</p>
       <p class="ti2">
         以下是您在橘猫精选四道口店所租档口的房租明细，请您于
-        <span>2019年4月30日</span>
+        <span>{{year}}年{{month}}月{{lastday}}日</span>
         0时之前，将下述租金支付至我公司财务部。</p>
     </div>
     <div class="page_main">
         <div class="page_main_item">
           <span><i>1.</i>商户名称：</span>
-          <p>小当家冰品</p>
+          <p>{{print_info.store_name}}</p>
         </div>
         <div class="page_main_item">
           <span><i>2.</i>档口号位置：</span>
-          <p>B3</p>
+          <p>{{print_info.store_no}}</p>
         </div>
         <div class="page_main_item">
           <span><i>3.</i>商户负责人：</span>
-          <p>赵海明</p>
+          <p>{{print_info.shopkeeper}}</p>
         </div>
         <div class="page_main_item">
           <span><i>4.</i>款项类型：</span>
@@ -28,7 +28,7 @@
         </div>
         <div class="page_main_item">
           <span><i>5.</i>款项明细日期：</span>
-          <p>2019年5月26日至2019年5月31日</p>
+          <p>{{print_info.rent_start_date}}至{{print_info.rent_end_date}}</p>
         </div>
         <div class="page_main_item">
           <span><i>6.</i>滞纳金起算日：</span>
@@ -36,11 +36,11 @@
         </div>
         <div class="page_main_item">
           <span><i>7.</i>末付滞纳金金额：</span>
-          <p></p>
+          <p>{{print_info.rent_overdue_fee}}元</p>
         </div>
         <div class="page_main_item">
           <span><i>8.</i>应付款合计：</span>
-          <p>1161.29元 </p>
+          <p>{{total}}元 </p>
         </div>
     </div>
     <div class="page_footer">
@@ -62,7 +62,7 @@
         </div>
         <div class="page_footer_bottom">
           <p>北京金同餐饮管理有限公司</p>
-          <p>2019年4月25日</p>
+          <p>{{currentdate}}</p>
         </div>
     </div>
   </div>
@@ -79,11 +79,15 @@ export default {
   },
   data () {
     return {
+      year:'',
+      month:'',
+      lastday:'',
+      currentdate:'',
+      total:'',
     }
   },
   watch: {
     print_info (newInfo, oldInfo) {
-      newInfo.currentdate = this.getCurentTime();
       this.formValue(newInfo);
       this.print_info = newInfo;
     }
@@ -91,7 +95,6 @@ export default {
   methods: {
     getCurentTime () {
       var date = new Date()
-      var seperator1 = '-'
       var month = date.getMonth() + 1
       var strDate = date.getDate()
       if (month >= 1 && month <= 9) {
@@ -100,13 +103,29 @@ export default {
       if (strDate >= 0 && strDate <= 9) {
         strDate = '0' + strDate
       }
-      var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+      var currentdate = date.getFullYear() + '年' + month + '月' + strDate+ '日'
       return currentdate
     },
+    // 获取当前月最后一天
+    getCurrentMonthLast (date){
+     var endDate = new Date(date); //date 是需要传递的时间如：2018-08
+     var month=endDate.getMonth();
+     var nextMonth=++month;
+     var nextMonthFirstDay=new Date(endDate.getFullYear(),nextMonth,1);
+     var oneDay=1000*60*60*24;
+     var dateString=new Date(nextMonthFirstDay-oneDay);
+     var dateYar = dateString.toLocaleDateString(); //toLocaleDateString() 返回 如：2018/8/31
+      var arr = dateString.toLocaleDateString().replace(new RegExp('/','g'),"-").split("-");
+     return arr[arr.length-1];
+    },
     formValue(info){
-      info.currentdate = this.getCurentTime();
-      info.energy_value = (info.energy_end*1 - info.energy_start*1 ).toFixed(2);
-      info.water_value = (info.water_end*1 - info.water_start*1 ).toFixed(2);
+      let date = info.month ? info.month :  '0000-00';
+      let arr = date.split('-');
+      this.year = arr[0] || '';
+      this.month = arr[1] || '';
+      this.lastday = this.getCurrentMonthLast(date);
+      this.currentdate = this.getCurentTime();
+      this.total = (info.rent_fee*1 + info.rent_overdue_fee*1).toFixed(2);
     },
   },
   created () {

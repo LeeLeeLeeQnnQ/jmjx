@@ -657,7 +657,7 @@ export default {
         const dbody = res.data
         if (dbody.code != 0) {
           this.$Notice.warning({
-            title: "起租表格数据获取失败！"
+            title: "表格数据获取失败！"
           })
           return
         }

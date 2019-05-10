@@ -83,11 +83,11 @@
                   <DatePicker type="date" placeholder="选择公摊起始日期" :value="leaseinfo.entrance_date" @on-change="getEntranceDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
-              <i-col span="10" offset="2">
+<!--               <i-col span="10" offset="2">
                 <FormItem label="店铺收费基数">
                   <Input v-model="leaseinfo.pay_base" placeholder="输入店铺收费基数" style="width: 200px"></Input>
                 </FormItem>
-              </i-col>
+              </i-col> -->
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">

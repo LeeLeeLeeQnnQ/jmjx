@@ -275,6 +275,7 @@ import PrintRent from '_c/print-rent'
 // 权限
 // Index/getKitchenList,StoreBill/queryList,StoreCharge/queryList,StoreBill/queryPayList,StoreBill/addStoreBillPay,StoreBill/deleteStoreBillPay
 import { getKitchenList  } from '@/api/data'
+import { getShopDetail } from '@/api/data'
 import { getStoreBillList , getStoreChargeItem } from '@/api/kitchen'
 import { getStoreBillPayList , addStoreBillPay  , deleteStoreBillPay } from '@/api/finance'
 export default {
@@ -293,12 +294,12 @@ export default {
       select_kitchen:[],
       select_kitchen_id:'',
       keyword:'',
-      page: {
-        current_page: 1,
-        last_page: '',
-        list_rows: 0,
-        total: 0
-      },
+      // page: {
+      //   current_page: 1,
+      //   last_page: '',
+      //   list_rows: 0,
+      //   total: 0
+      // },
       // 表格
       bill_columns:[
         {title: '厨房', key: 'kitchen_name'},
@@ -381,7 +382,7 @@ export default {
         {
           title: '打印',
           key: 'handle',
-          // width :150,
+          width :150,
           // width :90,
           button: [
             (h, params, vm) => {
@@ -397,22 +398,22 @@ export default {
                 }},
               '经营费用')
             },
-            // (h, params, vm) => {
-            //   return h('Button', {
-            //     style: {
-            //       marginLeft:'5px',
-            //     },
-            //     props: {
-            //       type: 'success',
-            //       size: 'small'
-            //     },
-            //     on: {
-            //       'click': () => {
-            //         vm.$emit('data-print-rent', params)
-            //       }
-            //     }},
-            //   '房租')
-            // }
+            (h, params, vm) => {
+              return h('Button', {
+                style: {
+                  marginLeft:'5px',
+                },
+                props: {
+                  type: 'success',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-print-rent', params)
+                  }
+                }},
+              '房租')
+            }
           ]
         },
         {
@@ -534,7 +535,7 @@ export default {
       viewItem:{},
       // 打印经营费用数据
       print_energy_info:{},
-      print_energy_str:"@page{size:A4;margin:0}@media print{*{font-size:9pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.page{box-sizing:border-box;padding:22px;padding-top:90px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:.9em}.page_head_left,.page_head_right{display:inline-block;width:50%;float:left}.table_box table{width:100%;border-spacing:0;border-collapse:collapse;border:1px solid gray;margin-top:5px}.table_box table th{border:1px solid gray;padding:3px}.table_box table td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr td{border:0;border-top:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr .total_td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .last_tr{border-top:1px solid gray}.page_footer{padding:5px;line-height:.9em}.page_footer .zhanghao{overflow:hidden;margin-bottom:10px}.page_footer .zhanghao>div{display:inline-block;float:left}.page_footer .zhanghao .line_box{float:right;margin-right:100px;text-align:center}.page_footer .zhanghao .line_box .line{width:240px;height:14px;border-bottom:1px solid #000;margin-bottom:5px}.page_footer .contect p{margin-top:8px;width:50%;display:inline-block}",
+      print_energy_str:"@page{size:A4;margin:0}@media print{*{font-size:9pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.page{box-sizing:border-box;padding:22px;padding-top:35px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:.9em}.page_head_left,.page_head_right{display:inline-block;width:50%;float:left}.table_box table{width:100%;border-spacing:0;border-collapse:collapse;border:1px solid gray;margin-top:5px}.table_box table th{border:1px solid gray;padding:3px}.table_box table td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr td{border:0;border-top:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr .total_td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .last_tr{border-top:1px solid gray}.page_footer{padding:5px;line-height:.9em}.page_footer .zhanghao{overflow:hidden;margin-bottom:10px}.page_footer .zhanghao>div{display:inline-block;float:left}.page_footer .zhanghao .line_box{float:right;margin-right:100px;text-align:center}.page_footer .zhanghao .line_box .line{width:240px;height:14px;border-bottom:1px solid #000;margin-bottom:5px}.page_footer .contect p{margin-top:8px;width:50%;display:inline-block}",
       print_rent_info:{},
       print_rent_str:"@page{size:A4;margin:0}@media print{*{font-size:10pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.ti2{text-indent:2em}.page{box-sizing:border-box;padding:90px 110px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:12pt}.page_main .page_main_item{text-indent:2em;display:flex;justify-content:flex-start;align-items:center;height:3em}.page_main .page_main_item span{width:150px}.page_main .page_main_item i{font-style:normal;font-weight:400}.page_main .page_main_item p{border-bottom:1px solid #000;text-align:center;text-indent:0;padding-bottom:2px;width:300px}.page_footer{padding:5px;line-height:.9em}.page_footer_top{text-indent:2em;line-height:12pt;margin:2em 0}.page_footer_main{line-height:15pt;margin:2em 0}.page_footer_bottom{line-height:15pt;text-align:right}"
     }
@@ -722,21 +723,31 @@ export default {
     },
     // 打印租金账单
     printRentBill(params){
-      let that = this;
-      // 获取店铺本月租金账单基本信息
-      let info = params.row;
-            // print_rent_str
-      setTimeout(function(argument) {
-        printJS({
-          printable: 'printRent',
-          documentTitle: '橘猫精选',
-          type: 'html',
-          targetStyle: ['*'],
-          maxWidth: 1200,
-          gridStyle:'border: 1px solid lightgray; margin-bottom: -1px;',
-          style: that.print_rent_str,
-        })
-      },500)
+      getShopDetail({id: params.row.store_id, lease_type: 1}).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: "数据获取失败！"
+          })
+          return
+        }
+        this.print_rent_info = {};
+        this.print_rent_info =  params.row;
+        this.print_rent_info.shopkeeper = res.data.data.shopkeeper;
+        let that = this;
+        setTimeout(function(argument) {
+          printJS({
+            printable: 'printRent',
+            documentTitle: '橘猫精选',
+            type: 'html',
+            targetStyle: ['*'],
+            maxWidth: 1200,
+            gridStyle:'border: 1px solid lightgray; margin-bottom: -1px;',
+            style: that.print_rent_str,
+          })
+        },500)
+      })
+      
     },
     // 计算合计
     getPayItemTotal( info ){

@@ -445,6 +445,7 @@
         </Form>
       </Modal>
       <tables 
+        :stripe="true"
         :columns="bill_columns"
         v-model="bill_list"
         @data-view="viewEnergyBill"
