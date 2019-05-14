@@ -74,6 +74,7 @@ export default {
         {title: '押金', key: 'store_name'},
         {title: '租金', key: 'store_name'},
         {title: '入场费', key: 'store_name'},
+        {title: '增容费', key: 'store_name'},
       ],
       // 数据
       sign_analysis_list: [],

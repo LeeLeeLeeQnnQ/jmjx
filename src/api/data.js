@@ -182,6 +182,23 @@ export const getWorkCategoryList = ( id ) => {
   })
 }
 
+
+/*
+  获取退租计算信息
+*/
+/*
+  store_id
+*/
+/*
+  finance-store-edit2 --  财务编辑2
+*/
+export const getRefundData = ( obj ) => {
+  return axios.request({
+    url: '/api/StoreLease/refund',
+    params: obj,
+    method: 'post'
+  })
+}
 /*
   获取厨房下的档口列表
 */

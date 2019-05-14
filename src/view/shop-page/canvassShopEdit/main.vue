@@ -7,7 +7,7 @@
         {{kitchen_name}}  {{store_no}}  {{store_name}}
       </p>
       <Tabs :animated="false" style="margin-top: 5px;" class="h100">
-        <TabPane label="店铺租约">
+<!--         <TabPane label="店铺租约">
           <Form :label-width="120">
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -27,13 +27,13 @@
                   <Input v-model="leaseinfo.entrance_fee" placeholder="输入入场费"></Input>
                 </FormItem>
               </i-col>
-             <!--   <i-col span="10" offset="2">
+               <i-col span="10" offset="2">
                 <FormItem label="增容费">
                   <Input v-model="leaseinfo.zr_fee" placeholder="输入增容费"></Input>
                 </FormItem>
-              </i-col> -->
+              </i-col>
             </Row>
- <!--            <Row type="flex" justify="start" align="middle" :gutter="20">
+            <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="燃气费">
                   <Input v-model="leaseinfo.gas_fee" placeholder="输入燃气费"></Input>
@@ -44,18 +44,18 @@
                   <Input v-model="leaseinfo.one_fee" placeholder="输入一次性费用"></Input>
                 </FormItem>
               </i-col>
-            </Row> -->
+            </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="上线日期">
                   <DatePicker type="date" placeholder="选择上线日期" :value="leaseinfo.online_date" @on-change="getOnlineDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
-<!--                <i-col span="10" offset="2">
+               <i-col span="10" offset="2">
                 <FormItem label="免租期">
                   <Input v-model="leaseinfo.free_day" placeholder="输入免租期"></Input>
                 </FormItem>
-              </i-col> -->
+              </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -72,7 +72,7 @@
               </i-col>
             </Row>
           </Form>
-        </TabPane>
+        </TabPane> -->
         <TabPane label="合同凭证">
           <Form :label-width="100">
             <FormItem label="合同资料">
@@ -340,22 +340,22 @@ export default {
       this.start_other = this.trimNull(data.start_other.split(','))
     },
     // 保存按钮
-    leaseinfoSubmit( ){
-      this.leaseinfo.kitchen_id = this.kitchen_id;
-      this.leaseinfo.store_id = this.store_id;
-      setStartShopEdit(this.leaseinfo).then(res => {
-        const dbody = res.data
-        if (dbody.code == 0) {
-          this.$Notice.warning({
-            title: '信息提交完成！'
-          })
-        } else {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-        }
-      })
-    },
+    // leaseinfoSubmit( ){
+    //   this.leaseinfo.kitchen_id = this.kitchen_id;
+    //   this.leaseinfo.store_id = this.store_id;
+    //   setStartShopEdit(this.leaseinfo).then(res => {
+    //     const dbody = res.data
+    //     if (dbody.code == 0) {
+    //       this.$Notice.warning({
+    //         title: '信息提交完成！'
+    //       })
+    //     } else {
+    //       this.$Notice.warning({
+    //         title: dbody.msg
+    //       })
+    //     }
+    //   })
+    // },
 
 
     //凭证卡片

@@ -122,6 +122,30 @@
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
+                <FormItem label="月租金">
+                  <Input v-model="baseinfo.month_rent" placeholder="输入月租金"></Input>
+                </FormItem>
+              </i-col>
+               <i-col span="10" offset="2">
+                <FormItem label="押金">
+                  <Input v-model="baseinfo.deposit_fee" placeholder="输入押金"></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
+                <FormItem label="入场费">
+                  <Input v-model="baseinfo.entrance_fee" placeholder="输入入场费"></Input>
+                </FormItem>
+              </i-col>
+               <i-col span="10" offset="2">
+                <FormItem label="增容费">
+                  <Input v-model="baseinfo.zr_fee" placeholder="输入增容费"></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
                 <FormItem>
                   <Button @click="baseinfoSubmit" type="warning">保存</Button>
                 </FormItem>
@@ -245,8 +269,8 @@
 
 <script>
   // 权限
-// /api/Index/getEmployeeList,/api/Index/getEmployeeList,/api/StoreLease/show,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/StoreLease/edit,/api/Index/getWorkCategory
-import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , setEndShopEdit , getWorkCategoryList } from '@/api/data'
+// Index/getEmployeeList,Index/getEmployeeList,StoreLease/show,Index/getKitchenList,Index/getStoreNo,StoreLease/edit,Index/getWorkCategory,StoreLease/refund
+import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , setEndShopEdit , getWorkCategoryList , getRefundData  } from '@/api/data'
 export default {
   name: 'finance-store-edit2',
   data () {
@@ -348,7 +372,7 @@ export default {
           title: '收支',
           key: 'rent_type',
           render: (h, params) => {
-            return h('strong', params.row.rent_type*1 == 1 ? '收入' : '支出')
+            return h('strong', params.row.rent_type*1 == 1 ? '扣减' : '退款')
           }
         },
         {
@@ -369,6 +393,9 @@ export default {
           width: 150,
           align: 'center',
           render: (h, params) => {
+            if(!!params.row.isHidden){
+              return ''
+            }
             return h('div', [
               h('Button', {
                 props: {
@@ -444,6 +471,7 @@ export default {
     // 提交验证器
     baseinfoSubmitValidateField(obj) {
       obj.store_name = obj.store_name.trim()
+      let priceReg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
       if (!obj.store_name) {
         this.$Notice.warning({
           title: '请输入正确标题！'
@@ -487,6 +515,30 @@ export default {
         })
         return false
       }
+      if (!obj.month_rent || obj.month_rent * 1 <= 0 || !priceReg.test(obj.month_rent)) {
+        this.$Notice.warning({
+          title: '请输入正确租金！'
+        })
+        return false
+      };
+      if (!obj.deposit_fee || obj.deposit_fee * 1 <= 0 || !priceReg.test(obj.deposit_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确押金！'
+        })
+        return false
+      };
+      if (!obj.entrance_fee || obj.entrance_fee * 1 < 0 || !priceReg.test(obj.entrance_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确入场费！'
+        })
+        return false
+      };
+      if (!obj.zr_fee || obj.zr_fee * 1 < 0 || !priceReg.test(obj.zr_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确入场费！'
+        })
+        return false
+      };
       return true
     },
     // 提交签约凭证
@@ -636,7 +688,14 @@ export default {
     leaseinfoSubmit(){
       let obj = { store_id : this.store_id };
       obj.archive = this.archive.length > 0 ? this.archive.join(",") : '';
-      obj.rent = this.end_tableData;
+      let arr = Object.assign(this.end_tableData);
+      let arr2 = [];
+      arr.forEach(function(i,j){
+        if(!i.isHidden){
+          arr2.push(i)
+        }
+      })
+      obj.rent = arr2;
       setEndShopEdit(obj).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
@@ -684,6 +743,10 @@ export default {
       this.baseinfo.manage_id = data.manage_id || '';
       this.baseinfo.manage_lease_id = data.manage_lease_id || '';
       this.baseinfo.store_no = data.store_no || '';
+      this.baseinfo.month_rent = data.month_rent || '';
+      this.baseinfo.deposit_fee = data.deposit_fee || '';
+      this.baseinfo.entrance_fee = data.entrance_fee || '';
+      this.baseinfo.zr_fee = data.zr_fee || '';
       getManageList().then(res => {
         const dbody = res.data
         let that = this
@@ -735,6 +798,8 @@ export default {
           return
         }
         this.end_tableData =  dbody.data.rent || [];
+        // 获取退租计算信息
+        this.getRefundData();
       })
     },
     // 删除表格信息
@@ -802,6 +867,7 @@ export default {
       this.archive = data.archive.length > 0 ? data.archive.split(",") : '';
       // 获取退租表格
       this.getEndTable();
+      
     },
     // 签约凭证卡片
     initVoucherinfo( data ){
@@ -821,6 +887,54 @@ export default {
           return
         }
         this.v_start_tableData =  dbody.data.rent || [];
+      })
+    },
+    // 获取退租表格信息
+    getRefundData(){
+      getRefundData({store_id: this.store_id}).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        let data = dbody.data;
+        for(let k in data){
+          let ii = {
+            category_id:'',
+            title: '',
+            rent_type: '',
+            money: '',
+            remark: '',
+            quantity: '1',
+            isHidden: true,
+          }
+          switch ( k ) {
+            case 'deposit_fee':
+              ii.title = "押金"
+              ii.money = data[k]
+              ii.rent_type = 2
+              ii.remark = '押金退换'
+              this.end_tableData.unshift(ii)
+              break;
+            case 'rent_fee':
+              ii.title = "租金"
+              ii.money = data[k]
+              ii.rent_type = data[k]*1 > 0 ? 1 : 2 
+              ii.remark = '租金退换'
+              this.end_tableData.unshift(ii)
+              break;
+            case 'bill_fee':
+              ii.title = "未缴款"
+              ii.money = data[k]
+              ii.rent_type = data[k]*1 > 0 ? 1 : 2 
+              ii.remark = '未缴款'
+              this.end_tableData.unshift(ii)
+              break;
+
+          }
+        };
       })
     },
     //初始化数据

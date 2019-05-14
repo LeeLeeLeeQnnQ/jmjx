@@ -7,9 +7,9 @@
             <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
           </Select>
         </i-col>
-        <i-col :xs="4" :md="4" :lg="4">
+<!--         <i-col :xs="4" :md="4" :lg="4">
           <DatePicker type="datetime" format="yyyy-MM-dd" placeholder="选择时间" style="width: 200px"></DatePicker>
-        </i-col>
+        </i-col> -->
       </Row>
     </Card>
     <Card shadow style="margin-top: 5px;">
@@ -49,9 +49,9 @@ export default {
       // 列表数据
       alive_store_list:[],
       alive_store_columns:[
-        {title: '商铺', key: 'store_no'},
-        {title: '商铺名', key: 'store_name'},
-        {title: '状态', key: 'store_name'},
+        {title: '档口', key: 'store_no'},
+        {title: '档口状态', key: 'store_no'},
+        {title: '商铺', key: 'store_name'},
         {title: '租金', key: 'store_name'},
         {title: '押金', key: 'store_name'},
         {title: '入场费', key: 'store_name'},

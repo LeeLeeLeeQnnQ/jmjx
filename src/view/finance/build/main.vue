@@ -54,6 +54,30 @@
           </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="月租金" prop="month_rent">
+              <Input v-model="formItem.month_rent" placeholder="输入月租金"></Input>
+            </FormItem>
+          </i-col>
+           <i-col span="10" offset="2">
+            <FormItem label="押金" prop="deposit_fee">
+              <Input v-model="formItem.deposit_fee" placeholder="输入押金"></Input>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="入场费" prop="entrance_fee">
+              <Input v-model="formItem.entrance_fee" placeholder="输入入场费"></Input>
+            </FormItem>
+          </i-col>
+           <i-col span="10" offset="2">
+            <FormItem label="增容费" prop="zr_fee">
+              <Input v-model="formItem.zr_fee" placeholder="输入增容费"></Input>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="20">
             <FormItem label="图片上传">
               <div class="img-upload-list" v-for="item in uploadList">
@@ -193,6 +217,18 @@ export default {
         ],
         store_no: [
           { required: true, message: '请选择档口号', trigger: 'change' }
+        ],
+        month_rent:[
+          { required: true, message: '填写月租金', trigger: 'change' }
+        ],
+        deposit_fee:[
+          { required: true, message: '填写押金', trigger: 'change' }
+        ],
+        entrance_fee:[
+          { required: true, message: '填写入场费', trigger: 'change' }
+        ],
+        zr_fee:[
+          { required: true, message: '填写增容费', trigger: 'change' }
         ]
       },
       // 店长列表
@@ -357,6 +393,7 @@ export default {
     // 提交验证器
     submitValidateField: function (obj) {
       obj.store_name = obj.store_name.trim()
+      let priceReg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
       if (!obj.store_name) {
         this.$Notice.warning({
           title: '请输入正确标题！'
@@ -412,6 +449,30 @@ export default {
         })
         return false
       }
+      if (!obj.month_rent || obj.month_rent * 1 <= 0 || !priceReg.test(obj.month_rent)) {
+        this.$Notice.warning({
+          title: '请输入正确租金！'
+        })
+        return false
+      };
+      if (!obj.deposit_fee || obj.deposit_fee * 1 <= 0 || !priceReg.test(obj.deposit_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确押金！'
+        })
+        return false
+      };
+      if (!obj.entrance_fee || obj.entrance_fee * 1 < 0 || !priceReg.test(obj.entrance_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确入场费！'
+        })
+        return false
+      };
+      if (!obj.zr_fee || obj.zr_fee * 1 < 0 || !priceReg.test(obj.zr_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确入场费！'
+        })
+        return false
+      };
       return true
     },
     // 提交工单按钮

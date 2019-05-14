@@ -111,7 +111,7 @@
 <script>
 //权限
 // StoreLease/show,StoreLease/edit,StoreLease/archive,Index/getWorkCategory
-import { getShopDetail , setEndShopEdit , getWorkCategoryList } from '@/api/data'
+import { getShopDetail , setEndShopEdit , getWorkCategoryList , getRefundData } from '@/api/data'
 import { setFileStore } from '@/api/finance'
 export default {
   name: 'finance-store-handle2',
@@ -144,7 +144,7 @@ export default {
           title: '收支',
           key: 'rent_type',
           render: (h, params) => {
-            return h('strong', params.row.rent_type*1 == 1 ? '收入' : '支出')
+            return h('strong', params.row.rent_type*1 == 1 ? '扣减' : '退款')
           }
         },
         {
@@ -165,6 +165,9 @@ export default {
           width: 150,
           align: 'center',
           render: (h, params) => {
+            if(!!params.row.isHidden){
+              return ''
+            }
             return h('div', [
               h('Button', {
                 props: {
@@ -301,7 +304,14 @@ export default {
       }
       let obj = { store_id : this.store_id };
       obj.archive = this.archive.join(",");
-      obj.rent = this.end_tableData;
+      let arr = Object.assign(this.end_tableData);
+      let arr2 = [];
+      arr.forEach(function(i,j){
+        if(!i.isHidden){
+          arr2.push(i)
+        }
+      })
+      obj.rent = arr2;
       setEndShopEdit(obj).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
@@ -344,6 +354,8 @@ export default {
           return
         }
         this.end_tableData =  dbody.data.rent || [];
+        // 获取退租计算信息
+        this.getRefundData();
       })
     },
     // 退款计算
@@ -356,6 +368,54 @@ export default {
       this.archive = data.archive.length > 0 ? data.archive.split(",") : '';
       // 获取退租表格
       this.getEndTable();
+    },
+    // 获取退租表格信息
+    getRefundData(){
+      getRefundData({store_id: this.store_id}).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        let data = dbody.data;
+        for(let k in data){
+          let ii = {
+            category_id:'',
+            title: '',
+            rent_type: '',
+            money: '',
+            remark: '',
+            quantity: '1',
+            isHidden: true,
+          }
+          switch ( k ) {
+            case 'deposit_fee':
+              ii.title = "押金"
+              ii.money = data[k]
+              ii.rent_type = 2
+              ii.remark = '押金退换'
+              this.end_tableData.unshift(ii)
+              break;
+            case 'rent_fee':
+              ii.title = "租金"
+              ii.money = data[k]
+              ii.rent_type = data[k]*1 > 0 ? 1 : 2 
+              ii.remark = '租金退换'
+              this.end_tableData.unshift(ii)
+              break;
+            case 'bill_fee':
+              ii.title = "未缴款"
+              ii.money = data[k]
+              ii.rent_type = data[k]*1 > 0 ? 1 : 2 
+              ii.remark = '未缴款'
+              this.end_tableData.unshift(ii)
+              break;
+
+          }
+        };
+      })
     },
     //初始化数据
     initData ( data ) {

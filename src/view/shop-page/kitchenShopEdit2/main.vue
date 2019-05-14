@@ -206,7 +206,7 @@
                 </div>
               </Upload>
             </FormItem>
-            <FormItem label="退租表格">
+            <!-- <FormItem label="退租表格">
               <Row type="flex" justify="start" align="middle" :gutter="20">
                 <i-col span="24">
                   <FormItem>
@@ -221,7 +221,7 @@
                   </Table>
                 </i-col>
               </Row>
-            </FormItem>
+            </FormItem> -->
             <FormItem>
               <Row type="flex" justify="start" align="middle" :gutter="20">
                 <i-col span="10">
@@ -546,7 +546,8 @@ export default {
           }
         }
       ],
-      connectTable:[],
+      connectTable:[
+      ],
     }
   },
   methods: {

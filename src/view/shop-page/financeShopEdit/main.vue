@@ -92,6 +92,30 @@
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
+                <FormItem label="月租金">
+                  <Input v-model="baseinfo.month_rent" placeholder="输入月租金"></Input>
+                </FormItem>
+              </i-col>
+               <i-col span="10" offset="2">
+                <FormItem label="押金">
+                  <Input v-model="baseinfo.deposit_fee" placeholder="输入押金"></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
+                <FormItem label="入场费">
+                  <Input v-model="baseinfo.entrance_fee" placeholder="输入入场费"></Input>
+                </FormItem>
+              </i-col>
+               <i-col span="10" offset="2">
+                <FormItem label="增容费">
+                  <Input v-model="baseinfo.zr_fee" placeholder="输入增容费"></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
                 <FormItem>
                   <Button @click="baseinfoSubmit" type="warning">保存</Button>
                 </FormItem>
@@ -303,6 +327,7 @@ export default {
     // 提交验证器
     baseinfoSubmitValidateField(obj) {
       obj.store_name = obj.store_name.trim()
+      let priceReg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
       if (!obj.store_name) {
         this.$Notice.warning({
           title: '请输入正确标题！'
@@ -346,6 +371,30 @@ export default {
         })
         return false
       }
+      if (!obj.month_rent || obj.month_rent * 1 <= 0 || !priceReg.test(obj.month_rent)) {
+        this.$Notice.warning({
+          title: '请输入正确租金！'
+        })
+        return false
+      };
+      if (!obj.deposit_fee || obj.deposit_fee * 1 <= 0 || !priceReg.test(obj.deposit_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确押金！'
+        })
+        return false
+      };
+      if (!obj.entrance_fee || obj.entrance_fee * 1 < 0 || !priceReg.test(obj.entrance_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确入场费！'
+        })
+        return false
+      };
+      if (!obj.zr_fee || obj.zr_fee * 1 < 0 || !priceReg.test(obj.zr_fee)) {
+        this.$Notice.warning({
+          title: '请输入正确入场费！'
+        })
+        return false
+      };
       return true
     },
     // 提交签约凭证
@@ -506,6 +555,10 @@ export default {
       this.baseinfo.manage_id = data.manage_id || '';
       this.baseinfo.manage_lease_id = data.manage_lease_id || '';
       this.baseinfo.store_no = data.store_no || '';
+      this.baseinfo.month_rent = data.month_rent || '';
+      this.baseinfo.deposit_fee = data.deposit_fee || '';
+      this.baseinfo.entrance_fee = data.entrance_fee || '';
+      this.baseinfo.zr_fee = data.zr_fee || '';
       getManageList().then(res => {
         const dbody = res.data
         let that = this

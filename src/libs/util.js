@@ -16,21 +16,21 @@ export const setUsername = (username) => {
 
 export const getToken = () => {
   const token = window.localStorage.getItem('gdjumaotoken')
-  if (token) {
+  if (!!token) {
     Cookies.set(TOKEN_KEY, token, {expires: cookieExpires || 1})
     return token
   } else { return false }
 }
 export const getUsername = () => {
   const username = window.localStorage.getItem('gdjumaousername')
-  if (username) {return username}
+  if (!!username) {return username}
   else { return false }
 }
 
 export const getAccess = () => {
   const access = window.localStorage.getItem('gdjumaoaccess')
-  if (access) { return access.split(',') }
-  else { return false }
+  if (!!access) { return access.split(',') }
+  else { return [] }
 }
 export const hasChild = (item) => {
   return !!(item.children && item.children.length !== 0)

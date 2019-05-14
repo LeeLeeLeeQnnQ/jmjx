@@ -867,6 +867,9 @@ export default {
     },
     // 重新选择厨房
     selectKitchen(){
+      this.$router.push({
+          query:merge(this.$route.query,{'tabValue':this.tabValue , 'kitchen_id':this.sreach_kitchen_id})
+      })
       this.initData(this.sreach_kitchen_id);
     },
     
@@ -887,8 +890,9 @@ export default {
     },
     // 卡片路由
     setCard(num){
+      this.tabValue = num;
       this.$router.push({
-          query:merge(this.$route.query,{'tabValue':num})
+          query:merge(this.$route.query,{'tabValue':this.tabValue , 'kitchen_id':this.sreach_kitchen_id})
       })
     },
   },
@@ -904,11 +908,14 @@ export default {
       // 初始化函数
       this.kitchenList = dbody.data.list || [];
       if(this.kitchenList.length > 0){
-        this.sreach_kitchen_id = this.kitchenList[this.kitchenList.length - 1].id;
+        this.sreach_kitchen_id = this.$route.query.kitchen_id*1 || this.kitchenList[this.kitchenList.length - 1].id;
         this.initData(this.sreach_kitchen_id);
       }
     }) 
     this.tabValue = this.$route.query.tabValue || "1"
+    this.$router.push({
+        query:merge(this.$route.query,{'tabValue':this.tabValue , 'kitchen_id':this.sreach_kitchen_id})
+    })
   }
 }
 </script>

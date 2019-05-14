@@ -142,7 +142,7 @@
             </FormItem>
           </i-col>
         </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
+       <!--  <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="24">
             <FormItem label="退租表格">
               <Button type="primary" @click="showModal = true">增加一条</Button>
@@ -157,7 +157,7 @@
               </Table>
             </FormItem>
           </i-col>
-        </Row>
+        </Row> -->
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <FormItem>
             <Button @click="handleSubmit('formItem')" type="primary">提交</Button>

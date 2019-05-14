@@ -730,15 +730,15 @@ export default {
     },
     // 卡片路由
     setCard(num){
+      this.tabValue = num;
       this.$router.push({
-          query:merge(this.$route.query,{'tabValue':num})
+          query:merge(this.$route.query,{'tabValue':this.tabValue})
       })
     },
   },
   mounted () {
     let that = this;
     this.sreach_kitchen_id = this.$route.query.kitchen_id*1
-    console.log(this.sreach_kitchen_id)
     getKitchenList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
