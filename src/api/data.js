@@ -26,6 +26,28 @@ export const getAllShopList = ( info ) => {
 }
 
 /*
+  招商签约分析查询
+*/
+/*
+  start_time:'',
+  end_time:'',
+  id:'',
+*/
+/*
+  sign_analysis
+*/
+export const getSignShopList = ( info ) => {
+  return axios.request({
+    url: '/api/StoreLease/index',
+    params: info,
+    method: 'get'
+  })
+}
+
+
+
+
+/*
   获取权限下的厨房列表
 */
 /*

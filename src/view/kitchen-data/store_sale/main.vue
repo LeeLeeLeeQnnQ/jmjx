@@ -56,6 +56,7 @@ export default {
         {title: '押金', key: 'store_name'},
         {title: '入场费', key: 'store_name'},
         {title: '面积', key: 'store_name'},
+        {title: '增容', key: 'store_name'},
       ],
     }
   },

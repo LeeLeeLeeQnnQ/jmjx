@@ -6,7 +6,7 @@
           <DatePicker type="daterange" placeholder="选择时间段" style="min-width: 200px" @on-change="selectDate"></DatePicker>
         </i-col>
         <i-col>
-          <Select v-model="sreach_info.employee_id" clearable style="width: 200px" placeholder="选择招商人员">
+          <Select v-model="sreach_info.manage_lease_id" @on-change="selectManageLeaseId" clearable style="width: 200px" placeholder="选择招商人员">
             <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
           </Select>
         </i-col>
@@ -31,7 +31,7 @@
 import Tables from '_c/tables'
 // 权限
 // 
-import { getLeasingList} from '@/api/data'
+import { getLeasingList , getSignShopList } from '@/api/data'
 export default {
   name: 'sign_analysis',
   components: {
@@ -41,7 +41,7 @@ export default {
     return {
       // 搜索对象
       sreach_info:{
-        employee_id:'',
+        manage_lease_id:'',
         // 时间段
         start_time:'',
         end_time:'',
@@ -53,6 +53,7 @@ export default {
         {title: '厨房', key: 'kitchen_name'},
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
+        {title: '建档时间', key: 'create_time', width: 150,sortable: 'custom'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         { title: '店铺状态',
           render: (h, params) => {
@@ -70,11 +71,11 @@ export default {
             } 
           }
         },
-        {title: '面积', key: 'store_name'},
-        {title: '押金', key: 'store_name'},
-        {title: '租金', key: 'store_name'},
-        {title: '入场费', key: 'store_name'},
-        {title: '增容费', key: 'store_name'},
+        {title: '面积', key: 'area'},
+        {title: '押金', key: 'deposit_fee'},
+        {title: '租金', key: 'month_rent'},
+        {title: '入场费', key: 'entrance_fee'},
+        {title: '增容费', key: 'zr_fee'},
       ],
       // 数据
       sign_analysis_list: [],
@@ -97,6 +98,9 @@ export default {
     selectDate(date){
       this.sreach_info.start_time = date[0]
       this.sreach_info.end_time = date[1]
+      let info = Object.assign({}, this.sreach_info);
+      info.page = this.page.current_page;
+      this.initData(info)
     },
     // 获取招商经理
     getLeasingList(){
@@ -104,6 +108,11 @@ export default {
         const dbody = res.data
         this.leasingList = dbody.data
       })
+    },
+    // 选择招商经理
+    selectManageLeaseId(){
+      let info = Object.assign({}, this.sreach_info);
+      this.initData(info)
     },
     // 获取新页面
     getSignAnalysisNewPage(page){
@@ -125,11 +134,22 @@ export default {
     },
     // 获取列表数据
     initData(info){
-
+      getSignShopList(info).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.sign_analysis_list = res.data.data.list || [];
+        this.page = res.data.data.page
+      })
     },
     //初始化
     init(){
       this.getLeasingList();
+      this.initData();
     },
   },
   mounted () {

@@ -39,6 +39,13 @@
       <Tabs :animated="false" style="margin-top: 5px;" class="h100">
         <TabPane label="起租凭证">
           <Form :label-width="100">
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
+                <FormItem label="首期应缴款：">
+                  <h3>{{startNeedFee}}</h3>
+                </FormItem>
+              </i-col>
+            </Row>
             <FormItem label="起租凭证">
               <div class="img-upload-list" v-for="item in voucherinfo_pay">
                 <img :src="item">
@@ -124,6 +131,8 @@ export default {
       store_no: '',
       // 财务凭证
       voucherinfo_pay:[],
+      // 首期未缴
+      startNeedFee:0.00,
       vStartshowModal:false,
       v_start_tableData:[],
       // 获取起租表格下拉选项
@@ -184,6 +193,8 @@ export default {
       visible: false,
       // 允许起租弹窗
       startStoreModal:false,
+      // 基本信息
+      baseinfo:{}
     }
   },
   methods: {
@@ -366,6 +377,11 @@ export default {
       // 起租财务上传凭证
       this.voucherinfo_pay = this.trimNull(data.pay.split(',')) || [];
     },
+    // 获取首期未缴
+    getStartNeedFee(){
+      let num = ((this.baseinfo.month_rent*2)+this.baseinfo.deposit_fee*1+this.baseinfo.entrance_fee*1+this.baseinfo.zr_fee*1).toFixed(2) || '数据有误'
+      this.startNeedFee = num;
+    },
     // 获取起租表格
     getStartTable( ){
       getShopDetail({id: this.store_id, lease_type: 1}).then(res => {
@@ -377,6 +393,7 @@ export default {
           return
         }
         this.v_start_tableData =  dbody.data.rent || [];
+        this.getStartNeedFee();
       })
     },
     //初始化数据
@@ -385,6 +402,10 @@ export default {
       this.kitchen_name = data.kitchen_name;
       this.store_name = data.store_name;
       this.store_no = data.store_no;
+      this.baseinfo.month_rent = data.month_rent || '';
+      this.baseinfo.deposit_fee = data.deposit_fee || '';
+      this.baseinfo.entrance_fee = data.entrance_fee || '';
+      this.baseinfo.zr_fee = data.zr_fee || '';
       this.initVoucherinfo(data);
     }
   },

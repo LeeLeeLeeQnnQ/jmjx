@@ -393,25 +393,34 @@ export default {
           switch ( k ) {
             case 'deposit_fee':
               ii.title = "押金"
-              ii.money = data[k]
+              ii.money =(data[k]*1).toFixed(2)
               ii.rent_type = 2
-              ii.remark = '押金退换'
+              ii.remark = '押金退还'
               this.end_tableData.unshift(ii)
               break;
             case 'rent_fee':
               ii.title = "租金"
-              ii.money = data[k]
+              ii.money =  Math.abs(data[k]).toFixed(2)
               ii.rent_type = data[k]*1 > 0 ? 1 : 2 
-              ii.remark = '租金退换'
+              ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\r\n"+'【应缴房租：'+data["payable_rent_fee"]+'】'
               this.end_tableData.unshift(ii)
               break;
             case 'bill_fee':
-              ii.title = "未缴款"
-              ii.money = data[k]
-              ii.rent_type = data[k]*1 > 0 ? 1 : 2 
-              ii.remark = '未缴款'
-              this.end_tableData.unshift(ii)
-              break;
+              if(!!data['is_bill']){
+                ii.title = "未缴款"
+                ii.money = Math.abs(data[k]).toFixed(2)
+                ii.rent_type = data[k]*1 > 0 ? 1 : 2 
+                ii.remark = '未缴款'
+                this.end_tableData.unshift(ii)
+                break;
+              }else{
+                ii.title = "未缴款账单未出"
+                ii.money = '0'
+                ii.rent_type = 1 
+                ii.remark = '未缴款账单未出'
+                this.end_tableData.unshift(ii)
+                break;
+              }
 
           }
         };

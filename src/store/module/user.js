@@ -87,14 +87,6 @@ export default {
             getUserInfo(token).then(res => {
               const dbody = res.data
               const data = dbody.data
-              if (dbody.code != 0) {
-                commit('setUsername', '')
-                commit('setToken', '')
-                commit('setAccess', [])
-                commit('sethasGetInfo', false)
-                resolve(data)
-                return
-              }
               let arr = []
               data.access.forEach(function (element, index) {
                 arr.push(element.id*1)
@@ -105,6 +97,8 @@ export default {
             }).catch(err => {
               reject(err)
             })
+          }else{
+            console.log(token)
           }
         } catch (error) {
           reject(error)

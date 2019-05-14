@@ -39,21 +39,23 @@ router.beforeEach((to, from, next) => {
     if (store.state.user.hasGetInfo) {
       turnTo(to, store.state.user.access, next)
     } else {
-      store.dispatch('setUserInfo').then(res => {
-        let user = res.data;
-        if (!user.access || user.access.length <= 0) {
-          next({
-            name: LOGIN_PAGE_NAME // 跳转到登录页
+      setTimeout(function(){
+        store.dispatch('setUserInfo').then(res => {
+          let user = res.data;
+          if (!user.access || user.access.length <= 0) {
+            next({
+              name: LOGIN_PAGE_NAME // 跳转到登录页
+            })
+            return
+          }
+          let access = user.access
+          let arr = []
+          access.forEach(function (element, index) {
+            arr.push(element.id*1)
           })
-          return
-        }
-        let access = user.access
-        let arr = []
-        access.forEach(function (element, index) {
-          arr.push(element.id*1)
+          turnTo(to, arr, next)
         })
-        turnTo(to, arr, next)
-      })
+      },200)
     }
   }
 })

@@ -183,6 +183,12 @@ export default {
             } 
           }
         },
+        { title: '首期未缴',
+          render: (h, params) => {
+            let unpaid_fee = params.row.unpaid_fee*1
+            return h('span', unpaid_fee)
+          }
+        },
         {title: '操作状态',
           render: (h, params) => {
             let confirm_time = params.row.confirm_time*1

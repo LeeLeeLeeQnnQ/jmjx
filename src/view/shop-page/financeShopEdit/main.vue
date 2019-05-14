@@ -125,6 +125,13 @@
         </TabPane>
         <TabPane label="起租凭证">
           <Form :label-width="100">
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
+                <FormItem label="首期应缴款：">
+                  <h3>{{startNeedFee}}</h3>
+                </FormItem>
+              </i-col>
+            </Row>
             <FormItem label="起租凭证">
               <div class="img-upload-list" v-for="item in voucherinfo_pay">
                 <img :src="item">
@@ -214,6 +221,8 @@ export default {
       voucherinfo:{},
       // 财务凭证
       voucherinfo_pay:[],
+      // 首期未缴
+      startNeedFee:0.00,
       vStartshowModal:false,
       v_start_tableData:[],
       // 获取起租表格下拉选项
@@ -602,6 +611,11 @@ export default {
       // 起租财务上传凭证
       this.voucherinfo_pay = this.trimNull(data.pay.split(',')) || [];
     },
+    // 获取首期未缴
+    getStartNeedFee(){
+      let num = ((this.baseinfo.month_rent*2)+this.baseinfo.deposit_fee*1+this.baseinfo.entrance_fee*1+this.baseinfo.zr_fee*1).toFixed(2) || '数据有误'
+      this.startNeedFee = num;
+    },
     // 获取起租表格
     getStartTable( ){
       getShopDetail({id: this.store_id, lease_type: 1}).then(res => {
@@ -613,6 +627,7 @@ export default {
           return
         }
         this.v_start_tableData =  dbody.data.rent || [];
+        this.getStartNeedFee();
       })
     },
     //初始化数据
