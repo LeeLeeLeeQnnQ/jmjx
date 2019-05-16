@@ -30,7 +30,7 @@
 <script>
 import Tables from '_c/tables'
 // 权限
-// 
+// Index/getEmployeeList,StoreLease/index
 import { getLeasingList , getSignShopList } from '@/api/data'
 export default {
   name: 'sign_analysis',

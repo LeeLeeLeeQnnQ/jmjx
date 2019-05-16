@@ -20,7 +20,7 @@
 <script>
 import Tables from '_c/tables'
 // 权限
-// Kitchen/index,KitchenStore/index
+// Kitchen/index,KitchenStore/querylist
 import { getKitchenList , getKitchenStoreQueryList } from '@/api/setting'
 export default {
   name: 'kitchen-data-store-sale',

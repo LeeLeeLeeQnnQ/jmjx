@@ -145,7 +145,7 @@ export default [
         meta: {
           icon: '_zitigui',
           title: '销控分析',
-          // access: [204]
+          access: [204]
         },
         component: () => import('@/view/kitchen-data/store_sale/main.vue')
       },
@@ -355,7 +355,7 @@ export default [
         meta: {
           icon: '_yingyongchengxu-xianxing',
           title: '签约分析',
-          // access: [406]
+          access: [406]
         },
         component: () => import('@/view/canvass/sign_analysis/main.vue')
       },
