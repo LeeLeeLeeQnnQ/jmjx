@@ -39,7 +39,11 @@
           <p>{{print_info.rent_overdue_fee}}元</p>
         </div>
         <div class="page_main_item">
-          <span><i>8.</i>应付款合计：</span>
+          <span><i>8.</i>房租减免金额：</span>
+          <p>{{print_info.rent_exempt_fee}}元</p>
+        </div>
+        <div class="page_main_item">
+          <span><i>9.</i>应付款合计：</span>
           <p>{{total}}元 </p>
         </div>
     </div>
@@ -125,7 +129,7 @@ export default {
       this.month = arr[1] || '';
       this.lastday = this.getCurrentMonthLast(date);
       this.currentdate = this.getCurentTime();
-      this.total = (info.rent_fee*1 + info.rent_overdue_fee*1).toFixed(2);
+      this.total = (info.rent_fee*1 + info.rent_overdue_fee*1 - info.rent_exempt_fee*1).toFixed(2);
     },
   },
   created () {
@@ -161,7 +165,7 @@ export default {
     }
     .page{
       box-sizing: border-box;
-      padding: 100px 110px;
+      padding: 70px 110px 50px;
     }
     
     .page h4{
@@ -199,6 +203,7 @@ export default {
       /*padding: 0 3em 2px;*/
       padding-bottom: 2px;
       width: 300px;
+      height: 2em;
     }
 
     .page_footer{

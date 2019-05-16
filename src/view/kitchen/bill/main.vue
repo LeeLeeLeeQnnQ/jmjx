@@ -97,6 +97,9 @@
             <FormItem label="其他费用" class="cellTit">
                 <span>{{viewItem.other_fee}}</span>
             </FormItem>
+            <FormItem label="经营费用减免" class="cellTit">
+                <span>{{viewItem.operate_exempt_fee}}</span>
+            </FormItem>
           </i-col>
         </Row>
         <Card shadow>
@@ -193,6 +196,13 @@
             <i-col span="10">
               <FormItem label="滞纳金">
                 <Input v-model="storeRentBill.rent_overdue_fee" style="width: 200px" ></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row type="flex" justify="start" align="middle" :gutter="20">
+            <i-col span="10">
+              <FormItem label="房租减免">
+                <Input v-model="storeRentBill.rent_exempt_fee" style="width: 200px" ></Input>
               </FormItem>
             </i-col>
           </Row>
@@ -428,6 +438,11 @@
                     <Input v-model="paymentItem.other_fee" @on-change="updateComputedPaper"></Input>
                 </FormItem>
               </i-col>
+              <i-col span="8">
+                <FormItem label="经营费用减免">
+                    <Input v-model="paymentItem.operate_exempt_fee" @on-change="updateComputedPaper"></Input>
+                </FormItem>
+              </i-col>
             </Row>
           </Card>
            <Card style="border:1px solid #2db7f5;margin-top: 5px;" title="备注">
@@ -560,7 +575,7 @@ export default {
                   }
                 }},
               '经营费用')
-            }
+            },
           ]
         },
         {
@@ -657,6 +672,7 @@ export default {
       this.storeRentBill.id = params.row.id;
       this.storeRentBill.rent_fee = params.row.rent_fee;
       this.storeRentBill.rent_overdue_fee = params.row.rent_overdue_fee;
+      this.storeRentBill.rent_exempt_fee = params.row.rent_exempt_fee;
       this.storeRentBill.month = params.row.month;
       this.storeRentBill.store_name = params.row.store_name;
       this.showEditStoreRentBillModal = true;
@@ -739,6 +755,7 @@ export default {
       total = info.project_fee*1 + total;
       total = info.taxes_fee*1 + total;
       total = info.operate_overdue_fee*1 + total;
+      total = total - info.operate_exempt_fee*1;
       return total.toFixed(2);
     },
     // 获取账单列表

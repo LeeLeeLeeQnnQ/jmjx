@@ -108,7 +108,7 @@
 import Tables from '_c/tables'
 import merge from 'webpack-merge'
 // 权限
-// /api/Kitchen/index,/api/StoreLease/index
+// Kitchen/index,StoreLease/index
 import { getKitchenList } from '@/api/setting'
 import { getAllShopList } from '@/api/data'
 export default {

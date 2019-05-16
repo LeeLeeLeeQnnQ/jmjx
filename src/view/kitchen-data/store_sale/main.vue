@@ -7,20 +7,12 @@
             <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
           </Select>
         </i-col>
-<!--         <i-col :xs="4" :md="4" :lg="4">
-          <DatePicker type="datetime" format="yyyy-MM-dd" placeholder="选择时间" style="width: 200px"></DatePicker>
-        </i-col> -->
       </Row>
     </Card>
     <Card shadow style="margin-top: 5px;">
       <tables
         v-model="alive_store_list"
         :columns="alive_store_columns"/>
-      <Page
-        :total="page.total"
-        :page-size="page.list_rows"
-        style="margin-top:10px;"
-        @on-change="getNewPage"/>
     </Card>
   </div>
 </template>
@@ -28,10 +20,10 @@
 <script>
 import Tables from '_c/tables'
 // 权限
-// Kitchen/index
-import { getKitchenList } from '@/api/setting'
+// Kitchen/index,KitchenStore/index
+import { getKitchenList , getKitchenStoreQueryList } from '@/api/setting'
 export default {
-  name: 'kitchen-data-store-list',
+  name: 'kitchen-data-store-sale',
   components: {
     Tables
   },
@@ -47,35 +39,85 @@ export default {
         total: 0
       },
       // 列表数据
+      // 1租赁中2转租中3起租中4空闲中
       alive_store_list:[],
       alive_store_columns:[
-        {title: '档口', key: 'store_no'},
+        {title: '档口', key: 'store_no',"sortable": true,},
+        {title: '面积', key: 'area',"sortable": true,},
         {title: '档口状态', key: 'store_no'},
+        {
+          "title": "档口状态",
+          "key": "store_status",
+          "width": 150,
+          "sortable": true,
+          filters: [
+              {
+                  label: '租赁中',
+                  value: 1
+              },
+              {
+                  label: '转租中',
+                  value: 2
+              },
+              {
+                  label: '起租中',
+                  value: 3
+              },
+              {
+                  label: '空闲中',
+                  value: 4
+              }
+          ],
+          filterMethod (value, row) {
+              return (row.store_status*1 == value);
+          },
+          render: (h, params) => {
+            let store_status = params.row.store_status*1;
+            switch (store_status) {
+              case 1:
+                return h('span', { style: {color: '#ff9900'}} ,'租赁中')
+                break;
+              case 2:
+                return h('span', { style: {color: '#2d8cf0'}} ,  '转租中')
+                break;
+              case 3:
+                return h('span',  { style: {color: '#19be6b'}} ,  '起租中')
+                break;
+              case 4:
+                return h('span', { style: {color: '#000000'}} ,'空闲中')
+                break;
+            }
+          }
+        },
+        {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_name'},
-        {title: '租金', key: 'store_name'},
-        {title: '押金', key: 'store_name'},
-        {title: '入场费', key: 'store_name'},
-        {title: '面积', key: 'store_name'},
-        {title: '增容', key: 'store_name'},
+        {title: '租金', key: 'rent_fee',"sortable": true,},
+        {title: '押金', key: 'store_deposit_fee',"sortable": true,},
+        {title: '入场费', key: 'store_entrance_fee',"sortable": true,},
+        {title: '增容', key: 'store_zr_fee',"sortable": true,},
       ],
     }
   },
   methods: {
-    getNewPage( page ){
-      let info = {};
-      info.kitchen_id = this.sreach_kitchen_id;
-      info.date = this.sreach_kitchen_id;
-      info.page = page;
-      this.initData(info);
+    // 重新选择厨房
+    selectKitchen(){
+      this.init();
     },
-    initData(info){
-
+    initData( info ){
+      getKitchenStoreQueryList( info ).then(res => {
+        const dbody = res.data;
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.alive_store_list = dbody.data  || [];
+      })
     },
     init( ){
       let info = {};
       info.kitchen_id = this.sreach_kitchen_id;
-      info.date = this.sreach_kitchen_id;
-      info.page = this.page.current_page;
       this.initData(info);
     },
   },
@@ -93,6 +135,7 @@ export default {
       if(this.kitchenList.length > 0){
         this.sreach_kitchen_id = this.kitchenList[this.kitchenList.length-1].id;
       }
+      this.init();
     })  
   }
 }

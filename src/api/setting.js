@@ -115,6 +115,23 @@ export const getKitchenStoreList = ( data ) => {
     method: 'get'
   })
 }
+
+/*
+  获取厨房下的档口列表
+*/
+/*
+  kitchen_id : 1
+*/
+/*
+  kitchen-data-kitchen-detail -- 档口列表 标签
+*/
+export const getKitchenStoreQueryList = ( data ) => {
+  return axios.request({
+    url: '/api/KitchenStore/querylist',
+    params: data,
+    method: 'get'
+  })
+}
 /*
   添加厨房下的档口
 */

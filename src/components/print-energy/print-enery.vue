@@ -168,6 +168,14 @@
                 <td></td>
                 <td>{{print_info.operating_fee}}</td>
               </tr>
+              <tr align="left">
+                <td>经营费用减免</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>{{print_info.operate_exempt_fee}}</td>
+              </tr>
               <tr align="left" class="last_tr">
                 <td>合计缴款</td>
                 <td></td>

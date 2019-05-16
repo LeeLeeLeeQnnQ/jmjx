@@ -2,7 +2,7 @@
   <div>
     <!-- 展示模版 -->
     <Modal title="账单信息" v-model="viewModal" scrollable>
-      <Form :label-width="110">
+      <Form :label-width="90">
         <Row type="flex" justify="start" align="middle" :gutter="20">
             <FormItem label="店铺名称" class="cellTit">
                 <span>{{viewItem.store_name}}</span>
@@ -97,6 +97,9 @@
             <FormItem label="其他费用" class="cellTit">
                 <span>{{viewItem.other_fee}}</span>
             </FormItem>
+            <FormItem label="经营费用减免" class="cellTit">
+                <span>{{viewItem.operate_exempt_fee}}</span>
+            </FormItem>
           </i-col>
         </Row>
         <Card shadow>
@@ -150,6 +153,39 @@
           <FormItem label="留言" class="cellTit">
               <span>{{viewItem.remark}}</span>
           </FormItem>
+        </Row>
+      </Form>
+    </Modal>
+    <Modal title="房租信息" v-model="viewRentModal" scrollable>
+      <Form :label-width="110">
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+            <FormItem label="店铺名称" class="cellTit">
+                <span>{{viewRentItem.store_name}}</span>
+            </FormItem>
+            <FormItem label="档口编号" class="cellTit">
+                <span>{{viewRentItem.store_no}}</span>
+            </FormItem>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+            <FormItem label="账单月份" class="cellTit">
+                <span>{{viewRentItem.month}}</span>
+            </FormItem>
+            <FormItem label="厨房名称" class="cellTit">
+                <span>{{viewRentItem.kitchen_name}}</span>
+            </FormItem>
+        </Row>
+        <Row>
+          <i-col span="24">
+            <FormItem label="房租" class="cellTit">
+                <span>{{viewRentItem.rent_fee}}</span>
+            </FormItem>
+            <FormItem label="房租滞纳金" class="cellTit">
+                <span>{{viewRentItem.rent_overdue_fee}}</span>
+            </FormItem>
+            <FormItem label="房租减免金额" class="cellTit">
+                <span>{{viewRentItem.rent_exempt_fee}}</span>
+            </FormItem>
+          </i-col>
         </Row>
       </Form>
     </Modal>
@@ -249,7 +285,8 @@
       <tables 
         :columns="bill_columns"
         v-model="bill_list"
-        @data-view-rent="viewEnergyBill"
+        @data-view-energy="viewEnergyBill"
+        @data-view-rent="viewRentBill"
         @data-add="showAddStorePay"
         @data-print-energy="printEnergyBill"
         @data-print-rent="printRentBill"
@@ -362,7 +399,7 @@ export default {
         {
           title: '查看',
           key: 'handle',
-          width :90,
+          width :150,
           button: [
             (h, params, vm) => {
               return h('Button', {
@@ -372,10 +409,24 @@ export default {
                 },
                 on: {
                   'click': () => {
-                    vm.$emit('data-view-rent', params)
+                    vm.$emit('data-view-energy', params)
                   }
                 }},
               '经营费用')
+            },
+            (h, params, vm) => {
+              return h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                style: {marginLeft: '8px'},
+                on: {
+                  'click': () => {
+                    vm.$emit('data-view-rent', params)
+                  }
+                }},
+              '房租')
             }
           ]
         },
@@ -533,11 +584,14 @@ export default {
       // 查看能源账单
       viewModal:false,
       viewItem:{},
+      // 查看房租
+      viewRentModal:false,
+      viewRentItem:{},
       // 打印经营费用数据
       print_energy_info:{},
       print_energy_str:"@page{size:A4;margin:0}@media print{*{font-size:9pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.page{box-sizing:border-box;padding:22px;padding-top:20px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:.9em}.page_head_left,.page_head_right{display:inline-block;width:50%;float:left}.table_box table{width:100%;border-spacing:0;border-collapse:collapse;border:1px solid gray;margin-top:5px}.table_box table th{border:1px solid gray;padding:3px}.table_box table td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr td{border:0;border-top:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr .total_td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .last_tr{border-top:1px solid gray}.page_footer{padding:5px;line-height:.9em}.page_footer .zhanghao{overflow:hidden;margin-bottom:10px}.page_footer .zhanghao>div{display:inline-block;float:left}.page_footer .zhanghao .line_box{float:right;margin-right:100px;text-align:center}.page_footer .zhanghao .line_box .line{width:240px;height:14px;border-bottom:1px solid #000;margin-bottom:5px}.page_footer .contect p{margin-top:8px;width:50%;display:inline-block}",
       print_rent_info:{},
-      print_rent_str:"@page{size:A4;margin:0}@media print{*{font-size:10pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.ti2{text-indent:2em}.page{box-sizing:border-box;padding:90px 110px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:12pt}.page_main .page_main_item{text-indent:2em;display:flex;justify-content:flex-start;align-items:center;height:3em}.page_main .page_main_item span{width:150px}.page_main .page_main_item i{font-style:normal;font-weight:400}.page_main .page_main_item p{border-bottom:1px solid #000;text-align:center;text-indent:0;padding-bottom:2px;width:300px}.page_footer{padding:5px;line-height:.9em}.page_footer_top{text-indent:2em;line-height:12pt;margin:2em 0}.page_footer_main{line-height:15pt;margin:2em 0}.page_footer_bottom{line-height:15pt;text-align:right}"
+      print_rent_str:"@page{size:A4;margin:0}@media print{*{font-size:10pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.ti2{text-indent:2em}.page{box-sizing:border-box;padding: 70px 110px 50px;}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:12pt}.page_main .page_main_item{text-indent:2em;display:flex;justify-content:flex-start;align-items:center;height:3em}.page_main .page_main_item span{width:150px}.page_main .page_main_item i{font-style:normal;font-weight:400}.page_main .page_main_item p{border-bottom:1px solid #000;text-align:center;text-indent:0;padding-bottom:2px;width:300px;height:1.25em;}.page_footer{padding:5px;line-height:.9em}.page_footer_top{text-indent:2em;line-height:12pt;margin:2em 0}.page_footer_main{line-height:15pt;margin:2em 0}.page_footer_bottom{line-height:15pt;text-align:right}"
     }
   },
   methods: {
@@ -708,6 +762,12 @@ export default {
       this.viewItem.energy_value = this.viewItem.water_value - this.viewItem.energy_end;
       this.viewItem.total = this.getPayItemTotal(this.viewItem);
       this.viewModal = true;
+    },
+    // 查看房租
+    viewRentBill(params){
+      this.viewRentItem = {};
+      this.viewRentItem = params.row;
+      this.viewRentModal = true;
     },
     // 打印能源账单
     printEnergyBill(params){
