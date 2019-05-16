@@ -836,6 +836,7 @@ export default {
       total = info.project_fee*1 + total;
       total = info.taxes_fee*1 + total;
       total = info.operate_overdue_fee*1 + total;
+      total = total - info.operate_exempt_fee*1;
       return total.toFixed(2);
     },
     // 获取账单列表
