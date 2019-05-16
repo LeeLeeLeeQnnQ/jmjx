@@ -511,7 +511,8 @@ export default {
           render: (h, params) => {
             let operate_fee = params.row.operate_fee;
             let operate_overdue_fee = params.row.operate_overdue_fee;
-            let fee = (operate_fee*1 + operate_overdue_fee*1).toFixed(2);
+            let operate_exempt_fee = params.row.operate_exempt_fee;
+            let fee = (operate_fee*1 + operate_overdue_fee*1 - operate_exempt_fee*1).toFixed(2);
             return h('span', fee)
           }
         },
@@ -519,7 +520,8 @@ export default {
           render: (h, params) => {
             let rent_fee = params.row.rent_fee;
             let rent_overdue_fee = params.row.rent_overdue_fee;
-            let fee = (rent_fee*1 + rent_overdue_fee*1).toFixed(2);
+            let rent_exempt_fee = params.row.rent_exempt_fee;
+            let fee = (rent_fee*1 + rent_overdue_fee*1 - rent_exempt_fee*1).toFixed(2);
             return h('span', fee)
           }
         },
