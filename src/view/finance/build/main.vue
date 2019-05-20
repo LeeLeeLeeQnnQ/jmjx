@@ -11,6 +11,18 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
+            <FormItem label="签约时间" prop="sign_date">
+              <DatePicker :value="formItem.sign_date" format="yyyy-MM-dd" type="date" placeholder="签约时间" style="width: 200px" @on-change="setSignDate" ></DatePicker>
+            </FormItem>
+          </i-col>
+          <i-col span="10" offset="2">
+            <FormItem label="客户ID" prop="customer_id">
+              <Input v-model="formItem.customer_id" placeholder="客户ID"></Input>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
             <FormItem label="店主姓名" prop="shopkeeper">
                 <Input v-model="formItem.shopkeeper" placeholder="输入店铺负责人信息"></Input>
             </FormItem>
@@ -173,9 +185,9 @@
 
 <script>
 //权限
-// /api/StoreLease/add,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/Index/getEmployeeList,/api/Index/getWorkCategory
+// /api/StoreLease/add,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/Index/getEmployeeList,/api/Index/getWorkCategory,Clue/existCustomer
 import { setKitchen } from '@/api/finance'
-import { getKitchenList, getStoreNoList, getLeasingList, getManageList ,getWorkCategoryList} from '@/api/data'
+import { getKitchenList, getStoreNoList, getLeasingList, getManageList ,getWorkCategoryList , isExistCustome } from '@/api/data'
 export default {
   name: 'build-kichen',
   data () {
@@ -197,6 +209,13 @@ export default {
       ruleValidate: {
         store_name: [
           { required: true, message: '店铺姓名不能为空', trigger: 'blur' },
+          { type: 'string', max: 50, message: '标题不能超过50个字', trigger: 'blur' }
+        ],
+        sign_date: [
+          { required: true, message: '签约时间不能为空', trigger: 'blur' },
+        ],
+        customer_id: [
+          { required: true, message: '客户ID不能为空', trigger: 'blur' },
           { type: 'string', max: 50, message: '标题不能超过50个字', trigger: 'blur' }
         ],
         shopkeeper: [
@@ -313,6 +332,10 @@ export default {
     }
   },
   methods: {
+    // 设置签约时间
+    setSignDate(date){
+      this.formItem.sign_date = date;
+    },
     setModalTitle(){
       let that = this;
       let id = this.modalItem.category_id;
@@ -390,13 +413,45 @@ export default {
         return '0.00'
       }
     },
+    // 客户是否存在
+    isExistCustome(obj){
+      let info = { customer_id : obj.customer_id }
+      isExistCustome( info ).then(res => {
+        let dbody = res.data;
+        if (dbody.code == 0) {
+          let data = dbody.data;
+          if(!!data){
+            if (this.submitValidateField(obj)) {
+              this.setOrderInfo(obj)
+            }
+            return true
+          }else{
+            this.$Notice.warning({
+              title: '请输入正确客户ID！'
+            })
+            return false
+          }
+        }else{
+          this.$Notice.warning({
+            title: '请输入正确客户ID！'
+          })
+          return false
+        }
+      })
+    },
     // 提交验证器
-    submitValidateField: function (obj) {
+    submitValidateField(obj) {
       obj.store_name = obj.store_name.trim()
       let priceReg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
       if (!obj.store_name) {
         this.$Notice.warning({
           title: '请输入正确标题！'
+        })
+        return false
+      }
+      if (!obj.sign_date) {
+        this.$Notice.warning({
+          title: '请选择正确签约时间！'
         })
         return false
       }
@@ -461,15 +516,15 @@ export default {
         })
         return false
       };
-      if (!obj.entrance_fee || obj.entrance_fee * 1 < 0 || !priceReg.test(obj.entrance_fee)) {
+      if ( obj.entrance_fee * 1 < 0 || !obj.entrance_fee ||  !priceReg.test(obj.entrance_fee)) {
         this.$Notice.warning({
           title: '请输入正确入场费！'
         })
         return false
       };
-      if (!obj.zr_fee || obj.zr_fee * 1 < 0 || !priceReg.test(obj.zr_fee)) {
+      if ( obj.zr_fee * 1 < 0 || !obj.zr_fee ||  !priceReg.test(obj.zr_fee)) {
         this.$Notice.warning({
-          title: '请输入正确增容费费！'
+          title: '请输入正确增容费！'
         })
         return false
       };
@@ -479,9 +534,7 @@ export default {
     handleSubmit () {
       this.formItem.pay = this.uploadList
       this.formItem.rent = this.tableData
-      if (this.submitValidateField(this.formItem)) {
-        this.setOrderInfo(this.formItem)
-      }
+      this.isExistCustome(this.formItem)
     },
     // 发送数据
     setOrderInfo (info) {

@@ -48,6 +48,18 @@
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
+                <FormItem label="签约时间" prop="sign_date">
+                  <DatePicker :value="baseinfo.sign_date" format="yyyy-MM-dd" type="date" placeholder="签约时间" style="width: 200px" @on-change="setSignDate" ></DatePicker>
+                </FormItem>
+              </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="客户ID" prop="customer_id">
+                  <Input v-model="baseinfo.customer_id" placeholder="客户ID"></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
                 <FormItem label="店主姓名">
                   <Input v-model="baseinfo.shopkeeper" placeholder="输入店主姓名"></Input>
                 </FormItem>
@@ -191,8 +203,8 @@
 
 <script>
 // 权限
-// /api/Index/getEmployeeList,/api/Index/getEmployeeList,/api/StoreLease/show,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/StoreLease/edit
-import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , getWorkCategoryList } from '@/api/data'
+// /api/Index/getEmployeeList,/api/Index/getEmployeeList,/api/StoreLease/show,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/StoreLease/edit, ,Clue/existCustomer
+import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , getWorkCategoryList ,isExistCustome } from '@/api/data'
 export default {
   name: 'finance-store-edit',
   data () {
@@ -317,21 +329,49 @@ export default {
     },
     // 提交基本卡片
     baseinfoSubmit(){
-      if (this.baseinfoSubmitValidateField(this.baseinfo)) {
-        this.baseinfo.store_id = this.store_id;
-        setStartShopEdit(this.baseinfo).then(res => {
-          const dbody = res.data
-          if (dbody.code == 0) {
+      this.isExistCustome(this.baseinfo)
+    },
+    // 设置签约时间
+    setSignDate(date){
+      this.baseinfo.sign_date = date;
+    },
+    // 客户是否存在
+    isExistCustome(obj){
+      let info = { customer_id : obj.customer_id }
+      isExistCustome( info ).then(res => {
+        let dbody = res.data;
+        if (dbody.code == 0) {
+          let data = dbody.data;
+          if(!!data){
+            if (this.baseinfoSubmitValidateField(obj)) {
+              obj.store_id = this.store_id;
+              setStartShopEdit(obj).then(res => {
+                const dbody = res.data
+                if (dbody.code == 0) {
+                  this.$Notice.warning({
+                    title: '信息提交完成！'
+                  })
+                } else {
+                  this.$Notice.warning({
+                    title: dbody.msg
+                  })
+                }
+              })
+            }
+            return
+          }else{
             this.$Notice.warning({
-              title: '信息提交完成！'
+              title: '请输入正确客户ID！'
             })
-          } else {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
+            return false
           }
-        })
-      }
+        }else{
+          this.$Notice.warning({
+            title: '请输入正确客户ID！'
+          })
+          return false
+        }
+      })
     },
     // 提交验证器
     baseinfoSubmitValidateField(obj) {
@@ -340,6 +380,12 @@ export default {
       if (!obj.store_name) {
         this.$Notice.warning({
           title: '请输入正确标题！'
+        })
+        return false
+      }
+      if (!obj.sign_date) {
+        this.$Notice.warning({
+          title: '请选择正确签约时间！'
         })
         return false
       }
@@ -392,15 +438,15 @@ export default {
         })
         return false
       };
-      if (!obj.entrance_fee || obj.entrance_fee * 1 < 0 || !priceReg.test(obj.entrance_fee)) {
+      if ( obj.entrance_fee * 1 < 0 || !obj.entrance_fee ||  !priceReg.test(obj.entrance_fee)) {
         this.$Notice.warning({
           title: '请输入正确入场费！'
         })
         return false
       };
-      if (!obj.zr_fee || obj.zr_fee * 1 < 0 || !priceReg.test(obj.zr_fee)) {
+      if (obj.zr_fee * 1 < 0 || !obj.zr_fee ||  !priceReg.test(obj.zr_fee)) {
         this.$Notice.warning({
-          title: '请输入正确容费费！'
+          title: '请输入正确增容费！'
         })
         return false
       };
@@ -568,6 +614,8 @@ export default {
       this.baseinfo.deposit_fee = data.deposit_fee || '';
       this.baseinfo.entrance_fee = data.entrance_fee || '';
       this.baseinfo.zr_fee = data.zr_fee || '';
+      this.baseinfo.sign_date = data.sign_date || '';
+      this.baseinfo.customer_id = data.customer_id || '';
       getManageList().then(res => {
         const dbody = res.data
         let that = this

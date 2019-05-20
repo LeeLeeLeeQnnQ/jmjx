@@ -78,6 +78,18 @@
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
+                <FormItem label="签约时间" prop="sign_date">
+                  <DatePicker :value="baseinfo.sign_date" format="yyyy-MM-dd" type="date" placeholder="签约时间" style="width: 200px" @on-change="setSignDate" ></DatePicker>
+                </FormItem>
+              </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="客户ID" prop="customer_id">
+                  <Input v-model="baseinfo.customer_id" placeholder="客户ID"></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
                 <FormItem label="店主姓名">
                   <Input v-model="baseinfo.shopkeeper" placeholder="输入店主姓名"></Input>
                 </FormItem>
@@ -248,7 +260,7 @@
                 <i-col span="22" style="margin-top:8px;">
                   <Table :columns="end_tableColumns" :data="end_tableData">
                     <div slot="footer" class="tableFooter">
-                      <h3>总计： {{ endTableTotal }}</h3>
+                      <h3>{{ endTableTotal }}</h3>
                     </div>
                   </Table>
                 </i-col>
@@ -269,8 +281,8 @@
 
 <script>
   // 权限
-// Index/getEmployeeList,Index/getEmployeeList,StoreLease/show,Index/getKitchenList,Index/getStoreNo,StoreLease/edit,Index/getWorkCategory,StoreLease/refund
-import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , setEndShopEdit , getWorkCategoryList , getRefundData  } from '@/api/data'
+// Index/getEmployeeList,Index/getEmployeeList,StoreLease/show,Index/getKitchenList,Index/getStoreNo,StoreLease/edit,Index/getWorkCategory,StoreLease/refund,Clue/existCustomer
+import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , setEndShopEdit , getWorkCategoryList , getRefundData , isExistCustome  } from '@/api/data'
 export default {
   name: 'finance-store-edit2',
   data () {
@@ -369,19 +381,22 @@ export default {
           key: 'title'
         },
         {
-          title: '收支',
-          key: 'rent_type',
-          render: (h, params) => {
-            return h('strong', params.row.rent_type*1 == 1 ? '扣减' : '退款')
-          }
-        },
-        {
           title: '数量',
           key: 'quantity'
         },
         {
           title: '金额',
-          key: 'money'
+          key: 'money',
+          render: (h, params) => {
+            let money = params.row.money;
+            if(params.row.rent_type*1 == 1){
+              let str =  '+' + money
+              return h('strong', { style: {color: 'green'}} , str )
+            }else{
+              let str =  '-' + money
+              return h('strong',  { style: {color: 'red'}}  , str )
+            }
+          }
         },
         {
           title: '备注',
@@ -450,23 +465,51 @@ export default {
         this.shopList = dbody.data || [];
       })
     },
+    // 设置签约时间
+    setSignDate(date){
+      this.baseinfo.sign_date = date;
+    },
+    // 客户是否存在
+    isExistCustome(obj){
+      let info = { customer_id : obj.customer_id }
+      isExistCustome( info ).then(res => {
+        let dbody = res.data;
+        if (dbody.code == 0) {
+          let data = dbody.data;
+          if(!!data){
+            if (this.baseinfoSubmitValidateField(obj)) {
+              obj.store_id = this.store_id;
+              setStartShopEdit(obj).then(res => {
+                const dbody = res.data
+                if (dbody.code == 0) {
+                  this.$Notice.warning({
+                    title: '信息提交完成！'
+                  })
+                } else {
+                  this.$Notice.warning({
+                    title: dbody.msg
+                  })
+                }
+              })
+            }
+            return
+          }else{
+            this.$Notice.warning({
+              title: '请输入正确客户ID！'
+            })
+            return false
+          }
+        }else{
+          this.$Notice.warning({
+            title: '请输入正确客户ID！'
+          })
+          return false
+        }
+      })
+    },
     // 提交基本卡片
     baseinfoSubmit(){
-      if (this.baseinfoSubmitValidateField(this.baseinfo)) {
-        this.baseinfo.store_id = this.store_id;
-        setStartShopEdit(this.baseinfo).then(res => {
-          const dbody = res.data
-          if (dbody.code == 0) {
-            this.$Notice.warning({
-              title: '信息提交完成！'
-            })
-          } else {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
-          }
-        })
-      }
+      this.isExistCustome(this.baseinfo)
     },
     // 提交验证器
     baseinfoSubmitValidateField(obj) {
@@ -475,6 +518,12 @@ export default {
       if (!obj.store_name) {
         this.$Notice.warning({
           title: '请输入正确标题！'
+        })
+        return false
+      }
+      if (!obj.sign_date) {
+        this.$Notice.warning({
+          title: '请选择正确签约时间！'
         })
         return false
       }
@@ -527,15 +576,15 @@ export default {
         })
         return false
       };
-      if (!obj.entrance_fee || obj.entrance_fee * 1 < 0 || !priceReg.test(obj.entrance_fee)) {
+      if ( obj.entrance_fee * 1 < 0 || !obj.entrance_fee ||  !priceReg.test(obj.entrance_fee)) {
         this.$Notice.warning({
           title: '请输入正确入场费！'
         })
         return false
       };
-      if (!obj.zr_fee || obj.zr_fee * 1 < 0 || !priceReg.test(obj.zr_fee)) {
+      if (obj.zr_fee * 1 < 0 || !obj.zr_fee ||  !priceReg.test(obj.zr_fee)) {
         this.$Notice.warning({
-          title: '请输入正确容费费！'
+          title: '请输入正确增容费！'
         })
         return false
       };
@@ -747,6 +796,8 @@ export default {
       this.baseinfo.deposit_fee = data.deposit_fee || '';
       this.baseinfo.entrance_fee = data.entrance_fee || '';
       this.baseinfo.zr_fee = data.zr_fee || '';
+      this.baseinfo.sign_date = data.sign_date || '';
+      this.baseinfo.customer_id = data.customer_id || '';
       getManageList().then(res => {
         const dbody = res.data
         let that = this
@@ -913,24 +964,24 @@ export default {
           switch ( k ) {
             case 'deposit_fee':
               ii.title = "押金"
-              ii.money = (data[k]*1).toFixed(2)
+              ii.money =(data[k]*1).toFixed(2)
               ii.rent_type = 2
               ii.remark = '押金退还'
               this.end_tableData.unshift(ii)
               break;
             case 'rent_fee':
-              ii.title = "租金"
-              ii.money = Math.abs(data[k]).toFixed(2)
+              ii.title = "应退租金"
+              ii.money =  Math.abs(data[k]).toFixed(2)
               ii.rent_type = data[k]*1 > 0 ? 1 : 2 
-              ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\r\n"+'【应缴房租：'+data["payable_rent_fee"]+'】'
+              ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"]+'】'+"\t"+'【房租减免：'+data["rent_exempt_fee"]+'】'
               this.end_tableData.unshift(ii)
               break;
             case 'bill_fee':
               if(!!data['is_bill']){
-                ii.title = "未缴款"
+                ii.title = "商户欠款"
                 ii.money = Math.abs(data[k]).toFixed(2)
                 ii.rent_type = data[k]*1 > 0 ? 1 : 2 
-                ii.remark = '未缴款'
+                ii.remark = '商户以往账单未缴清款项'
                 this.end_tableData.unshift(ii)
                 break;
               }else{
@@ -941,6 +992,7 @@ export default {
                 this.end_tableData.unshift(ii)
                 break;
               }
+
           }
         };
       })
@@ -982,14 +1034,18 @@ export default {
         let t = 0
         this.end_tableData.forEach(function (i, j) {
           if (i.rent_type == '1') {
-            t += 1 * i.money * i.quantity
+            t += 1 * Math.abs(i.money) * i.quantity
           } else {
-            t -= 1 * i.money * i.quantity
+            t -= 1 * Math.abs(i.money) * i.quantity
           }
         })
-        return t.toFixed(2)
+        if(t.toFixed(2)>=0){
+          return "商户欠款："+ Math.abs(t.toFixed(2)).toFixed(2)
+        }else{
+          return "应退金额："+ Math.abs(t.toFixed(2)).toFixed(2)
+        }
       } else {
-        return '0.00'
+        return "没有数据"
       }
     },
   },

@@ -79,6 +79,28 @@ export const getKitchenList = () => {
 }
 
 /*
+  建档是否存在客户ID
+*/
+/*
+  start_time:'',
+  end_time:'',
+  id:'',
+*/
+/*
+  sign_analysis
+*/
+export const isExistCustome = ( info ) => {
+  return axios.request({
+    url: 'api/Clue/existCustomer',
+    params: info,
+    method: 'get'
+  })
+}
+
+
+
+
+/*
   获取权限下的厨房列表
 */
 /*

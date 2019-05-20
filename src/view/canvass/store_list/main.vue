@@ -670,7 +670,7 @@ export default {
     },
     getStartShopsNewPage(page){
       // 获取新页-全部店铺
-      this.getStartShops( this.sreach_kitchen_id , page );
+      this.getStartShops( this.sreach_kitchen_id , page , this.keyword  );
     },
     // 表格排序
     startShopsSortTables(sort_data){
@@ -701,7 +701,7 @@ export default {
     },
     getNormalShopsNewPage(page){
       // 获取新页-全部店铺
-      this.getNormalShops( this.sreach_kitchen_id , page );
+      this.getNormalShops( this.sreach_kitchen_id , page , this.keyword  );
     },
     // 表格排序
     normalShopsSortTables(sort_data){
@@ -732,7 +732,7 @@ export default {
     },
     getEndShopsNewPage(page){
       // 获取新页-全部店铺
-      this.getEndShops( this.sreach_kitchen_id , page );
+      this.getEndShops( this.sreach_kitchen_id , page , this.keyword  );
     },
     // 表格排序
     endShopsSortTables(sort_data){
@@ -764,7 +764,7 @@ export default {
     },
     getRefundShopsNewPage(page){
       // 获取新页-全部店铺
-      this.getRefundShops( this.sreach_kitchen_id , page );
+      this.getRefundShops( this.sreach_kitchen_id , page , this.keyword  );
     },
     // 表格排序
     refundShopsSortTables(sort_data){
@@ -796,7 +796,7 @@ export default {
     },
     getEliminateShopsNewPage(page){
       // 获取新页-全部店铺
-      this.getEliminateShops( this.sreach_kitchen_id , page );
+      this.getEliminateShops( this.sreach_kitchen_id , page , this.keyword  );
     },
     // 表格排序
     eliminateShopsSortTables(sort_data){
@@ -826,7 +826,7 @@ export default {
     },
     getAllShopsNewPage(page){
       // 获取新页-全部店铺
-      this.getAllShops( this.sreach_kitchen_id , page );
+      this.getAllShops( this.sreach_kitchen_id , page , this.keyword  );
     },
     // 表格排序
     allShopsSortTables(sort_data){

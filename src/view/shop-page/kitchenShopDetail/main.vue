@@ -19,6 +19,20 @@
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
+                <FormItem label="签约时间" class="cellTit">
+                    <span v-show="!!baseinfo.sign_date">{{baseinfo.sign_date}}</span>
+                    <span v-show="!baseinfo.sign_date" class="noData">未填写</span>
+                </FormItem>
+              </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="客户ID" class="cellTit">
+                    <span v-show="!!baseinfo.customer_id">{{baseinfo.customer_id}}</span>
+                    <span v-show="!baseinfo.customer_id" class="noData">未填写</span>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
                 <FormItem label="店主姓名" class="cellTit">
                     <span v-show="!!baseinfo.shopkeeper">{{baseinfo.shopkeeper}}</span>
                     <span v-show="!baseinfo.shopkeeper" class="noData">未填写</span>
@@ -653,6 +667,8 @@ export default {
       this.baseinfo.store_no = data.store_no || '';
       this.baseinfo.manage_lease = data.manage_lease || '';
       this.baseinfo.kitchen_name = data.kitchen_name || '';
+      this.baseinfo.sign_date = data.sign_date || '';
+      this.baseinfo.customer_id = data.customer_id || '';
     },
     //租期租约卡片
     initLeaseinfo( data ){

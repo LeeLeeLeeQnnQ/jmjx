@@ -77,7 +77,7 @@
                 <i-col span="22" style="margin-top:8px;">
                   <Table :columns="end_tableColumns" :data="end_tableData">
                     <div slot="footer" class="tableFooter">
-                      <h3>总计： {{ endTableTotal }}</h3>
+                      <h3>{{ endTableTotal }}</h3>
                     </div>
                   </Table>
                 </i-col>
@@ -141,19 +141,22 @@ export default {
           key: 'title'
         },
         {
-          title: '收支',
-          key: 'rent_type',
-          render: (h, params) => {
-            return h('strong', params.row.rent_type*1 == 1 ? '扣减' : '退款')
-          }
-        },
-        {
           title: '数量',
           key: 'quantity'
         },
         {
           title: '金额',
-          key: 'money'
+          key: 'money',
+          render: (h, params) => {
+            let money = params.row.money;
+            if(params.row.rent_type*1 == 1){
+              let str =  '+' + money
+              return h('strong', { style: {color: 'green'}} , str )
+            }else{
+              let str =  '-' + money
+              return h('strong',  { style: {color: 'red'}}  , str )
+            }
+          }
         },
         {
           title: '备注',
@@ -399,18 +402,18 @@ export default {
               this.end_tableData.unshift(ii)
               break;
             case 'rent_fee':
-              ii.title = "租金"
+              ii.title = "应退租金"
               ii.money =  Math.abs(data[k]).toFixed(2)
               ii.rent_type = data[k]*1 > 0 ? 1 : 2 
-              ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\r\n"+'【应缴房租：'+data["payable_rent_fee"]+'】'
+              ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"]+'】'+"\t"+'【房租减免：'+data["rent_exempt_fee"]+'】'
               this.end_tableData.unshift(ii)
               break;
             case 'bill_fee':
               if(!!data['is_bill']){
-                ii.title = "未缴款"
+                ii.title = "商户欠款"
                 ii.money = Math.abs(data[k]).toFixed(2)
                 ii.rent_type = data[k]*1 > 0 ? 1 : 2 
-                ii.remark = '未缴款'
+                ii.remark = '商户以往账单未缴清款项'
                 this.end_tableData.unshift(ii)
                 break;
               }else{
@@ -446,14 +449,18 @@ export default {
         let t = 0
         this.end_tableData.forEach(function (i, j) {
           if (i.rent_type == '1') {
-            t += 1 * i.money * i.quantity
+            t += 1 * Math.abs(i.money) * i.quantity
           } else {
-            t -= 1 * i.money * i.quantity
+            t -= 1 * Math.abs(i.money) * i.quantity
           }
         })
-        return t.toFixed(2)
+        if(t.toFixed(2)>=0){
+          return "商户欠款："+ Math.abs(t.toFixed(2)).toFixed(2)
+        }else{
+          return "应退金额："+ Math.abs(t.toFixed(2)).toFixed(2)
+        }
       } else {
-        return '0.00'
+        return "没有数据"
       }
     },
     
