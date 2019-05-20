@@ -56,6 +56,7 @@ export const getStoreChargeItem = ( data ) => {
 */
 /*
   kitchen-kitchen-bill --- 店内运营 --> 商户账单 --> 编辑 （ 经营费用 租金 ）
+  finance-kitchen-bill --- 财务 --> 商户账单 --> 编辑 （ 经营费用 租金 ）
 */
 export const editStoreBillItem = ( data ) => {
   return axios.request({

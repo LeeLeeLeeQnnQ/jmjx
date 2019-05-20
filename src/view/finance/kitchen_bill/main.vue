@@ -156,34 +156,33 @@
         </Row>
       </Form>
     </Modal>
-    <Modal title="房租信息" v-model="viewRentModal" scrollable>
-      <Form :label-width="110">
+    <Modal v-model="showEditStoreRentBillModal" title="编辑房租" @on-ok="editStoreRentBill" :mask-closable="false">
+      <Form :model="storeRentBill" :label-width="80">
         <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="店铺名称" class="cellTit">
-                <span>{{viewRentItem.store_name}}</span>
+          <i-col span="22">
+            <FormItem>
+              <span>{{storeRentBill.month}} / {{storeRentBill.store_name}}</span>
             </FormItem>
-            <FormItem label="档口编号" class="cellTit">
-                <span>{{viewRentItem.store_no}}</span>
-            </FormItem>
+          </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="账单月份" class="cellTit">
-                <span>{{viewRentItem.month}}</span>
+          <i-col span="10">
+            <FormItem label="房租">
+              <Input v-model="storeRentBill.rent_fee" style="width: 200px" ></Input>
             </FormItem>
-            <FormItem label="厨房名称" class="cellTit">
-                <span>{{viewRentItem.kitchen_name}}</span>
-            </FormItem>
+          </i-col>
         </Row>
-        <Row>
-          <i-col span="24">
-            <FormItem label="房租" class="cellTit">
-                <span>{{viewRentItem.rent_fee}}</span>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="滞纳金">
+              <Input v-model="storeRentBill.rent_overdue_fee" style="width: 200px" ></Input>
             </FormItem>
-            <FormItem label="房租滞纳金" class="cellTit">
-                <span>{{viewRentItem.rent_overdue_fee}}</span>
-            </FormItem>
-            <FormItem label="房租减免金额" class="cellTit">
-                <span>{{viewRentItem.rent_exempt_fee}}</span>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="房租减免">
+              <Input v-model="storeRentBill.rent_exempt_fee" style="width: 200px" ></Input>
             </FormItem>
           </i-col>
         </Row>
@@ -286,7 +285,7 @@
         :columns="bill_columns"
         v-model="bill_list"
         @data-view-energy="viewEnergyBill"
-        @data-view-rent="viewRentBill"
+        @data-edit-rent="editRentBill"
         @data-add="showAddStorePay"
         @data-print-energy="printEnergyBill"
         @data-print-rent="printRentBill"
@@ -313,8 +312,8 @@ import PrintRent from '_c/print-rent'
 // Index/getKitchenList,StoreBill/queryList,StoreCharge/queryList,StoreBill/queryPayList,StoreBill/addStoreBillPay,StoreBill/deleteStoreBillPay
 import { getKitchenList  } from '@/api/data'
 import { getShopDetail } from '@/api/data'
-import { getStoreBillList , getStoreChargeItem } from '@/api/kitchen'
-import { getStoreBillPayList , addStoreBillPay  , deleteStoreBillPay } from '@/api/finance'
+import { getStoreBillList , getStoreChargeItem , editStoreBillItem } from '@/api/kitchen'
+import { getStoreBillPayList , addStoreBillPay   , deleteStoreBillPay } from '@/api/finance'
 export default {
   name: 'finance-kitchen-bill',
   components: {
@@ -379,11 +378,13 @@ export default {
             
             let operate_fee = params.row.operate_fee;
             let operate_overdue_fee = params.row.operate_overdue_fee;
-            let fee1 = (operate_fee*1 + operate_overdue_fee*1).toFixed(2);
+            let operate_exempt_fee = params.row.operate_exempt_fee;
+            let fee1 = (operate_fee*1 + operate_overdue_fee*1 - operate_exempt_fee*1).toFixed(2);
 
             let rent_fee = params.row.rent_fee;
             let rent_overdue_fee = params.row.rent_overdue_fee;
-            let fee2 = (rent_fee*1 + rent_overdue_fee*1).toFixed(2);
+            let rent_exempt_fee = params.row.rent_exempt_fee;
+            let fee2 = (rent_fee*1 + rent_overdue_fee*1  - rent_exempt_fee*1).toFixed(2);
 
             let store_account = params.row.store_account || 0;
             let pay_fee = params.row.pay_fee || 0;
@@ -416,20 +417,6 @@ export default {
                 }},
               '经营费用')
             },
-            (h, params, vm) => {
-              return h('Button', {
-                props: {
-                  type: 'info',
-                  size: 'small'
-                },
-                style: {marginLeft: '8px'},
-                on: {
-                  'click': () => {
-                    vm.$emit('data-view-rent', params)
-                  }
-                }},
-              '房租')
-            }
           ]
         },
         {
@@ -472,7 +459,7 @@ export default {
         {
           title: '编辑',
           key: 'handle',
-          width :90,
+          width :180,
           button: [
             (h, params, vm) => {
               return h('Button', {
@@ -487,7 +474,28 @@ export default {
                   }
                 }},
               '缴费列表')
-            }
+            },
+            (h, params, vm) => {
+              return h('Poptip', {
+                props: {
+                  confirm: true,
+                  title: '编辑租金！'
+                },
+                on: {
+                  'on-ok': () => {
+                    vm.$emit('data-edit-rent', params)
+                  }
+                }
+              }, [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {marginLeft: '8px'}
+                }, '租金')
+              ])
+            },
           ]
         },
         {
@@ -587,8 +595,8 @@ export default {
       viewModal:false,
       viewItem:{},
       // 查看房租
-      viewRentModal:false,
-      viewRentItem:{},
+      showEditStoreRentBillModal:false,
+      storeRentBill:{},
       // 打印经营费用数据
       print_energy_info:{},
       print_energy_str:"@page{size:A4;margin:0}@media print{*{font-size:9pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.page{box-sizing:border-box;padding:22px;padding-top:20px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:.9em}.page_head_left,.page_head_right{display:inline-block;width:50%;float:left}.table_box table{width:100%;border-spacing:0;border-collapse:collapse;border:1px solid gray;margin-top:5px}.table_box table th{border:1px solid gray;padding:3px}.table_box table td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr td{border:0;border-top:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr .total_td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .last_tr{border-top:1px solid gray}.page_footer{padding:5px;line-height:.9em}.page_footer .zhanghao{overflow:hidden;margin-bottom:10px}.page_footer .zhanghao>div{display:inline-block;float:left}.page_footer .zhanghao .line_box{float:right;margin-right:100px;text-align:center}.page_footer .zhanghao .line_box .line{width:240px;height:14px;border-bottom:1px solid #000;margin-bottom:5px}.page_footer .contect p{margin-top:8px;width:50%;display:inline-block}",
@@ -766,10 +774,43 @@ export default {
       this.viewModal = true;
     },
     // 查看房租
-    viewRentBill(params){
-      this.viewRentItem = {};
-      this.viewRentItem = params.row;
-      this.viewRentModal = true;
+    editRentBill(params){
+      this.storeRentBill = {}
+      this.storeRentBill.id = params.row.id;
+      this.storeRentBill.rent_fee = params.row.rent_fee;
+      this.storeRentBill.rent_overdue_fee = params.row.rent_overdue_fee;
+      this.storeRentBill.rent_exempt_fee = params.row.rent_exempt_fee;
+      this.storeRentBill.month = params.row.month;
+      this.storeRentBill.store_name = params.row.store_name;
+      this.showEditStoreRentBillModal = true;
+    },
+    // 编辑商户月租金
+    editStoreRentBill(){
+      if(isNaN(this.storeRentBill.rent_fee*1)){
+        this.$Notice.warning({
+          title: '房租非数字！'
+        })
+        return
+      }
+      if(isNaN(this.storeRentBill.rent_overdue_fee*1)){
+        this.$Notice.warning({
+          title: '房租滞纳金非法！'
+        })
+        return
+      }
+      editStoreBillItem( this.storeRentBill ).then(res => {
+        const dbody = res.data
+        if(dbody.code != 0){
+          this.$Notice.warning({
+            title: dbody.msg,
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: "修改成功！",
+        })
+        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
+      });
     },
     // 打印能源账单
     printEnergyBill(params){

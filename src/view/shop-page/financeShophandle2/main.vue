@@ -454,7 +454,7 @@ export default {
             t -= 1 * Math.abs(i.money) * i.quantity
           }
         })
-        if(t.toFixed(2)>=0){
+        if(t.toFixed(2)>0){
           return "商户欠款："+ Math.abs(t.toFixed(2)).toFixed(2)
         }else{
           return "应退金额："+ Math.abs(t.toFixed(2)).toFixed(2)

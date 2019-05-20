@@ -542,11 +542,13 @@ export default {
             
             let operate_fee = params.row.operate_fee;
             let operate_overdue_fee = params.row.operate_overdue_fee;
-            let fee1 = (operate_fee*1 + operate_overdue_fee*1).toFixed(2);
+            let operate_exempt_fee = params.row.operate_exempt_fee;
+            let fee1 = (operate_fee*1 + operate_overdue_fee*1 - operate_exempt_fee*1).toFixed(2);
 
             let rent_fee = params.row.rent_fee;
             let rent_overdue_fee = params.row.rent_overdue_fee;
-            let fee2 = (rent_fee*1 + rent_overdue_fee*1).toFixed(2);
+            let rent_exempt_fee = params.row.rent_exempt_fee;
+            let fee2 = (rent_fee*1 + rent_overdue_fee*1  - rent_exempt_fee*1).toFixed(2);
 
             let store_account = params.row.store_account || 0;
             let pay_fee = params.row.pay_fee || 0;
