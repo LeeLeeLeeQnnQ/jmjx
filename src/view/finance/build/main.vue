@@ -469,7 +469,7 @@ export default {
       };
       if (!obj.zr_fee || obj.zr_fee * 1 < 0 || !priceReg.test(obj.zr_fee)) {
         this.$Notice.warning({
-          title: '请输入正确入场费！'
+          title: '请输入正确增容费费！'
         })
         return false
       };
