@@ -261,6 +261,8 @@ export default {
               return h('span', { style: {color: '#2d8cf0'}}, '租赁中')
             }else if (lease_type == 3) {
               return h('span', { style: {color: '#ff9900'}}, '退租中')
+            }else if (lease_type == 7) {
+              return h('span', { style: {color: '#6600cc'}}, '退款中')
             }else if (lease_type == 4) {
               return h('span', '已归档')
             }
@@ -383,6 +385,8 @@ export default {
               return h('span', { style: {color: '#2d8cf0'}}, '租赁中')
             }else if (lease_type == 3) {
               return h('span', { style: {color: '#ff9900'}}, '退租中')
+            }else if (lease_type == 7) {
+              return h('span', { style: {color: '#6600cc'}}, '退款中')
             }else if (lease_type == 4) {
               return h('span', '已归档')
             }
@@ -439,6 +443,8 @@ export default {
               return h('span', { style: {color: '#2d8cf0'}}, '租赁中')
             }else if (lease_type == 3) {
               return h('span', { style: {color: '#ff9900'}}, '退租中')
+            }else if (lease_type == 7) {
+              return h('span', { style: {color: '#6600cc'}}, '退款中')
             }else if (lease_type == 4) {
               return h('span', '已归档')
             }

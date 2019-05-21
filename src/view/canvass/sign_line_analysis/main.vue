@@ -186,7 +186,11 @@ export default {
               if( !info[k] ){arr.push('kitchen_name')}
               break;
             case 'end_area':
-              if( !info[k] ){arr.push('area')}
+            // 固定整个面积属性
+              arr.push('area')
+            // console.log(!info[k])
+            // console.log(info[k])
+            //   if( !info[k] ){arr.push('area')}
               break;
           }
         };

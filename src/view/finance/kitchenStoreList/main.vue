@@ -28,7 +28,7 @@
               <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="选择厨房">
+          <FormItem label="选择周期">
             <DatePicker format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择时间" style="width: 200px" @on-change="selectPSEdate"></DatePicker>
           </FormItem>
         </Form>
@@ -681,6 +681,8 @@ export default {
               return h('span', { style: {color: '#2d8cf0'}}, '租赁中')
             }else if (lease_type == 3) {
               return h('span', { style: {color: '#ff9900'}}, '退租中')
+            }else if (lease_type == 7) {
+              return h('span', { style: {color: '#6600cc'}}, '退款中')
             }else if (lease_type == 4) {
               return h('span', '已归档')
             }
@@ -1126,7 +1128,6 @@ export default {
     },
   },
   mounted () {
-    console.log(this.$route.query.kitchen_id)
     getKitchenList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
@@ -1137,7 +1138,7 @@ export default {
       }      // 初始化函数
       this.kitchenList = dbody.data.list || [];
       if(this.kitchenList.length > 0){
-        this.sreach_kitchen_id = this.$route.query.kitchen_id*1 || this.kitchenList[this.kitchenList.length - 1].id;
+        this.sreach_kitchen_id = this.$route.query.kitchen_id || this.kitchenList[this.kitchenList.length - 1].id;
         this.initData(this.sreach_kitchen_id);
         this.tabValue = this.$route.query.tabValue || "1";
         this.$router.push({
