@@ -910,12 +910,12 @@ export default {
       if(this.kitchenList.length > 0){
         this.sreach_kitchen_id = this.$route.query.kitchen_id*1 || this.kitchenList[this.kitchenList.length - 1].id;
         this.initData(this.sreach_kitchen_id);
+        this.tabValue = this.$route.query.tabValue || "1"
+        this.$router.push({
+            query:merge(this.$route.query,{'tabValue':this.tabValue , 'kitchen_id':this.sreach_kitchen_id})
+        })
       }
     }) 
-    this.tabValue = this.$route.query.tabValue || "1"
-    this.$router.push({
-        query:merge(this.$route.query,{'tabValue':this.tabValue , 'kitchen_id':this.sreach_kitchen_id})
-    })
   }
 }
 </script>

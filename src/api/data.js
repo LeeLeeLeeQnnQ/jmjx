@@ -44,7 +44,24 @@ export const getSignShopList = ( info ) => {
   })
 }
 
-
+/*
+  招商签约分析不分页查询
+*/
+/*
+  start_time:'',
+  end_time:'',
+  id:'',
+*/
+/*
+  sign_analysis
+*/
+export const getSignShopQueryList = ( info ) => {
+  return axios.request({
+    url: '/api/StoreLease/queryList',
+    params: info,
+    method: 'get'
+  })
+}
 
 
 /*

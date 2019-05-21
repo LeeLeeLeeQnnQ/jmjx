@@ -29,7 +29,8 @@ export default {
   canvass_store_view:'带看管理',
   view_analysis_body:'带看分析',
   canvass_web_book:'网站预约',
-  canvass_sign_analysis:'签约分析',
+  canvass_sign_analysis:'签约数据',
+  canvass_sign_line_analysis:'签约分析',
   
   permission: '设置',
   member_list:'人员列表',

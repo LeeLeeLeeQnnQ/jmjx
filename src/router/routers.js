@@ -354,10 +354,20 @@ export default [
         name: 'canvass_sign_analysis',
         meta: {
           icon: '_yingyongchengxu-xianxing',
-          title: '签约分析',
+          title: '签约数据',
           access: [406]
         },
         component: () => import('@/view/canvass/sign_analysis/main.vue')
+      },
+      {
+        path: '/canvass_sign_line_analysis',
+        name: 'canvass_sign_line_analysis',
+        meta: {
+          icon: '_zhexiantu-xianxing',
+          title: '签约分析',
+          access: [407]
+        },
+        component: () => import('@/view/canvass/sign_line_analysis/main.vue')
       },
     ]
   },

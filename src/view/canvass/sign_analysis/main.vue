@@ -53,7 +53,7 @@ export default {
         {title: '厨房', key: 'kitchen_name'},
         {title: '商铺', key: 'store_no', width: 80,sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
-        {title: '建档时间', key: 'create_time', width: 150,sortable: 'custom'},
+        {title: '签约时间', key: 'sign_date', width: 150,sortable: 'custom'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         { title: '店铺状态',
           render: (h, params) => {
