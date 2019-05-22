@@ -320,6 +320,10 @@ export default {
     },
     selectKitchen () {
       const id = this.baseinfo.kitchen_id;
+      let kitchen_name_arr = this.kitchenList.filter(function( item ){
+        return item.id == id;
+      });
+      this.baseinfo.kitchen_name = kitchen_name_arr[0].kitchen_name;
       let that = this;
       this.baseinfo.store_no = '';
       getStoreNoList({ kitchen_id:id }).then(res => {
