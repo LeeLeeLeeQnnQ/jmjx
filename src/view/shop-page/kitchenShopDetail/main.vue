@@ -150,14 +150,14 @@
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="店铺电表起始" class="cellTit">
-                  <span v-show="!!(leaseinfo.start_energy*1)">{{leaseinfo.start_energy}}</span>
-                  <span v-show="!(leaseinfo.start_energy*1)" class="noData">未填写</span>
+                  <span v-if="leaseinfo.start_energy*1 >= 0">{{leaseinfo.start_energy}}</span>
+                  <span v-else class="noData">未填写</span>
                 </FormItem>
               </i-col>
               <i-col span="10" offset="2">
                 <FormItem label="店铺水表起始" class="cellTit">
-                  <span v-show="!!(leaseinfo.start_water*1)">{{leaseinfo.start_water}}</span>
-                  <span v-show="!(leaseinfo.start_water*1)" class="noData">未填写</span>
+                  <span v-if="leaseinfo.start_water*1 >= 0">{{leaseinfo.start_water}}</span>
+                  <span v-else class="noData">未填写</span>
                 </FormItem>
               </i-col>
             </Row>
@@ -181,14 +181,14 @@
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="店铺电表结束" class="cellTit">
-                  <span v-show="!!(leaseinfo.end_energy*1)">{{leaseinfo.end_energy}}</span>
-                  <span v-show="!(leaseinfo.end_energy*1)" class="noData">未填写</span>
+                  <span v-if="leaseinfo.end_energy*1 >= 0" >{{leaseinfo.end_energy}}</span>
+                  <span v-else class="noData">未填写</span>
                 </FormItem>
               </i-col>
               <i-col span="10" offset="2">
                 <FormItem label="店铺水表结束" class="cellTit">
-                  <span v-show="!!(leaseinfo.end_water*1)">{{leaseinfo.end_water}}</span>
-                  <span v-show="!(leaseinfo.end_water*1)" class="noData">未填写</span>
+                  <span v-if="leaseinfo.end_water*1 >= 0" >{{leaseinfo.end_water}}</span>
+                  <span v-else class="noData">未填写</span>
                 </FormItem>
               </i-col>
             </Row>
