@@ -24,16 +24,34 @@
         </FormItem>
       </Form>
     </Modal>
+    <!--  -->
+    <!-- <Modal v-model="refreshMeterModal" width="360">
+      <p slot="header" style="color:#f60;text-align:center">
+          <Icon type="ios-information-circle"></Icon>
+          <span>确认启用新表么？</span>
+      </p>
+      <div slot="footer">
+          <Button type="error" size="large" long @click="refreshMeter">确认</Button>
+      </div>
+    </Modal> -->
     <!-- 数据 -->
     <Card shadow style="margin-top: 5px;">
       <Tabs>
         <TabPane label="电表">
           <Card shadow>
-            <tables :stripe="true" :columns="energy_record_columns" v-model="energy_record_list" @data-edit="handleMeter"></tables>
+            <tables :stripe="true"
+            :columns="energy_record_columns"
+            v-model="energy_record_list"
+            @data-edit="handleMeter"></tables>
+            <!-- @data-handle="showRefreshMeter"></tables> -->
           </Card>
         </TabPane>
         <TabPane label="水表">
-            <tables :stripe="true" :columns="water_record_columns" v-model="water_record_list" @data-edit="handleMeter"></tables>
+            <tables :stripe="true"
+            :columns="water_record_columns"
+            v-model="water_record_list"
+            @data-edit="handleMeter"></tables>
+            <!-- @data-handle="showRefreshMeter"></tables> -->
         </TabPane>
       </Tabs>
     </Card>
@@ -111,6 +129,28 @@ export default {
             },
           ]
         },
+        // {
+        //   title: '操作',
+        //   key: 'handle',
+        //   width : 90,
+        //   button: [
+        //     // 不带气泡 一层嵌套
+        //     (h, params, vm) => {
+        //       return h('Button', {
+        //         style: {margin: '0'},
+        //         props: {
+        //           type: 'primary',
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'click': () => {
+        //             vm.$emit('data-handle', params)
+        //           }
+        //         }},
+        //       '操作')
+        //     },
+        //   ]
+        // },
       ],
       // 电表数据
       water_record_list:[],
@@ -161,14 +201,58 @@ export default {
             },
           ]
         },
+        // {
+        //   title: '操作',
+        //   key: 'handle',
+        //   width : 90,
+        //   button: [
+        //     // 不带气泡 一层嵌套
+        //     (h, params, vm) => {
+        //       return h('Button', {
+        //         style: {margin: '0'},
+        //         props: {
+        //           type: 'primary',
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'click': () => {
+        //             vm.$emit('data-handle', params)
+        //           }
+        //         }},
+        //       '操作')
+        //     },
+        //   ]
+        // },
       ],
       // 电表信息 editMeterItem
       editMeterItem:{},
       // 编辑框显示 editMeterModal
       editMeterModal:false,
+      // 电表信息 refreshMeterItem
+      refreshMeterItem:{},
+      // 编辑框显示 refreshMeterModal
+      refreshMeterModal:false,
     }
   },
   methods: {
+    // isCanRefreshMeter 刷新判定
+    isCanRefreshMeter(info){
+      // if(){
+        
+      // }
+    },
+    // 表刷新
+    showRefreshMeter(){
+      if(this.sCanRefreshMeter()){
+        this.refreshMeterItem = {};
+        this.refreshMeterItem = Object.assign({}, params.row);
+        this.refreshMeterModal = true;
+      }
+    },
+    // 弹窗
+    refreshMeter(){
+
+    },
     // 搜索功能
     // 月份选择
     selectDate(date){

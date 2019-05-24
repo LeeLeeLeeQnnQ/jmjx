@@ -273,16 +273,6 @@ export default [
         },
         component: () => import('@/view/kitchen/record/main.vue')
       },
-      // {
-      //   path: '/kitchen_record_new',
-      //   name: 'kitchen_record_new',
-      //   meta: {
-      //     icon: '_leidatance ',
-      //     title: '抄表1',
-      //     access: [313]
-      //   },
-      //   component: () => import('@/view/kitchen/record_new/main.vue')
-      // },
       {
         path: '/kitchen_bill',
         name: 'kitchen_bill',

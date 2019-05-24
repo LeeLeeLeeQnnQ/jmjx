@@ -44,7 +44,6 @@ export default {
       alive_store_columns:[
         {title: '档口', key: 'store_no',"sortable": true,},
         {title: '面积', key: 'area',"sortable": true,},
-        {title: '档口状态', key: 'store_no'},
         {
           "title": "档口状态",
           "key": "store_status",
