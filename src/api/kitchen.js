@@ -200,6 +200,38 @@ export const editMeter = ( data ) => {
   })
 }
 
+
+// 刷新表信息
+/*
+  creator_id: (...)
+  creator_name: (...)
+  end_value: (...)
+  id: (...)
+  images: (...)
+  initRowIndex: (...)
+  kitchen_id: (...)
+  kitchen_name: (...)
+  meter_date: (...)
+  meter_name: (...)
+  meter_type: (...)
+  month: (...)
+  multiple: (...)
+  remark: (...)
+  start_value: (...)
+  status: (...)
+  store_no: (...)
+*/
+/*
+  kitchen-record --- 编辑抄表信息
+*/
+export const refreshMeter = ( data ) => {
+  return axios.request({
+    url: '/api/Meter/updateBaseValue',
+    data,
+    method: 'post'
+  })
+}
+
 /*
   获取商户罚款列表
 */

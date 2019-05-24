@@ -25,15 +25,20 @@
       </Form>
     </Modal>
     <!--  -->
-    <!-- <Modal v-model="refreshMeterModal" width="360">
+    <Modal v-model="refreshMeterModal" @on-ok="refreshMeter">
       <p slot="header" style="color:#f60;text-align:center">
           <Icon type="ios-information-circle"></Icon>
           <span>确认启用新表么？</span>
       </p>
-      <div slot="footer">
-          <Button type="error" size="large" long @click="refreshMeter">确认</Button>
-      </div>
-    </Modal> -->
+      <Form :model="refreshMeterItem" :label-width="80">
+        <FormItem label="电表名">
+          <Input v-model="refreshMeterItem.meter_name" readonly style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="结束值">
+          <Input v-model="refreshMeterItem.end_value" placeholder="输入结束值" style="width: 200px"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
     <!-- 数据 -->
     <Card shadow style="margin-top: 5px;">
       <Tabs>
@@ -42,16 +47,16 @@
             <tables :stripe="true"
             :columns="energy_record_columns"
             v-model="energy_record_list"
-            @data-edit="handleMeter"></tables>
-            <!-- @data-handle="showRefreshMeter"></tables> -->
+            @data-edit="handleMeter"
+            @data-handle="showRefreshMeter"></tables>
           </Card>
         </TabPane>
         <TabPane label="水表">
             <tables :stripe="true"
             :columns="water_record_columns"
             v-model="water_record_list"
-            @data-edit="handleMeter"></tables>
-            <!-- @data-handle="showRefreshMeter"></tables> -->
+            @data-edit="handleMeter"
+            @data-handle="showRefreshMeter"></tables>
         </TabPane>
       </Tabs>
     </Card>
@@ -63,7 +68,7 @@ import Tables from '_c/tables'
 // 权限
 // /api/Index/getKitchenList,/api/Meter/queryList,/api/Meter/edit
 import { getKitchenList } from '@/api/data'
-import { queryMeterList  , editMeter } from '@/api/kitchen'
+import { queryMeterList  , editMeter , refreshMeter } from '@/api/kitchen'
 export default {
   name: 'kitchen-record',
   components: {
@@ -94,6 +99,7 @@ export default {
         {title: '月份', key: 'month'},
         {title: '电表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
+        {title: '旧电表累计值', key: 'base_value'},
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},
@@ -139,7 +145,7 @@ export default {
         //       return h('Button', {
         //         style: {margin: '0'},
         //         props: {
-        //           type: 'primary',
+        //           type: 'error',
         //           size: 'small'
         //         },
         //         on: {
@@ -147,7 +153,7 @@ export default {
         //             vm.$emit('data-handle', params)
         //           }
         //         }},
-        //       '操作')
+        //       '换表')
         //     },
         //   ]
         // },
@@ -166,6 +172,7 @@ export default {
         {title: '月份', key: 'month'},
         {title: '电表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
+        {title: '旧水表累计值', key: 'base_value'},
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},
@@ -237,21 +244,43 @@ export default {
   methods: {
     // isCanRefreshMeter 刷新判定
     isCanRefreshMeter(info){
-      // if(){
-        
-      // }
+      if(info.end_value < info.start_value){
+        return false;
+      }else{
+        return true;
+      }
     },
     // 表刷新
-    showRefreshMeter(){
-      if(this.sCanRefreshMeter()){
-        this.refreshMeterItem = {};
-        this.refreshMeterItem = Object.assign({}, params.row);
-        this.refreshMeterModal = true;
-      }
+    showRefreshMeter( params ){
+      this.refreshMeterItem = {};
+      this.refreshMeterItem = Object.assign({}, params.row);
+      this.refreshMeterModal = true;
     },
     // 弹窗
     refreshMeter(){
-
+      if(this.isCanRefreshMeter(this.refreshMeterItem)){
+         let obj = {};
+         obj.id = this.refreshMeterItem.id;
+         obj.base_value = this.refreshMeterItem.base_value*1 + this.refreshMeterItem.end_value*1;
+         // 启用新表操作
+         refreshMeter( obj ).then(res => {
+          const dbody = res.data
+          if (dbody.code != 0) {
+            this.$Notice.warning({
+              title: dbody.msg
+            })
+            return
+          }
+          this.$Notice.warning({
+            title: "启用新表成功！"
+          })
+          this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id })
+         })
+      }else{
+        this.$Notice.warning({
+          title: "老电表结束值有误！"
+        })
+      }
     },
     // 搜索功能
     // 月份选择

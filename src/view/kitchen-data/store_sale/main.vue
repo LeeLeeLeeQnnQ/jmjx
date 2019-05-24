@@ -90,7 +90,7 @@ export default {
         },
         {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_name'},
-        {title: '租金', key: 'rent_fee',"sortable": true,},
+        {title: '租金', key: 'store_rent_fee',"sortable": true,},
         {title: '押金', key: 'store_deposit_fee',"sortable": true,},
         {title: '入场费', key: 'store_entrance_fee',"sortable": true,},
         {title: '增容', key: 'store_zr_fee',"sortable": true,},
