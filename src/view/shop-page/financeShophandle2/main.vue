@@ -404,7 +404,7 @@ export default {
             case 'rent_fee':
               ii.title = "剩余预付租金"
               ii.money =  Math.abs(data[k]).toFixed(2)
-              ii.rent_type = data[k]*1 > 0 ? 1 : 2 
+              ii.rent_type = data[k]*1 < 0 ? 1 : 2 
               ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"]+'】'+"\t"+'【房租减免：'+data["rent_exempt_fee"]+'】'
               this.end_tableData.unshift(ii)
               break;

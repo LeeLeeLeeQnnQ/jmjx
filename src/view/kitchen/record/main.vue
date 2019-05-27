@@ -135,28 +135,28 @@ export default {
             },
           ]
         },
-        {
-          title: '操作',
-          key: 'handle',
-          width : 90,
-          button: [
-            // 不带气泡 一层嵌套
-            (h, params, vm) => {
-              return h('Button', {
-                style: {margin: '0'},
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('data-handle', params)
-                  }
-                }},
-              '换表')
-            },
-          ]
-        },
+        // {
+        //   title: '操作',
+        //   key: 'handle',
+        //   width : 90,
+        //   button: [
+        //     // 不带气泡 一层嵌套
+        //     (h, params, vm) => {
+        //       return h('Button', {
+        //         style: {margin: '0'},
+        //         props: {
+        //           type: 'error',
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'click': () => {
+        //             vm.$emit('data-handle', params)
+        //           }
+        //         }},
+        //       '换表')
+        //     },
+        //   ]
+        // },
       ],
       // 电表数据
       water_record_list:[],
@@ -208,28 +208,28 @@ export default {
             },
           ]
         },
-        {
-          title: '操作',
-          key: 'handle',
-          width : 90,
-          button: [
-            // 不带气泡 一层嵌套
-            (h, params, vm) => {
-              return h('Button', {
-                style: {margin: '0'},
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('data-handle', params)
-                  }
-                }},
-              '换表')
-            },
-          ]
-        },
+        // {
+        //   title: '操作',
+        //   key: 'handle',
+        //   width : 90,
+        //   button: [
+        //     // 不带气泡 一层嵌套
+        //     (h, params, vm) => {
+        //       return h('Button', {
+        //         style: {margin: '0'},
+        //         props: {
+        //           type: 'error',
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'click': () => {
+        //             vm.$emit('data-handle', params)
+        //           }
+        //         }},
+        //       '换表')
+        //     },
+        //   ]
+        // },
       ],
       // 电表信息 editMeterItem
       editMeterItem:{},
