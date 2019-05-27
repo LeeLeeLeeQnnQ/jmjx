@@ -101,7 +101,7 @@
                 </div>
               </Upload>
             </FormItem>
-            <FormItem label="店主身份证">
+            <FormItem label="合同人身份证">
               <div class="img-upload-list" v-for="item in identity">
                 <img :src="item">
                 <div class="img-upload-list-cover">

@@ -241,7 +241,7 @@
                 </i-col>
               </Row>
             </FormItem>
-            <FormItem label="店主身份证">
+            <FormItem label="合同人身份证">
               <Row type="flex" justify="start" align="middle" :gutter="20">
                 <i-col span="22">
                   <div class="img-upload-list" v-for="item in voucherinfo.identity">
