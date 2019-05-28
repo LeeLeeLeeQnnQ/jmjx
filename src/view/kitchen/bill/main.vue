@@ -585,10 +585,13 @@ export default {
         {
           title: '编辑',
           key: 'handle',
-          width :180,
+          width :90,
           button: [
             (h, params, vm) => {
               return h('Poptip', {
+                style: {
+                  margin:'5px 0 ',
+                },
                 props: {
                   confirm: true,
                   title: '编辑经营费用！'
@@ -604,12 +607,15 @@ export default {
                     type: 'error',
                     size: 'small'
                   },
-                  style: {marginLeft: '8px'}
+                  style: {marginLeft: '0px'}
                 }, '经营费用')
               ])
             },
             (h, params, vm) => {
               return h('Poptip', {
+                style: {
+                  margin:'5px 0 ',
+                },
                 props: {
                   confirm: true,
                   title: '编辑租金！'
@@ -625,7 +631,7 @@ export default {
                     type: 'error',
                     size: 'small'
                   },
-                  style: {marginLeft: '8px'}
+                  style: {marginLeft: '0px'}
                 }, '租金')
               ])
             },

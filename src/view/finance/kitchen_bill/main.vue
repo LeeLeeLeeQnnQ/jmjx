@@ -402,7 +402,7 @@ export default {
         {
           title: '查看',
           key: 'handle',
-          width :150,
+          width :90,
           button: [
             (h, params, vm) => {
               return h('Button', {
@@ -422,11 +422,13 @@ export default {
         {
           title: '打印',
           key: 'handle',
-          width :150,
-          // width :90,
+          width :90,
           button: [
             (h, params, vm) => {
               return h('Button', {
+                style: {
+                  margin:'5px 0 ',
+                },
                 props: {
                   type: 'success',
                   size: 'small'
@@ -441,7 +443,7 @@ export default {
             (h, params, vm) => {
               return h('Button', {
                 style: {
-                  marginLeft:'5px',
+                  margin:'5px 0 ',
                 },
                 props: {
                   type: 'success',
@@ -459,11 +461,13 @@ export default {
         {
           title: '编辑',
           key: 'handle',
-          width :180,
+          width :90,
           button: [
             (h, params, vm) => {
               return h('Button', {
-                style: {},
+                style: {
+                  margin:'5px 0 ',
+                },
                 props: {
                   type: 'primary',
                   size: 'small'
@@ -477,6 +481,9 @@ export default {
             },
             (h, params, vm) => {
               return h('Poptip', {
+                style: {
+                  margin:'5px 0 ',
+                },
                 props: {
                   confirm: true,
                   title: '编辑租金！'
@@ -492,7 +499,7 @@ export default {
                     type: 'primary',
                     size: 'small'
                   },
-                  style: {marginLeft: '8px'}
+                  style: {marginLeft: '0px'}
                 }, '租金')
               ])
             },
@@ -501,7 +508,7 @@ export default {
         {
           title: '添加',
           key: 'handle',
-          width :100,
+          width :90,
           button: [
             (h, params, vm) => {
               return h('Poptip', {
@@ -520,7 +527,7 @@ export default {
                     type: 'error',
                     size: 'small'
                   },
-                  style: {marginLeft: '8px'}
+                  style: {marginLeft: '0px'}
                 }, '添加上缴')
               ])
             }
