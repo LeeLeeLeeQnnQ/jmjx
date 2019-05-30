@@ -402,10 +402,10 @@ export default {
                 ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"].toFixed(2)+'】'+"\t"+'【房租减免：'+data["rent_exempt_fee"]+'】'+"\t"+'【押金：'+data["deposit_fee"]+'】'+"\t"+'【应收账款：'+data["bill_fee"]+'】'
                 this.end_tableData.unshift(ii)
               }else{
-                ii.title = "应收账款账单未出"
-                ii.money = '0'
-                ii.rent_type = 1 
-                ii.remark = '应收账款账单未出'
+                ii.title = "【注意】应收账款账单未出！退款可能不准确"
+                ii.money =  Math.abs(data[k]).toFixed(2)
+                ii.rent_type = data[k]*1 < 0 ? 1 : 2 
+                ii.remark = '【注意】应收账款账单未出！退款可能不准确'+'【总缴房租：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"].toFixed(2)+'】'+"\t"+'【房租减免：'+data["rent_exempt_fee"]+'】'+"\t"+'【押金：'+data["deposit_fee"]+'】'+"\t"+'【应收账款：'+data["bill_fee"]+'】'
                 this.end_tableData.unshift(ii)
               }
 

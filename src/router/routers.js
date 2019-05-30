@@ -636,6 +636,27 @@ export default [
   //     },
   //   ]
   // },
+  // 商户推广红包
+  // {
+  //   path: '/store_spread',
+  //   name: 'store_spread',
+  //   meta: {
+  //     icon: '_diamond',
+  //     title: '商户推广红包',
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/store_spread_list',
+  //       name: 'store_spread_list',
+  //       meta: {
+  //         icon: '_shouye-xianxing',
+  //         title: '推广红包列表',
+  //       },
+  //       component: () => import('@/view/store_spread/store_spread_list/main.vue')
+  //     },
+  //   ]
+  // },
   // 401
   {
     path: '/401',

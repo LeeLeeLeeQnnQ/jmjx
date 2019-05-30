@@ -13,11 +13,12 @@
           @data-edit-info="handleEditInfo" 
           @data-recharge="saveRechargeInfo" 
           @data-edit-tag="handleEditTagModal"
+          @data-eidt-status = "handleEditStatus"
       />
       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
     </Card>
     <!-- 查看图片 -->
-    <Modal title="预览图" v-model="visible">
+    <Modal title="预览图" v-model="visible">w
         <img :src="imgUrl" v-if="visible" style="width: 100%">
     </Modal>
     <!-- 添加店铺 -->
@@ -124,13 +125,6 @@
       title="添加推广商户"
       @on-ok="saveEditModalInfo" >
         <Form :model="editItem" :label-width="120" inline>
-          <FormItem label="更改状态">
-            <Select v-model="editItem.kitchen_id" style="width: 200px">
-              <Option :value="1" :key="1">启用</Option>
-              <Option :value="2" :key="2">禁用</Option>
-              <Option :value="3" :key="3">下线</Option>
-            </Select>
-          </FormItem>
           <FormItem label="经营品类">
             <Input v-model="editItem.type" placeholder="不超过6个字" style="width: 200px"></Input>
           </FormItem>
@@ -223,6 +217,21 @@
                 </div>
               </Upload>
             </div>
+          </FormItem>
+        </Form>
+    </Modal>
+    <!-- 修改店铺状态 -->
+    <Modal 
+      v-model="showEditStatusModal"
+      title="修改店铺状态"
+      @on-ok="saveEditStatusModalInfo" >
+        <Form :model="editItem" :label-width="120" inline>
+          <FormItem label="更改状态">
+            <Select v-model="statusItem" style="width: 200px">
+              <Option :value="1" :key="1">启用</Option>
+              <Option :value="2" :key="2">禁用</Option>
+              <Option :value="3" :key="3">下线</Option>
+            </Select>
           </FormItem>
         </Form>
     </Modal>
@@ -370,7 +379,7 @@ export default {
         {
           title: '编辑',
           key: 'handle',
-          width:90,
+          width:180,
           button: [
             (h, params, vm) => {
               return h('Button', {
@@ -387,7 +396,21 @@ export default {
                   }
                 }},
               '标签编辑')
-            }, 
+            },
+            (h, params, vm) => {
+              return h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {margin: '5px'},
+                on: {
+                  'click': () => {
+                    vm.$emit('data-eidt-status', params)
+                  }
+                }},
+              '状态变更')
+            },
           ]
         },
         {
@@ -494,6 +517,9 @@ export default {
       // 标签编辑
       showEditTagModal:false,
       tagItem:{},
+      // 更改店铺状态
+      showEditStatusModal:false,
+      statusItem:'',
       // id
       spread_store_id: '',
       // 
@@ -678,6 +704,15 @@ export default {
     // 充值页面新
     getRechargeNewPage(page){
       
+    },
+    // 显示更改店铺状态
+    handleEditStatus(params){
+      this.statusItem = '';
+      this.showEditStatusModal = true;
+    },
+    // 保存变更
+    saveEditStatusModalInfo(){
+
     },
     // 初始化
     init(){

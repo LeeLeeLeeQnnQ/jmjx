@@ -44,4 +44,7 @@ export default {
   apply_list:'申领列表',
   config_list:'小程序设置',
 
+  store_spread:'商户推广红包',
+  store_spread_list:'推广红包列表',
+
 }
