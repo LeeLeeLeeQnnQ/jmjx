@@ -8,11 +8,13 @@
       <a href="#" slot="extra" @click.prevent="showAddStoreModal">
           新建推广商户
       </a>
-      <tables ref="tables" v-model="kitchenList" :columns="columns" 
+      <tables ref="tables" v-model="spreadList" :columns="columns" 
           @data-view-recharge-list="handleViewRechargeList" 
           @data-edit-info="handleEditInfo" 
           @data-recharge="saveRechargeInfo" 
+          @data-edit-tag="handleEditTagModal"
       />
+      <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
     </Card>
     <!-- 查看图片 -->
     <Modal title="预览图" v-model="visible">
@@ -29,11 +31,14 @@
           </FormItem>
           <FormItem label="地区选择">
             <Select v-model="addItem.kitchen_id" @on-change="getNewKitchen" style="width: 200px">
-              <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
+              <Option v-for="item in spreadList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
             </Select>
           </FormItem>
           <FormItem label="商铺名称">
             <Input v-model="addItem.manage_phone" placeholder="输入商铺名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="商铺电话">
+            <Input v-model="addItem.manage_phone" placeholder="输入商铺电话" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="店铺LOGO" style="width: 200px">
             <div>
@@ -131,11 +136,14 @@
           </FormItem>
           <FormItem label="地区选择">
             <Select v-model="editItem.kitchen_id" @on-change="getNewKitchen" style="width: 200px">
-              <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
+              <Option v-for="item in spreadList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
             </Select>
           </FormItem>
           <FormItem label="商铺名称">
             <Input v-model="editItem.manage_phone" placeholder="输入商铺名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="商铺电话">
+            <Input v-model="editItem.manage_phone" placeholder="输入商铺电话" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="店铺LOGO" style="width: 200px">
             <div>
@@ -256,6 +264,23 @@
           </FormItem>
         </Form>
     </Modal>
+    <!-- 标签编辑 -->
+    <Modal 
+      v-model="showEditTagModal"
+      title="添加推广商户"
+      @on-ok="saveEditTagModalInfo" >
+        <Form :model="tagItem" :label-width="120" inline>
+          <FormItem label="标签1">
+            <Input v-model="tagItem.tag1" placeholder="例如：人均17元" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="标签2">
+            <Input v-model="tagItem.tag2" placeholder="例如：月销3000+" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="标签3">
+            <Input v-model="tagItem.tag3" placeholder="请输入标签" style="width: 200px"></Input>
+          </FormItem>
+        </Form>
+    </Modal>
     <!-- 充值列表 -->
     <Modal title="充值列表" v-model="showRechargeModalList">
         <tables
@@ -264,7 +289,7 @@
           :columns="rechargeColumns"
           @voucher-view="showStoreBudgetVoucher"
         />
-        <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
+        <Page :total="recharge_page.total" :page-size="recharge_page.list_rows" @on-change="getRechargeNewPage" style="margin-top:10px;"/>
     </Modal>
     <!-- 充值凭证 -->
     <Modal title="充值凭证预览" v-model="showRechargeBudgetList">
@@ -298,6 +323,7 @@ export default {
       columns: [
         {title: '推广店铺ID', key: 'id',width:100},
         {title: '店铺名称', key: 'kitchen_name'},
+        {title: '店铺电话', key: 'kitchen_name'},
         { title: '余额',
           render: (h, params) => {
             let yue = params.row.use_total*1
@@ -321,6 +347,7 @@ export default {
         {
           title: '查看',
           key: 'handle',
+          width:90,
           button: [
             (h, params, vm) => {
               return h('Button', {
@@ -341,9 +368,32 @@ export default {
           ]
         },
         {
+          title: '编辑',
+          key: 'handle',
+          width:90,
+          button: [
+            (h, params, vm) => {
+              return h('Button', {
+                style:{
+                  margin:"0"
+                },
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-edit-tag', params)
+                  }
+                }},
+              '标签编辑')
+            }, 
+          ]
+        },
+        {
           title: '操作',
           key: 'handle',
-          // width : 100 ,
+          width : 160 ,
           button: [
             (h, params, vm) => {
               return h('Poptip', {
@@ -386,7 +436,13 @@ export default {
           ]
         },
       ],
-      kitchenList: [],
+      page: {
+        current_page: 1,
+        last_page: '',
+        list_rows: 0,
+        total: 0
+      },
+      spreadList: [],
       // 
       showAddModal: false,
       addItem: {},
@@ -426,7 +482,7 @@ export default {
           ]
         },
       ],
-      page: {
+      recharge_page:{
         current_page: 1,
         last_page: '',
         list_rows: 0,
@@ -435,6 +491,9 @@ export default {
       // 充值凭证
       showRechargeBudgetList:false,
       storeRechargeList:[],
+      // 标签编辑
+      showEditTagModal:false,
+      tagItem:{},
       // id
       spread_store_id: '',
       // 
@@ -453,11 +512,7 @@ export default {
       this.$refs[name].fileList.splice(fileList.indexOf(file), 1)
       this[name].splice(fileList.indexOf(file), 1)
     },
-    // 显示添加
-    showAddStoreModal(){
-      this.addItem= {};
-      this.showAddModal = true;
-    },
+    
     // 错误提示
     handleFormatError (file) {
       this.$Notice.warning({
@@ -558,6 +613,11 @@ export default {
         })
       }
     },
+    // 显示添加
+    showAddStoreModal(){
+      this.addItem= {};
+      this.showAddModal = true;
+    },
     // 查看充值列表
     handleViewRechargeList(params) {
       let spread_store_id = params.row.id;
@@ -597,12 +657,26 @@ export default {
       this.storeBudgetList = voucher;
       this.showRechargeBudgetList = true;
     },
+
+    // showEditTagModal 展示
+    handleEditTagModal(params){
+      this.tagItem = {};
+      this.showEditTagModal = true;
+    },
+    // saveEditTagModalInfo 保存标签
+    saveEditTagModalInfo(){
+
+    },
     //获取地点 
     getNewKitchen(){
 
     },
     // 选择新页面
     getNewPage(page){
+      
+    },
+    // 充值页面新
+    getRechargeNewPage(page){
       
     },
     // 初始化
@@ -619,7 +693,7 @@ export default {
         })
         return
       }
-      this.kitchenList = dbody.data.list
+      this.spreadList = dbody.data.list
     })
   },
   computed: {

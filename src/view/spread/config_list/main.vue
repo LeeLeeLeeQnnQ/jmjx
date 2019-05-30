@@ -3,69 +3,105 @@
     <!-- 厨房表格数据 -->
     <Card>
       <p slot="title">
-          厨房列表
+          头部banner配置
       </p>
-      <a href="#" slot="extra" @click.prevent="showAddModal=true">
-          添加厨房
+      <a href="#" slot="extra" @click.prevent="addNewBannerModal">
+          添加banner
       </a>
-      <tables ref="tables" v-model="kitchenList" :columns="columns" 
-          @data-view-store="handleViewStore" 
-          @data-view-detail="handleViewDetail" 
-          @data-edit-base="handleEditBase" 
-          @data-dele="handleDele"
+      <tables ref="tables" v-model="bannerList" :columns="columns" 
+          @data-view-banner="handleViewBanner" 
+          @data-edit-alive="handleEditAlive" 
+          @data-edit-ban="handleEditBan" 
+          @data-edit-info="handleEditInfo"
       />
     </Card>
-    <!-- 添加厨房 -->
-    <Modal v-model="showAddModal" title="添加厨房" @on-ok="saveAddModalInfo" @on-cancel="cancelAddModalInfo">
-        <Form :model="addItem" :label-width="80" inline>
-          <FormItem label="厨房名称">
-            <Input v-model="addItem.kitchen_name" placeholder="输入厨房名称" style="width: 200px"></Input>
+    <!-- 查看图片 -->
+    <Modal title="预览图" v-model="visible">
+        <img :src="imgUrl" v-if="visible" style="width: 100%">
+    </Modal>
+    <!-- 添加 -->
+    <Modal 
+      v-model="showAddNewBannerModal"
+      title="增加新banner"
+      @on-ok="saveAddNewBannerInfo" >
+        <Form :model="newBannerItem" :label-width="120" inline>
+          <FormItem label="名称">
+            <Input v-model="newBannerItem.name" placeholder="banner名称" style="width: 200px"></Input>
           </FormItem>
-          <FormItem label="店长">
-            <Input v-model="addItem.manage_name" placeholder="输入店长名称" style="width: 200px"></Input>
+          <FormItem label="描述">
+            <Input v-model="newBannerItem.remark" type="textarea" :rows="4" placeholder="描述"  style="width: 200px"/>
           </FormItem>
-          <FormItem label="店长电话">
-            <Input v-model="addItem.manage_phone" placeholder="输入店长电话" style="width: 200px"></Input>
+          <FormItem label="链接">
+            <Input v-model="newBannerItem.url" placeholder="请输入url" style="width: 200px"></Input>
           </FormItem>
-          <FormItem label="厨房位置">
-            <Input v-model="addItem.position" placeholder="输入厨房位置坐标" style="width: 200px"></Input>
+          <FormItem label="banner图片" style="width: 200px" >
+            <div v-if="!!newBannerItem.img" class="img-upload-list">
+              <img :src="newBannerItem.img">
+              <div class="img-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(newBannerItem.img)"></Icon>
+              </div>
+            </div>
+            <Upload
+              ref="uploadLetter"
+              :show-upload-list="false"
+              :on-success="uploadNewBanner"
+              :format="['jpg','jpeg','png']"
+              :max-size="4200"
+              :on-format-error="handleFormatError"
+              :on-exceeded-size="handleMaxSize"
+              :before-upload="handleBeforeUpload"
+              multiple
+              type="drag"
+              action="/api/Index/upload"
+              style="display: inline-block;width:60px;">
+              <div style="width: 60px;height:60px;line-height: 60px;">
+                  <Icon type="ios-camera" size="20"></Icon>
+              </div>
+            </Upload>
           </FormItem>
-          <FormItem label="应支出房租(每月)">
-            <Input v-model="editItem.kitchen_rent" placeholder="输入应支出房租(每月)" style="width: 200px"></Input>
-          </FormItem>
-
-          <FormItem label="垃圾及隔油池(固定费用)">
-            <Input v-model="editItem.garbage_fee" placeholder="输入垃圾及隔油池(固定费用)" style="width: 200px"></Input>
-          </FormItem>
-          <FormItem label="烟道清洗(固定费用)">
-            <Input v-model="editItem.flue_fee" placeholder="输入烟道清洗(固定费用)" style="width: 200px"></Input>
-          </FormItem>
-          <FormItem label="消杀(固定费用)">
-            <Input v-model="editItem.kill_fee" placeholder="输入消杀(固定费用)" style="width: 200px"></Input>
-          </FormItem>
-          <FormItem label="网络使用费(固定费用)">
-            <Input v-model="editItem.network_fee" placeholder="输入网络使用费(固定费用)" style="width: 200px"></Input>
-          </FormItem>
-          <FormItem label="卫生费(固定费用)">
-            <Input v-model="editItem.health_fee" placeholder="输入卫生数(固定费用)" style="width: 200px"></Input>
-          </FormItem>
-          <FormItem label="水费基数(固定费用)">
-            <Input v-model="editItem.water_fee" placeholder="输入水费基数(固定费用)" style="width: 200px"></Input>
-          </FormItem>
-          <FormItem label="电费基数(固定费用)">
-            <Input v-model="editItem.energy_fee" placeholder="输入电费基数(固定费用)" style="width: 200px"></Input>
-          </FormItem>
-          
         </Form>
     </Modal>
-    <!-- 删除弹框 -->
-    <Modal
-        title="删除操作"
-        v-model="showDeleModal"
-        @on-ok="saveDeleModalInfo"
-        @on-cancel="cancelDeleModalInfo"
-        :style="{top: '20px'}">
-        <p>确认删除厨房吗？</p>
+    <!-- 修改 -->
+    <Modal 
+      v-model="showEditBannerModal"
+      title="修改banner"
+      @on-ok="saveEditBannerInfo" >
+        <Form :model="editBannerItem" :label-width="120" inline>
+          <FormItem label="名称">
+            <Input v-model="editBannerItem.name" placeholder="banner名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="描述">
+            <Input v-model="editBannerItem.remark" type="textarea" :rows="4" placeholder="描述"  style="width: 200px"/>
+          </FormItem>
+          <FormItem label="链接">
+            <Input v-model="editBannerItem.url" placeholder="请输入url" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="banner图片" style="width: 200px" >
+            <div v-if="!!editBannerItem.img" class="img-upload-list">
+              <img :src="editBannerItem.img">
+              <div class="img-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(editBannerItem.img)"></Icon>
+              </div>
+            </div>
+            <Upload
+              ref="uploadLetter"
+              :show-upload-list="false"
+              :on-success="updateBanner"
+              :format="['jpg','jpeg','png']"
+              :max-size="4200"
+              :on-format-error="handleFormatError"
+              :on-exceeded-size="handleMaxSize"
+              :before-upload="handleBeforeUpload"
+              multiple
+              type="drag"
+              action="/api/Index/upload"
+              style="display: inline-block;width:60px;">
+              <div style="width: 60px;height:60px;line-height: 60px;">
+                  <Icon type="ios-camera" size="20"></Icon>
+              </div>
+            </Upload>
+          </FormItem>
+        </Form>
     </Modal>
   </div>
 </template>
@@ -73,7 +109,7 @@
 // 权限
 // /api/Kitchen/index,/api/Kitchen/add,/api/Kitchen/delete
 import Tables from '_c/tables'
-import { getKitchenList , addKitchen  , deleKitchen } from '@/api/setting'
+import { getKitchenList } from '@/api/setting'
 export default {
   name: 'config_list',
   components: {
@@ -82,38 +118,34 @@ export default {
   data () {
     return {
       columns: [
-        {title: '厨房ID', key: 'id', width: 80},
-        {title: '厨房名称', key: 'kitchen_name'},
-        { title: '档口数量',
-          render: (h, params) => {
-            let a = params.row.use_total
-            let b = params.row.wait_total
-            let c = params.row.free_total
-            return h('span', a*1+b*1+c*1)
-          }
-        },
-        {title: '店长', key: 'manage_name', width: 80},
-        {title: '店长电话', key: 'manage_phone'},
-        { title: '总房租(实价)',
-          render: (h, params) => {
-            let a = (params.row.rent_total*1/10000).toFixed(2)+'万';
-            return h('span', a)
-          }
-        },
-        { title: '在产生租金',
-          render: (h, params) => {
-            let a = (params.row.produce_total*1/10000).toFixed(2)+'万';
-            return h('span', a)
-          }
-        },
-        { title: '应支出月房租',
-          render: (h, params) => {
-            let a = (params.row.kitchen_rent*1/10000).toFixed(2)+'万';
-            return h('span', a)
-          }
-        },
         {
-          title: '查看',
+          title: '查看图片',
+          key: 'handle',
+          button: [
+            (h, params, vm) => {
+              let banner_name = params.row.kitchen_name;
+              return h('a', {
+                style:{
+                  margin:"0"
+                },
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-view-banner', params)
+                  }
+                }},
+              banner_name)
+            }, 
+          ]
+        },
+        {title: '状态', key: 'manage_name', width: 80},
+        {title: '链接', key: 'manage_name', width: 80},
+        {title: '描述', key: 'manage_phone'},
+        {
+          title: '编辑',
           key: 'handle',
           button: [
             (h, params, vm) => {
@@ -127,160 +159,171 @@ export default {
                 },
                 on: {
                   'click': () => {
-                    vm.$emit('data-view-store', params)
-                  }
-                }},
-              '商户列表')
-            }, 
-          ]
-        },
-        {
-          title: '编辑',
-          key: 'handle',
-          button: [
-            (h, params, vm) => {
-              return h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('data-view-detail', params)
+                    vm.$emit('data-edit-info', params)
                   }
                 }},
               '编辑')
-            },
+            }, 
           ]
         },
         {
           title: '操作',
           key: 'handle',
+          width : 160 ,
           button: [
             (h, params, vm) => {
-              return h('Button', {
+              return h('Poptip', {
+                style: {
+                  margin:'5px 0 ',
+                },
                 props: {
-                  type: 'error',
-                  size: 'small'
+                  confirm: true,
+                  title: '启用banner！'
                 },
                 on: {
-                  'click': () => {
-                    vm.$emit('data-dele', params)
+                  'on-ok': () => {
+                    vm.$emit('data-edit-alive', params)
                   }
-                }},
-              '删除')
-            }
+                }
+              }, [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {marginLeft: '0px'}
+                }, '启用')
+              ])
+            },
+            (h, params, vm) => {
+              return h('Poptip', {
+                style: {
+                  margin:'5px 0 ',
+                },
+                props: {
+                  confirm: true,
+                  title: '禁用banner！'
+                },
+                on: {
+                  'on-ok': () => {
+                    vm.$emit('data-edit-ban', params)
+                  }
+                }
+              }, [
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                  },
+                  style: {marginLeft: '5px'}
+                }, '禁用')
+              ])
+            },
           ]
         },
       ],
-      kitchenList: [],
-      showAddModal: false,
-      showEditModal: false,
-      showDeleModal: false,
-      addItem: {},
-      editItem: {},
-      deleItemId: ''
+      bannerList: [],
+      // 图片
+      imgUrl: '',
+      visible: false,
+      // 增加新banner
+      showAddNewBannerModal:false,
+      newBannerItem:{},
+      // 修改showEditBannerModal
+      showEditBannerModal:false,
+      editBannerItem:{},
     }
   },
   methods: {
-    // 查看厨房详情
-    handleViewDetail(params){
-      let kitchen_id = params.row.id
-      const route = {
-        name: 'kitchen_data_kitchen_detail',
-        query: {
-          kitchen_id
-        }
-      }
-      this.$router.push(route)
+    // 图片预览
+    handleView (imgUrl) {
+      this.imgUrl = imgUrl
+      this.visible = true
     },
-    // 查看商户列表
-    handleViewStore(params){
-      let kitchen_id = params.row.id
-      const route = {
-        name: 'kitchen_data_store_list',
-        query: {
-          kitchen_id
-        }
-      }
-      this.$router.push(route)
+    // 删除图片
+    handleRemove (file, name) {
+      const fileList = this.$refs[name].fileList
+      this.$refs[name].fileList.splice(fileList.indexOf(file), 1)
+      this[name].splice(fileList.indexOf(file), 1)
     },
-    // 显示编辑基础数据
-    handleEditBase (params) {
-      this.editItem.id = params.row.id
-      this.editItem.kitchen_name = params.row.kitchen_name
-      this.editItem.manage_name = params.row.manage_name
-      this.editItem.manage_phone = params.row.manage_phone
-      this.editItem.position = params.row.position
-      this.editItem.kitchen_rent = params.row.kitchen_rent
-      this.editItem.garbage_fee = params.row.garbage_fee
-      this.editItem.flue_fee = params.row.flue_fee
-      this.editItem.kill_fee = params.row.kill_fee
-      this.editItem.network_fee = params.row.network_fee
-      this.editItem.water_fee = params.row.water_fee
-      this.editItem.energy_fee = params.row.energy_fee
-      this.editItem.storage_fee = params.row.storage_fee
-      this.editItem.health_fee = params.row.health_fee
-      this.showEditModal = true
-    },
-    // 显示删除
-    handleDele (params) {
-      this.deleItemId = params.row.id
-      this.showDeleModal = true
-    },
-    // 新增
-    saveAddModalInfo () {
-      addKitchen(this.addItem).then(res => {
-        const dbody = res.data
-        if (dbody.code != 0) {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-          return
-        }
-        // 处理成功逻辑
-        getKitchenList().then(res => {
-          const dbody = res.data
-          if (dbody.code != 0) {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
-            return
-          }
-          this.kitchenList = dbody.data.list
-        })
+    
+    // 错误提示
+    handleFormatError (file) {
+      this.$Notice.warning({
+        title: '文件格式错误',
+        desc: '文件 ' + file.name + ' 格式错误, 请上传jpg／jpeg／png格式.'
       })
     },
-    // 删除
-    saveDeleModalInfo () {
-      deleKitchen({ id: this.deleItemId }).then(res => {
-        const dbody = res.data
-        if (dbody.code != 0) {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-          return
-        }
-        // 处理成功逻辑
-        getKitchenList().then(res => {
-          const dbody = res.data
-          if (dbody.code != 0) {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
-            return
-          }
-          this.kitchenList = dbody.data.list
-        })
+    // 超大提示
+    handleMaxSize (file) {
+      this.$Notice.warning({
+        title: '超过最大限制',
+        desc: '文件  ' + file.name + ' 过大, 不能超过 2M.'
       })
     },
-    // 取消
-    cancelAddModalInfo () {
-      this.addItem = {}
+    // 发送触发
+    handleBeforeUpload (file) {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = (event) => {
+      }
     },
-    cancelDeleModalInfo () {
-      this.deleItemId = ''
+    //NewBanner
+    uploadNewBanner (res, file) {
+      if (res.code == 0) {
+        this.newBannerItem.img = res.data;
+        this.showAddNewBannerModal = false;
+        this.showAddNewBannerModal = true;
+      }else{
+        this.$Notice.warning({
+          title: res.msg
+        })
+      }
+    },
+    //oldBanner
+    updateBanner (res, file) {
+      if (res.code == 0) {
+        this.editBannerItem.img = res.data;
+        this.showEditBannerModal = false;
+        this.showEditBannerModal = true;
+      }else{
+        this.$Notice.warning({
+          title: res.msg
+        })
+      }
+    },
+    // 图片预览
+    handleViewBanner (params) {
+      this.imgUrl = params.row.url;
+      this.visible = true
+    },
+    // 启用
+    handleEditAlive(params){
+
+    },
+    // 禁用
+    handleEditBan(params){
+
+    },
+    // 增加新
+    addNewBannerModal(){
+      this.newBannerItem = {};
+      this.showAddNewBannerModal = true;
+    },
+    // 保存新
+    saveAddNewBannerInfo(){
+
+    },
+    // 修改
+    handleEditInfo(params){
+      this.editBannerItem = {};
+      this.showEditBannerModal = true;
+    },
+    // saveEditBannerInfo
+    saveEditBannerInfo(){
+
     }
+
   },
   mounted () {
     getKitchenList().then(res => {
@@ -291,7 +334,7 @@ export default {
         })
         return
       }
-      this.kitchenList = dbody.data.list
+      this.bannerList = dbody.data.list
     })
   },
   computed: {
@@ -300,6 +343,54 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .store_logo{
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+    border:1px solid #ddd;
+  }
+  .store_erweima{
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    border:1px solid #ddd;
+  }
+  .img-upload-list{
+      display: inline-block;
+      width: 60px;
+      min-height: 60px;
+      height: 60px;
+      text-align: center;
+      line-height: 60px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #fff;
+      position: relative;
+      box-shadow: 0 1px 1px rgba(0,0,0,.2);
+      margin-right: 4px;
+  }
+  .img-upload-list img{
+      width: 100%;
+      height: 100%;
+  }
+  .img-upload-list-cover{
+      display: none;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0,0,0,.6);
+  }
+  .img-upload-list:hover .img-upload-list-cover{
+      display: block;
+  }
+  .img-upload-list-cover i{
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      margin: 0 2px;
+  }
 </style>
