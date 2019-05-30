@@ -39,4 +39,9 @@ export default {
   add_permission:'添加权限组',
   order_config:'表格配置',
 
+  spread:'运营推广',
+  spread_list:'推广商户列表',
+  apply_list:'申领列表',
+  config_list:'小程序设置',
+
 }

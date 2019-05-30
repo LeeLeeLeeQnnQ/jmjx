@@ -509,15 +509,6 @@ export default [
         },
         component: () => import('@/view/finance/kitchen_bill/main.vue')
       },
-      // {
-      //   path: '/finance_print',
-      //   name: 'finance_print',
-      //   meta: {
-      //     icon: '_jisuanqilishuai-xianxing-xi',
-      //     title: '打印',
-      //   },
-      //   component: () => import('@/view/finance/finance_print/main.vue')
-      // }
     ]
   },
   // 配置
@@ -606,6 +597,45 @@ export default [
       },
     ]
   },
+  // 传播
+  // {
+  //   path: '/spread',
+  //   name: 'spread',
+  //   meta: {
+  //     icon: '_diamond',
+  //     title: '商户运营',
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/spread_list',
+  //       name: 'spread_list',
+  //       meta: {
+  //         icon: '_shouye-xianxing',
+  //         title: '商户运营列表',
+  //       },
+  //       component: () => import('@/view/spread/spread_list/main.vue')
+  //     },
+  //     {
+  //       path: '/apply_list',
+  //       name: 'apply_list',
+  //       meta: {
+  //         icon: '_hongbao-xianxing',
+  //         title: '申领列表',
+  //       },
+  //       component: () => import('@/view/spread/apply_list/main.vue')
+  //     },
+  //     {
+  //       path: '/config_list',
+  //       name: 'config_list',
+  //       meta: {
+  //         icon: '_anzhuangshigong-xianxing',
+  //         title: '小程序设置',
+  //       },
+  //       component: () => import('@/view/spread/config_list/main.vue')
+  //     },
+  //   ]
+  // },
   // 401
   {
     path: '/401',
