@@ -221,6 +221,7 @@ export const getNormalStoreList = (id) => {
   work_type 5 -- 支出表格
   work_type 7 -- 起租表格
   work_type 8 -- 退租表格
+  work_type 9 -- 区域下拉
 */
 /*
   build-kichen --  起租表格
@@ -233,6 +234,7 @@ export const getNormalStoreList = (id) => {
   kitchen_shop_edit2 --  退租表格
   kitchen_shop_handle2 --  退租表格
   finance_shop_handle2 --  退租表格
+  spread_list -- 9  退租表格
 */
 export const getWorkCategoryList = ( id ) => {
   const obj = { work_type : id };

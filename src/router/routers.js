@@ -598,65 +598,48 @@ export default [
     ]
   },
   // 传播
-  // {
-  //   path: '/spread',
-  //   name: 'spread',
-  //   meta: {
-  //     icon: '_diamond',
-  //     title: '商户运营',
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: '/spread_list',
-  //       name: 'spread_list',
-  //       meta: {
-  //         icon: '_shouye-xianxing',
-  //         title: '商户运营列表',
-  //       },
-  //       component: () => import('@/view/spread/spread_list/main.vue')
-  //     },
-  //     {
-  //       path: '/apply_list',
-  //       name: 'apply_list',
-  //       meta: {
-  //         icon: '_hongbao-xianxing',
-  //         title: '申领列表',
-  //       },
-  //       component: () => import('@/view/spread/apply_list/main.vue')
-  //     },
-  //     {
-  //       path: '/config_list',
-  //       name: 'config_list',
-  //       meta: {
-  //         icon: '_anzhuangshigong-xianxing',
-  //         title: '小程序设置',
-  //       },
-  //       component: () => import('@/view/spread/config_list/main.vue')
-  //     },
-  //   ]
-  // },
-  // 商户推广红包
-  // {
-  //   path: '/store_spread',
-  //   name: 'store_spread',
-  //   meta: {
-  //     icon: '_diamond',
-  //     title: '商户推广红包',
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: '/store_spread_list',
-  //       name: 'store_spread_list',
-  //       meta: {
-  //         icon: '_shouye-xianxing',
-  //         title: '推广红包列表',
-  //       },
-  //       component: () => import('@/view/store_spread/store_spread_list/main.vue')
-  //     },
-  //   ]
-  // },
+  {
+    path: '/spread',
+    name: 'spread',
+    meta: {
+      icon: '_diamond',
+      title: '商户运营',
+      access: [700]
+    },
+    component: Main,
+    children: [
+      {
+        path: '/spread_list',
+        name: 'spread_list',
+        meta: {
+          icon: '_shouye-xianxing',
+          title: '商户运营列表',
+          access: [701]
+        },
+        component: () => import('@/view/spread/spread_list/main.vue')
+      },
+      {
+        path: '/apply_list',
+        name: 'apply_list',
+        meta: {
+          icon: '_hongbao-xianxing',
+          title: '申领列表',
+          access: [702]
+        },
+        component: () => import('@/view/spread/apply_list/main.vue')
+      },
+      {
+        path: '/config_list',
+        name: 'config_list',
+        meta: {
+          icon: '_anzhuangshigong-xianxing',
+          title: '小程序设置',
+          access: [703]
+        },
+        component: () => import('@/view/spread/config_list/main.vue')
+      },
+    ]
+  },
   // 401
   {
     path: '/401',

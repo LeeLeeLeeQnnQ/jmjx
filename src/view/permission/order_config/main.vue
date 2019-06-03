@@ -39,7 +39,7 @@
         v-model="showDeleModal"
         @on-ok="saveDeleModalInfo"
         :style="{top: '20px'}">
-        <p>确认删除厨房吗？</p>
+        <p>确认删除吗？</p>
     </Modal>
   </div>
 </template>
@@ -85,6 +85,9 @@ export default {
                 break
               case 8:
                 return h('span', '退租表格')
+                break
+              case 9:
+                return h('span', '区域下拉')
                 break
             }
           }
@@ -176,6 +179,10 @@ export default {
         {
           id:8,
           title:'退租表格'
+        },
+        {
+          id:9,
+          title:'区域下拉'
         },
       ]
     }

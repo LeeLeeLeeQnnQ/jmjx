@@ -14,6 +14,7 @@
           @data-edit-ban="handleEditBan" 
           @data-edit-info="handleEditInfo"
       />
+      <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewBannerPage" style="margin-top:10px;"/>
     </Card>
     <!-- 查看图片 -->
     <Modal title="预览图" v-model="visible">
@@ -26,19 +27,22 @@
       @on-ok="saveAddNewBannerInfo" >
         <Form :model="newBannerItem" :label-width="120" inline>
           <FormItem label="名称">
-            <Input v-model="newBannerItem.name" placeholder="banner名称" style="width: 200px"></Input>
+            <Input v-model="newBannerItem.title" placeholder="banner名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="排序">
+            <Input v-model="newBannerItem.sort" placeholder="越大越靠前" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="描述">
-            <Input v-model="newBannerItem.remark" type="textarea" :rows="4" placeholder="描述"  style="width: 200px"/>
+            <Input v-model="newBannerItem.content" type="textarea" :rows="4" placeholder="描述"  style="width: 200px"/>
           </FormItem>
           <FormItem label="链接">
             <Input v-model="newBannerItem.url" placeholder="请输入url" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="banner图片" style="width: 200px" >
-            <div v-if="!!newBannerItem.img" class="img-upload-list">
-              <img :src="newBannerItem.img">
+            <div v-if="!!newBannerItem.image" class="img-upload-list">
+              <img :src="newBannerItem.image">
               <div class="img-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(newBannerItem.img)"></Icon>
+                  <Icon type="ios-eye-outline" @click.native="handleView(newBannerItem.image)"></Icon>
               </div>
             </div>
             <Upload
@@ -68,19 +72,22 @@
       @on-ok="saveEditBannerInfo" >
         <Form :model="editBannerItem" :label-width="120" inline>
           <FormItem label="名称">
-            <Input v-model="editBannerItem.name" placeholder="banner名称" style="width: 200px"></Input>
+            <Input v-model="editBannerItem.title" placeholder="banner名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="排序">
+            <Input v-model="editBannerItem.sort" placeholder="越大越靠前" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="描述">
-            <Input v-model="editBannerItem.remark" type="textarea" :rows="4" placeholder="描述"  style="width: 200px"/>
+            <Input v-model="editBannerItem.content" type="textarea" :rows="4" placeholder="描述"  style="width: 200px"/>
           </FormItem>
           <FormItem label="链接">
             <Input v-model="editBannerItem.url" placeholder="请输入url" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="banner图片" style="width: 200px" >
-            <div v-if="!!editBannerItem.img" class="img-upload-list">
-              <img :src="editBannerItem.img">
+            <div v-if="!!editBannerItem.image" class="img-upload-list">
+              <img :src="editBannerItem.image">
               <div class="img-upload-list-cover">
-                  <Icon type="ios-eye-outline" @click.native="handleView(editBannerItem.img)"></Icon>
+                  <Icon type="ios-eye-outline" @click.native="handleView(editBannerItem.image)"></Icon>
               </div>
             </div>
             <Upload
@@ -107,9 +114,9 @@
 </template>
 <script>
 // 权限
-// /api/Kitchen/index,/api/Kitchen/add,/api/Kitchen/delete
+// Banner/index,Banner/add,Banner/edit,Banner/status
 import Tables from '_c/tables'
-import { getKitchenList } from '@/api/setting'
+import { getBannerList , addNewBanner , editBanner , changeBannerStatus } from '@/api/spread'
 export default {
   name: 'config_list',
   components: {
@@ -123,7 +130,7 @@ export default {
           key: 'handle',
           button: [
             (h, params, vm) => {
-              let banner_name = params.row.kitchen_name;
+              let title = params.row.title;
               return h('a', {
                 style:{
                   margin:"0"
@@ -137,13 +144,23 @@ export default {
                     vm.$emit('data-view-banner', params)
                   }
                 }},
-              banner_name)
+              title)
             }, 
           ]
         },
-        {title: '状态', key: 'manage_name', width: 80},
-        {title: '链接', key: 'manage_name', width: 80},
-        {title: '描述', key: 'manage_phone'},
+        {title: '位置（大的靠前）', key: 'sort'},
+        { title: '状态',
+          render: (h, params) => {
+            let status = params.row.status*1
+            if(status == 1){
+              return h('span', { style: {color: '#19be6b'}}, '正常')
+            }else if (status == 2) {
+              return h('span', { style: {color: '#2d8cf0'}}, '禁用' )
+            }
+          }
+        },
+        {title: '链接', key: 'url'},
+        {title: '描述', key: 'content'},
         {
           title: '编辑',
           key: 'handle',
@@ -223,6 +240,12 @@ export default {
         },
       ],
       bannerList: [],
+      page: {
+        current_page: 1,
+        last_page: '',
+        list_rows: 0,
+        total: 0
+      },
       // 图片
       imgUrl: '',
       visible: false,
@@ -232,6 +255,7 @@ export default {
       // 修改showEditBannerModal
       showEditBannerModal:false,
       editBannerItem:{},
+
     }
   },
   methods: {
@@ -240,13 +264,6 @@ export default {
       this.imgUrl = imgUrl
       this.visible = true
     },
-    // 删除图片
-    handleRemove (file, name) {
-      const fileList = this.$refs[name].fileList
-      this.$refs[name].fileList.splice(fileList.indexOf(file), 1)
-      this[name].splice(fileList.indexOf(file), 1)
-    },
-    
     // 错误提示
     handleFormatError (file) {
       this.$Notice.warning({
@@ -271,7 +288,7 @@ export default {
     //NewBanner
     uploadNewBanner (res, file) {
       if (res.code == 0) {
-        this.newBannerItem.img = res.data;
+        this.newBannerItem.image = res.data;
         this.showAddNewBannerModal = false;
         this.showAddNewBannerModal = true;
       }else{
@@ -283,7 +300,7 @@ export default {
     //oldBanner
     updateBanner (res, file) {
       if (res.code == 0) {
-        this.editBannerItem.img = res.data;
+        this.editBannerItem.image = res.data;
         this.showEditBannerModal = false;
         this.showEditBannerModal = true;
       }else{
@@ -294,16 +311,70 @@ export default {
     },
     // 图片预览
     handleViewBanner (params) {
-      this.imgUrl = params.row.url;
+      this.imgUrl = params.row.image;
       this.visible = true
     },
     // 启用
     handleEditAlive(params){
-
+      let data = {
+        id:params.row.id,
+        status:1,
+      }
+      changeBannerStatus( data ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: '变更成功！'
+        })
+        this.initBanner({ page:this.current_page });
+      })
     },
     // 禁用
     handleEditBan(params){
-
+      let data = {
+        id:params.row.id,
+        status:2,
+      }
+      changeBannerStatus( data ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: '变更成功！'
+        })
+        this.initBanner({ page:this.current_page });
+      })
+    },
+    // 验证数据完整
+    testObj( data ){
+      if(!data.image){
+        this.$Notice.warning({
+          title: 'banner图片错误！'
+        })
+        return false
+      }
+      if(!data.title){
+        this.$Notice.warning({
+          title: 'banner名称错误！'
+        })
+        return false
+      }
+      if(isNaN(data.sort)){
+        this.$Notice.warning({
+          title: 'banner排序错误！'
+        })
+        return false
+      }
+      return true
     },
     // 增加新
     addNewBannerModal(){
@@ -312,30 +383,73 @@ export default {
     },
     // 保存新
     saveAddNewBannerInfo(){
-
+      if(this.testObj(this.newBannerItem)){
+        this.newBannerItem.banner_type = 2;
+        addNewBanner( this.newBannerItem ).then(res => {
+          const dbody = res.data
+          if (dbody.code != 0) {
+            this.$Notice.warning({
+              title: dbody.msg
+            })
+            return
+          }
+          this.$Notice.warning({
+            title: '新增成功！'
+          })
+          this.initBanner({ page:this.current_page });
+        })
+      }
     },
     // 修改
     handleEditInfo(params){
       this.editBannerItem = {};
+      this.editBannerItem = params.row;
       this.showEditBannerModal = true;
     },
     // saveEditBannerInfo
     saveEditBannerInfo(){
+      if(this.testObj(this.editBannerItem)){
+        let data = Object.assign({},this.editBannerItem);
+        delete data.create_time
+        delete data.update_time
+        editBanner( data ).then(res => {
+          const dbody = res.data
+          if (dbody.code != 0) {
+            this.$Notice.warning({
+              title: dbody.msg
+            })
+            return
+          }
+          this.$Notice.warning({
+            title: '修改成功！'
+          })
+          this.initBanner({ page:this.current_page });
+        })
+      }
+    },
 
+    // 选择新页面
+    getNewBannerPage(page){
+      this.initBanner({ page : page });
+    },
+    // initBanner
+    initBanner(data){
+      getBannerList(data).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.bannerList = dbody.data.list || [];
+        this.page = dbody.data.page;
+      })
     }
 
   },
   mounted () {
-    getKitchenList().then(res => {
-      const dbody = res.data
-      if (dbody.code != 0) {
-        this.$Notice.warning({
-          title: dbody.msg
-        })
-        return
-      }
-      this.bannerList = dbody.data.list
-    })
+    this.initBanner();
   },
   computed: {
 

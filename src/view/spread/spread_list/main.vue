@@ -18,7 +18,7 @@
       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
     </Card>
     <!-- 查看图片 -->
-    <Modal title="预览图" v-model="visible">w
+    <Modal title="预览图" v-model="visible">
         <img :src="imgUrl" v-if="visible" style="width: 100%">
     </Modal>
     <!-- 添加店铺 -->
@@ -28,22 +28,25 @@
       @on-ok="saveAddModalInfo" >
         <Form :model="addItem" :label-width="120" inline>
           <FormItem label="经营品类">
-            <Input v-model="addItem.type" placeholder="不超过6个字" style="width: 200px"></Input>
+            <Input v-model="addItem.category" placeholder="不超过6个字" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="地区选择">
-            <Select v-model="addItem.kitchen_id" @on-change="getNewKitchen" style="width: 200px">
-              <Option v-for="item in spreadList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
+            <Select v-model="addItem.area_id" @on-change="getNewArea" style="width: 200px">
+              <Option v-for="item in areaList" :value="item.id" :key="item.id">{{ item.area_name }}</Option>
             </Select>
           </FormItem>
           <FormItem label="商铺名称">
-            <Input v-model="addItem.manage_phone" placeholder="输入商铺名称" style="width: 200px"></Input>
+            <Input v-model="addItem.shop_name" placeholder="输入商铺名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="经营者">
+            <Input v-model="addItem.shopkeeper" placeholder="输入商铺名称" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="商铺电话">
-            <Input v-model="addItem.manage_phone" placeholder="输入商铺电话" style="width: 200px"></Input>
+            <Input v-model="addItem.shop_phone" placeholder="输入商铺电话" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="店铺LOGO" style="width: 200px">
             <div>
-              <img v-if="!!addItem.store_logo" class="store_logo" :src="addItem.store_logo">
+              <img v-if="!!addItem.shop_logo" class="store_logo" :src="addItem.shop_logo">
             </div>
             <Upload
               ref="uploadLetter"
@@ -64,18 +67,18 @@
             </Upload>
           </FormItem>
           <FormItem label="满减优惠">
-            <Input v-model="addItem.kitchen_rent" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
+            <Input v-model="addItem.activities" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="返利规则">
-            <Input v-model="addItem.garbage_fee" placeholder="输入返利规则（返8元现金红包）" style="width: 200px"></Input>
+            <Input v-model="addItem.rules" placeholder="输入返利规则（返8元现金红包）" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="红包金额">
-            <Input v-model="addItem.flue_fee" placeholder="输入红包金额" style="width: 200px"></Input>
+            <Input v-model="addItem.coupon_value" placeholder="输入红包金额" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="美团二维码">
             <div style="width: 200px">
               <div>
-                <img v-if="!!addItem.store_meituan_erweima" class="store_erweima" :src="addItem.store_meituan_erweima">
+                <img v-if="!!addItem.meituan_qrcode" class="store_erweima" :src="addItem.meituan_qrcode">
               </div>
               <Upload
                 :show-upload-list="false"
@@ -97,7 +100,7 @@
           <FormItem label="饿了么二维码" >
             <div style="width: 200px">
               <div>
-                <img v-if="!!addItem.store_eleme_erweima" class="store_erweima" :src="addItem.store_eleme_erweima">
+                <img v-if="!!addItem.ele_qrcode" class="store_erweima" :src="addItem.ele_qrcode">
               </div>
               <Upload
                 ref="uploadLetter"
@@ -126,22 +129,25 @@
       @on-ok="saveEditModalInfo" >
         <Form :model="editItem" :label-width="120" inline>
           <FormItem label="经营品类">
-            <Input v-model="editItem.type" placeholder="不超过6个字" style="width: 200px"></Input>
+            <Input v-model="editItem.category" placeholder="不超过6个字" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="地区选择">
-            <Select v-model="editItem.kitchen_id" @on-change="getNewKitchen" style="width: 200px">
-              <Option v-for="item in spreadList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
+            <Select v-model="editItem.area_id" @on-change="getEditArea" style="width: 200px">
+              <Option v-for="item in areaList" :value="item.id" :key="item.id">{{ item.area_name }}</Option>
             </Select>
           </FormItem>
           <FormItem label="商铺名称">
-            <Input v-model="editItem.manage_phone" placeholder="输入商铺名称" style="width: 200px"></Input>
+            <Input v-model="editItem.shop_name" placeholder="输入商铺名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="经营者">
+            <Input v-model="editItem.shopkeeper" placeholder="输入商铺名称" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="商铺电话">
-            <Input v-model="editItem.manage_phone" placeholder="输入商铺电话" style="width: 200px"></Input>
+            <Input v-model="editItem.shop_phone" placeholder="输入商铺电话" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="店铺LOGO" style="width: 200px">
             <div>
-              <img v-if="!!editItem.store_logo" class="store_logo" :src="editItem.store_logo">
+              <img v-if="!!editItem.shop_logo" class="store_logo" :src="editItem.shop_logo">
             </div>
             <Upload
               ref="uploadLetter"
@@ -162,18 +168,18 @@
             </Upload>
           </FormItem>
           <FormItem label="满减优惠">
-            <Input v-model="editItem.kitchen_rent" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
+            <Input v-model="editItem.activities" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="返利规则">
-            <Input v-model="editItem.garbage_fee" placeholder="输入返利规则（返8元现金红包）" style="width: 200px"></Input>
+            <Input v-model="editItem.rules" placeholder="输入返利规则（返8元现金红包）" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="红包金额">
-            <Input v-model="editItem.flue_fee" placeholder="输入红包金额" style="width: 200px"></Input>
+            <Input v-model="editItem.coupon_value" placeholder="输入红包金额" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="美团二维码" >
             <div style="width: 200px">
               <div>
-                <img v-if="!!editItem.store_meituan_erweima" class="store_erweima" :src="editItem.store_meituan_erweima">
+                <img v-if="!!editItem.meituan_qrcode" class="store_erweima" :src="editItem.meituan_qrcode">
               </div>
               <Upload
                 ref="uploadLetter"
@@ -197,7 +203,7 @@
           <FormItem label="饿了么二维码">
             <div  style="width: 200px">
               <div>
-                <img v-if="!!editItem.store_eleme_erweima" class="store_erweima" :src="editItem.store_eleme_erweima">
+                <img v-if="!!editItem.ele_qrcode" class="store_erweima" :src="editItem.ele_qrcode">
               </div>
               <Upload
                 ref="uploadLetter"
@@ -228,9 +234,9 @@
         <Form :model="editItem" :label-width="120" inline>
           <FormItem label="更改状态">
             <Select v-model="statusItem" style="width: 200px">
-              <Option :value="1" :key="1">启用</Option>
-              <Option :value="2" :key="2">禁用</Option>
-              <Option :value="3" :key="3">下线</Option>
+              <Option :value="1" :key="1">上线</Option>
+              <Option :value="2" :key="2">敬请期待</Option>
+              <Option :value="3" :key="3">禁用</Option>
             </Select>
           </FormItem>
         </Form>
@@ -242,9 +248,12 @@
       @on-ok="saveRechargeModalInfo" >
         <Form :model="rechargeItem" :label-width="120" inline>
           <FormItem label="充值金额">
-            <Input v-model="rechargeItem.type" placeholder="输入金额" style="width: 200px"></Input>
+            <Input v-model="rechargeItem.money" placeholder="输入金额" style="width: 200px"></Input>
           </FormItem>
-          <FormItem label="本次缴纳凭证">
+          <FormItem label="备注">
+            <Input v-model="rechargeItem.remark" placeholder="输入金额" style="width: 200px"></Input>
+          </FormItem>
+<!--           <FormItem label="本次缴纳凭证">
             <div class="img-upload-list" v-for="item in rechargeImgList">
               <div>
                 <img :src="item">
@@ -270,7 +279,7 @@
                     <Icon type="ios-camera" size="20"></Icon>
                 </div>
               </Upload>
-          </FormItem>
+          </FormItem> -->
         </Form>
     </Modal>
     <!-- 标签编辑 -->
@@ -296,8 +305,8 @@
           ref="tables"
           v-model="rechargeBillList"
           :columns="rechargeColumns"
-          @voucher-view="showStoreBudgetVoucher"
         />
+        <!-- @voucher-view="showStoreBudgetVoucher" -->
         <Page :total="recharge_page.total" :page-size="recharge_page.list_rows" @on-change="getRechargeNewPage" style="margin-top:10px;"/>
     </Modal>
     <!-- 充值凭证 -->
@@ -315,8 +324,8 @@
 </template>
 <script>
 // 权限
-// 
-import { getKitchenList  } from '@/api/setting'
+// Shop/index,Shop/add,Shop/edit,Shop/state,Area/getAreaList,Shop/deposit,ShopPay/index
+import { getSpreadStoreList , addSpreadStore , editSpreadStore , changeStateSpreadStore , getAreaList , depositSpreadStore , getShopPayList } from '@/api/spread'
 import Tables from '_c/tables'
 export default {
   name: 'spread_list',
@@ -328,14 +337,16 @@ export default {
       // 图片
       imgUrl: '',
       visible: false,
+      // 当前充值店铺id
+      recharge_store_id:'',
       // 
       columns: [
         {title: '推广店铺ID', key: 'id',width:100},
-        {title: '店铺名称', key: 'kitchen_name'},
-        {title: '店铺电话', key: 'kitchen_name'},
+        {title: '店铺名称', key: 'shop_name'},
+        {title: '店铺电话', key: 'shop_phone'},
         { title: '余额',
           render: (h, params) => {
-            let yue = params.row.use_total*1
+            let yue = params.row.shop_account*1
             if(yue > 50){
               return h('span', { style: {color: '#19be6b'}}, yue)
             }else if (yue > 0) {
@@ -345,12 +356,18 @@ export default {
             }  
           }
         },
-        {title: '建立日期', key: 'manage_name'},
-        {title: '返单数', key: 'manage_phone'},
+        {title: '建立日期', key: 'create_time'},
+        {title: '返单数', key: 'order_count'},
         { title: '状态',
           render: (h, params) => {
-            let a = (params.row.rent_total*1/10000).toFixed(2)+'万';
-            return h('span', a)
+            let status = params.row.shop_state;
+            if(status == '1'){
+              return h('span', { style: {color: '#19be6b'}}, '上线')
+            }else if (status == '2') {
+              return h('span', { style: {color: '#2d8cf0'}}, '敬请期待')
+            }else if (status == '3') {
+              return h('span', { style: {color: 'red'}}, '禁用')
+            }
           }
         },
         {
@@ -465,7 +482,10 @@ export default {
         list_rows: 0,
         total: 0
       },
+      // 区域下拉
+      areaList:[],
       spreadList: [],
+      currentId:'',
       // 
       showAddModal: false,
       addItem: {},
@@ -481,29 +501,29 @@ export default {
       rechargeBillList:[],
       // 充值col
       rechargeColumns: [
-        {title: '充值时间', key: 'name'},
-        {title: '店铺名称', key: 'kitchen_name'},
-        {title: '充值金额', key: 'kitchen_name'},
-        {
-          title: '查看凭证',
-          key: 'handle',
-          button: [
-            (h, params, vm) => {
-              return h('Button', {
-                style: {},
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('voucher-view', params)
-                  }
-                }},
-              '查看凭证')
-            }
-          ]
-        },
+        {title: '充值时间', key: 'create_time'},
+        {title: '充值金额', key: 'money'},
+        {title: '备注', key: 'remark'},
+        // {
+        //   title: '查看凭证',
+        //   key: 'handle',
+        //   button: [
+        //     (h, params, vm) => {
+        //       return h('Button', {
+        //         style: {},
+        //         props: {
+        //           type: 'primary',
+        //           size: 'small'
+        //         },
+        //         on: {
+        //           'click': () => {
+        //             vm.$emit('voucher-view', params)
+        //           }
+        //         }},
+        //       '查看凭证')
+        //     }
+        //   ]
+        // },
       ],
       recharge_page:{
         current_page: 1,
@@ -537,8 +557,7 @@ export default {
       const fileList = this.$refs[name].fileList
       this.$refs[name].fileList.splice(fileList.indexOf(file), 1)
       this[name].splice(fileList.indexOf(file), 1)
-    },
-    
+    },  
     // 错误提示
     handleFormatError (file) {
       this.$Notice.warning({
@@ -560,10 +579,9 @@ export default {
       reader.onload = (event) => {
       }
     },
-    // 退场其他
     uploadStoreLogo (res, file) {
       if (res.code == 0) {
-        this.addItem.store_logo = res.data;
+        this.addItem.shop_logo = res.data;
         this.showAddModal = false;
         this.showAddModal = true;
       }else{
@@ -574,8 +592,7 @@ export default {
     },
     uploadMeituanStoreErweima(res, file) {
       if (res.code == 0) {
-        this.addItem.store_meituan_erweima = res.data;
-        console.log(this.addItem)
+        this.addItem.meituan_qrcode = res.data;
         this.showAddModal = false;
         this.showAddModal = true;
       }else{
@@ -586,7 +603,7 @@ export default {
     },
     uploadElemeStoreErweima(res, file) {
       if (res.code == 0) {
-        this.addItem.store_eleme_erweima = res.data;
+        this.addItem.ele_qrcode = res.data;
         this.showAddModal = false;
         this.showAddModal = true;
       }else{
@@ -598,9 +615,9 @@ export default {
     // 修改
     updateStoreLogo(res, file) {
       if (res.code == 0) {
-        this.editItem.store_logo = res.data;
-        this.showAddModal = false;
-        this.showAddModal = true;
+        this.editItem.shop_logo = res.data;
+        this.showEditModal = false;
+        this.showEditModal = true;
       }else{
         this.$Notice.warning({
           title: res.msg
@@ -609,7 +626,7 @@ export default {
     },
     updateElemeStoreErweima(res, file) {
       if (res.code == 0) {
-        this.editItem.store_meituan_erweima = res.data;
+        this.editItem.ele_qrcode = res.data;
         this.showEditModal = false;
         this.showEditModal = true;
       }else{
@@ -620,7 +637,7 @@ export default {
     },
     updateMeituanStoreErweima(res, file) {
       if (res.code == 0) {
-        this.editItem.store_eleme_erweima = res.data;
+        this.editItem.meituan_qrcode = res.data;
         this.showEditModal = false;
         this.showEditModal = true;
       }else{
@@ -646,34 +663,167 @@ export default {
     },
     // 查看充值列表
     handleViewRechargeList(params) {
-      let spread_store_id = params.row.id;
-      this.rechargeBillList = [
-        { name:'1' }
-      ]
-      this.showRechargeModalList = true;
+      this.recharge_store_id = params.row.id;
+      this.rechargeBillList = [];
+      getShopPayList( { id : this.recharge_store_id } ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.rechargeBillList = dbody.data.list || [];
+        this.recharge_page = dbody.data.page;
+        this.showRechargeModalList = true;
+      })
+    },
+    // 获取新区域
+    getNewArea(){
+      this.areaList.forEach((item) => {
+        if(this.addItem.area_id == item.id){
+          this.addItem.area_name = item.title
+        }
+      })
+    },
+    getEditArea(){
+      this.areaList.forEach((item) => {
+        if(this.editItem.area_id == item.id){
+          this.editItem.area_name = item.title
+        }
+      })
     },
     // 编辑推广商户
     handleEditInfo(params) {
       this.editItem = params.row;
       this.showEditModal = true;
     },
+    // 验证数据完整
+    testObj( data ){
+      if(!data.shop_name){
+        this.$Notice.warning({
+          title: '店铺名称错误！'
+        })
+        return false
+      }
+      if(!data.shop_phone ){
+        this.$Notice.warning({
+          title: '店铺电话错误！'
+        })
+        return false
+      }
+      if(!data.shopkeeper){
+        this.$Notice.warning({
+          title: '经营者错误！'
+        })
+        return false
+      }
+      if(!data.shop_logo){
+        this.$Notice.warning({
+          title: '商户logo错误！'
+        })
+        return false
+      }
+      if(!data.area_id){
+        this.$Notice.warning({
+          title: '区域商圈错误！'
+        })
+        return false
+      }
+      if(!data.category){
+        this.$Notice.warning({
+          title: '经营品类错误！'
+        })
+        return false
+      }
+      if(!data.activities){
+        this.$Notice.warning({
+          title: '满减优惠错误！'
+        })
+        return false
+      }
+      if(!data.rules){
+        this.$Notice.warning({
+          title: '返利规则错误！'
+        })
+        return false
+      }
+      if(!data.ele_qrcode || !data.meituan_qrcode){
+        this.$Notice.warning({
+          title: '商户二维码错误！'
+        })
+        return false
+      }
+      return true
+    },
     // 创建推广商户
     saveAddModalInfo(){
-
+      if(this.testObj(this.addItem)){
+        addSpreadStore( this.addItem ).then(res => {
+          const dbody = res.data
+          if (dbody.code != 0) {
+            this.$Notice.warning({
+              title: dbody.msg
+            })
+            return
+          }
+          this.$Notice.warning({
+            title: "添加成功！"
+          })
+          this.init({ page:this.current_page });
+        })
+      }
     },
     // 保存修改
     saveEditModalInfo(){
-
+      if(this.testObj(this.editItem)){
+        let data = Object.assign({}, this.editItem);
+        delete data.update_time;
+        delete data.create_time;
+        editSpreadStore( data ).then(res => {
+          const dbody = res.data
+          if (dbody.code != 0) {
+            this.$Notice.warning({
+              title: dbody.msg
+            })
+            return
+          }
+          this.$Notice.warning({
+            title: "修改成功！"
+          })
+          this.init({ page:this.current_page });
+        })
+      }
     },
     // 保存充值记录
     saveRechargeModalInfo(){
-
+      if(isNaN(this.rechargeItem.money)){
+        this.$Notice.warning({
+          title: '充值金额错误！'
+        })
+        return
+      }
+      depositSpreadStore( this.rechargeItem ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: "充值成功！"
+        })
+        this.init({ page:this.current_page });
+      })
     },
     // 商户充值登记
     saveRechargeInfo(params){
-      let spread_store_id = params.row.id;
-      this.rechargeImgList = [];
-      this.rechargeItem = {};
+      this.recharge_store_id = params.row.id;
+      // this.rechargeImgList = [];
+      this.rechargeItem = {
+        id:this.recharge_store_id,
+      };
       this.showRechargeModal = true;
     },
     // 展示凭证
@@ -683,44 +833,106 @@ export default {
       this.storeBudgetList = voucher;
       this.showRechargeBudgetList = true;
     },
-
     // showEditTagModal 展示
     handleEditTagModal(params){
+      let arr = !!params.row.tags? params.row.tags.split(',') : [];
       this.tagItem = {};
+      arr.map((item,index) => {
+        let str = 'tag'+(index+1)
+        this.tagItem[str] = item;
+      })
+      this.currentId = params.row.id || '';
       this.showEditTagModal = true;
     },
     // saveEditTagModalInfo 保存标签
     saveEditTagModalInfo(){
-
-    },
-    //获取地点 
-    getNewKitchen(){
-
+      let tagArr = [];
+      for( let key in this.tagItem ){
+        if(!!this.tagItem[key]){
+          tagArr.push(this.tagItem[key])
+        }
+      }
+      let data = {
+        id : this.currentId,
+        tags : tagArr.join(','),
+      }
+      editSpreadStore( data ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: "编辑成功！"
+        })
+        this.init({ page:this.current_page });
+      })
     },
     // 选择新页面
     getNewPage(page){
-      
+      this.init({ page : page });
     },
     // 充值页面新
     getRechargeNewPage(page){
-      
+      getShopPayList( { id : this.recharge_store_id , page: page } ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.rechargeBillList = dbody.data.list || [];
+        this.recharge_page = dbody.data.page;
+        this.showRechargeModalList = false;
+        this.showRechargeModalList = true;
+      })
     },
     // 显示更改店铺状态
     handleEditStatus(params){
-      this.statusItem = '';
+      this.currentId = params.row.id || '';
+      this.statusItem = params.row.status || '';
       this.showEditStatusModal = true;
     },
     // 保存变更
     saveEditStatusModalInfo(){
-
+      let data = {
+        id : this.currentId , 
+        shop_state : this.statusItem , 
+      }
+      changeStateSpreadStore( data ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: "修改成功！"
+        })
+        this.init({ page:this.current_page });
+      })
     },
     // 初始化
-    init(){
-
+    init( data ){
+      getSpreadStoreList( data ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.spreadList = dbody.data.list || [];
+        this.page = dbody.data.page;
+      })
     },
   },
   mounted () {
-    getKitchenList().then(res => {
+    getAreaList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({
@@ -728,7 +940,8 @@ export default {
         })
         return
       }
-      this.spreadList = dbody.data.list
+      this.areaList = dbody.data || [];
+      this.init();
     })
   },
   computed: {

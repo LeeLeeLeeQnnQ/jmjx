@@ -27,21 +27,25 @@
     <Modal title="驳回申请"
       v-model="showApplyReturnModal"
       @on-ok="saveApplyReturn">
-      <Input v-model="return_remark" type="textarea" :rows="4" placeholder="驳回原因" />
+      <Input v-model="return_remark.remark" type="textarea" :rows="4" placeholder="驳回原因" />
     </Modal>
     <!-- 发放 -->
     <Modal title="发放红包"
       v-model="showApplyPassModal"
       @on-ok="saveApplyPass">
-      <Input v-model="apply_money" placeholder="输入发放金额"></Input>
+      <Input v-model="apply_money.order_price" placeholder="输入发放金额"></Input>
+    </Modal>
+    <!-- 查看图片 -->
+    <Modal title="预览图" v-model="visible">
+        <img :src="imgUrl" v-if="visible" style="width: 100%">
     </Modal>
   </div>
 </template>
 <script>
 // 权限
-// /api/Kitchen/index,/api/Kitchen/add,/api/Kitchen/delete
+// UserOrder/index,UserOrder/state
 import Tables from '_c/tables'
-import { getKitchenList , addKitchen  , deleKitchen } from '@/api/setting'
+import { getSpreadUserOrderList , changeStateSpreadUserOrdert } from '@/api/spread'
 export default {
   name: 'apply_list',
   components: {
@@ -51,14 +55,49 @@ export default {
     return {
       columns: [
         {title: '申领ID', key: 'id', width: 80},
-        {title: '申领日期', key: 'kitchen_name'},
-        {title: '区域', key: 'kitchen_name'},
-        {title: '订单号', key: 'manage_name'},
-        {title: '红包金额', key: 'manage_name'},
-        {title: '店长电话', key: 'manage_phone'},
-        { title: '返现规则', key: 'manage_phone'},
-        { title: '审批状态', key: 'manage_phone'},
-        { title: '审批结果', key: 'manage_phone'},
+        {title: '申领日期', key: 'create_time'},
+        {title: '区域', key: 'area_name'},
+        {title: '订单号', key: 'order_sn'},
+        {title: '店铺名称', key: 'shop_name'},
+        {title: '红包金额', key: 'coupon_value'},
+        { title: '返现规则', key: 'rules'},
+        { title: '审批状态',
+          render: (h, params) => {
+            let order_state = params.row.order_state*1
+            if(order_state == 0){
+              return h('span', { style: {color: '#19be6b'}}, '未审核')
+            }else if (order_state == 1) {
+              return h('span', { style: {color: '#2d8cf0'}}, '已发放')
+            }else if (order_state == 2) {
+              return h('span', { style: {color: '#2d8cf0'}}, '发放中')
+            }else if (order_state == 3) {
+              return h('span', { style: {color: 'red'}}, '发放失败')
+            }else if (order_state == 4) {
+              return h('span', { style: {color: 'red'}}, '未通过')
+            }  
+          }
+        },
+        {title: '实发金额', key: 'order_price'},
+        { title: '审批结果',
+          render: (h, params) => {
+            let order_state = params.row.order_state*1
+            let remark = params.row.remark
+            let order_price = params.row.order_price*1
+            let notify_time = params.row.notify_time
+            if(order_state == 0){
+              return h('span', { style: {color: '#19be6b'}}, '未审核')
+            }else if (order_state == 1) {
+              let str = notify_time +'已发放'+ order_price.toFixed(2) + '红包'
+              return h('span', { style: {color: '#2d8cf0'}}, str )
+            }else if (order_state == 2) {
+              return h('span', { style: {color: '#2d8cf0'}}, '发放中请等待')
+            }else if (order_state == 3) {
+              return h('span', { style: {color: 'red'}}, remark )
+            }else if (order_state == 4) {
+              return h('span', { style: {color: 'red'}}, remark )
+            }  
+          }
+        },
         {
           title: '查看',
           key: 'handle',
@@ -134,9 +173,9 @@ export default {
       imgUrl: '',
       visible: false,
       // 驳回原因
-      return_remark:'',
+      return_remark:{},
       // 发放金额
-      apply_money:'',
+      apply_money:{},
     }
   },
   methods: {
@@ -147,42 +186,94 @@ export default {
     },
     // 选择新页面
     getNewPage(page){
-      
+      this.init({page:page})
     },
     // 查看凭证
     handleViewImg(params){
-      let voucher = !!params.row.images ? params.row.images.split(',') : [];
+      let voucher = [];
+      if(!!params.row.shop_image){
+        voucher.push(params.row.shop_image)
+      }
+      if(!!params.row.comment_image){
+        voucher.push(params.row.comment_image)
+      }
+      if(!!params.row.order_image){
+        voucher.push(params.row.order_image)
+      }
       this.applyImgList = [];
       this.applyImgList = voucher;
       this.showApplyImgList = true;
     },
     // 
     handleApplyReturn(params){
-      this.return_remark = '';
+      this.return_remark = {
+        id:params.row.id,
+        remark:params.row.remark,
+        order_state:4,
+      };
       this.showApplyReturnModal = true;
     },
     saveApplyReturn(){
-
-    },
-    // 
-    handleApplyPass(params){
-      this.showApplyPassModal = true;
-    },
-    saveApplyPass(){
-
-    }
-  },
-  mounted () {
-    getKitchenList().then(res => {
-      const dbody = res.data
-      if (dbody.code != 0) {
+      if(!this.return_remark.remark || this.return_remark.remark.length < 2){
         this.$Notice.warning({
-          title: dbody.msg
+          title: "驳回原因错误！"
         })
         return
       }
-      this.applyList = dbody.data.list
-    })
+      changeStateSpreadUserOrdert(this.return_remark).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.init({ page:this.current_page });
+      })
+    },
+    // 
+    handleApplyPass(params){
+      this.apply_money = {
+        id:params.row.id,
+        order_price:params.row.order_price,
+        order_state:1,
+      };
+      this.showApplyPassModal = true;
+    },
+    saveApplyPass(){
+      if(this.apply_money.order_price*1 <= 1){
+        this.$Notice.warning({
+          title: "金额错误！"
+        })
+        return
+      }
+      changeStateSpreadUserOrdert(this.apply_money).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.init({ page:this.current_page });
+      })
+    },
+    init(data){
+      getSpreadUserOrderList(data).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.applyList = dbody.data.list || [];
+        this.page = dbody.data.page;
+      })
+    }
+  },
+  mounted () {
+    this.init();
   },
   computed: {
 
