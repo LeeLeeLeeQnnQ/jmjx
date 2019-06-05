@@ -241,7 +241,7 @@ export default {
       this.showApplyPassModal = true;
     },
     saveApplyPass(){
-      if(this.apply_money.order_price*1 <= 1){
+      if(this.apply_money.order_price*1 < 1){
         this.$Notice.warning({
           title: "金额错误！"
         })
