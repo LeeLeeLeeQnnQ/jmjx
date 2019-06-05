@@ -83,11 +83,12 @@ export default {
             let order_state = params.row.order_state*1
             let remark = params.row.remark
             let order_price = params.row.order_price*1
-            let notify_time = params.row.notify_time
+            let approve_time_num =  new Date(params.row.approve_time*1000)
+            let approve_time  =  approve_time_num.toLocaleDateString().replace(/\//g, "-") + " " + approve_time_num.toTimeString().substr(0, 8)
             if(order_state == 0){
               return h('span', { style: {color: '#19be6b'}}, '未审核')
             }else if (order_state == 1) {
-              let str = notify_time +'已发放'+ order_price.toFixed(2) + '红包'
+              let str = approve_time +'/已发放'+ order_price.toFixed(2) + '红包'
               return h('span', { style: {color: '#2d8cf0'}}, str )
             }else if (order_state == 2) {
               return h('span', { style: {color: '#2d8cf0'}}, '发放中请等待')
