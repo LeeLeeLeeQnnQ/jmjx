@@ -125,7 +125,7 @@
     <!-- 修改店铺 -->
     <Modal 
       v-model="showEditModal"
-      title="添加推广商户"
+      title="修改推广商户"
       @on-ok="saveEditModalInfo" >
         <Form :model="editItem" :label-width="120" inline>
           <FormItem label="经营品类">
@@ -176,6 +176,9 @@
           <FormItem label="红包金额">
             <Input v-model="editItem.coupon_value" placeholder="输入红包金额" style="width: 200px"></Input>
           </FormItem>
+          <FormItem label="使用美团二维码" >
+            <Checkbox v-model="meituanSwitch" style="width: 200px" >使用美团二维码</Checkbox>
+          </FormItem>
           <FormItem label="美团二维码" >
             <div style="width: 200px">
               <div>
@@ -199,6 +202,9 @@
                 </div>
               </Upload>
             </div>
+          </FormItem>
+          <FormItem label="使用饿了么二维码" >
+            <Checkbox v-model="eleSwitch" style="width: 200px">使用饿了么二维码</Checkbox>
           </FormItem>
           <FormItem label="饿了么二维码">
             <div  style="width: 200px">
@@ -285,7 +291,7 @@
     <!-- 标签编辑 -->
     <Modal 
       v-model="showEditTagModal"
-      title="添加推广商户"
+      title="添加标签"
       @on-ok="saveEditTagModalInfo" >
         <Form :model="tagItem" :label-width="120" inline>
           <FormItem label="标签1">
@@ -543,7 +549,10 @@ export default {
       // id
       spread_store_id: '',
       // 
-      source_list:['美团','饿了么']
+      source_list:['美团','饿了么'],
+      // Switch
+      eleSwitch:true,
+      meituanSwitch:true,
     }
   },
   methods: {
@@ -748,12 +757,6 @@ export default {
         })
         return false
       }
-      if(!data.ele_qrcode || !data.meituan_qrcode){
-        this.$Notice.warning({
-          title: '商户二维码错误！'
-        })
-        return false
-      }
       return true
     },
     // 创建推广商户
@@ -780,6 +783,12 @@ export default {
         let data = Object.assign({}, this.editItem);
         delete data.update_time;
         delete data.create_time;
+        if( !this.eleSwitch ){
+          data.ele_qrcode = ''
+        }
+        if( !this.meituanSwitch ){
+          data.meituan_qrcode = ''
+        }
         editSpreadStore( data ).then(res => {
           const dbody = res.data
           if (dbody.code != 0) {
@@ -927,7 +936,9 @@ export default {
           return
         }
         this.spreadList = dbody.data.list || [];
-        this.page = dbody.data.page;
+        if(!!dbody.data.page){
+          this.page = dbody.data.page;
+        } 
       })
     },
   },

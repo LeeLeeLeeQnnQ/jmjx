@@ -1,5 +1,18 @@
 <template>
   <div>
+    <Card shadow style="margin-top: 5px">
+      <Row type="flex" justify="start" align="middle" :gutter="20">
+        <i-col>
+          <Input v-model="sreach.openid" placeholder="请输入店铺名称"/>
+        </i-col>
+        <i-col>
+          <Input v-model="sreach.keyword" placeholder="请输入店铺名称"/>
+        </i-col>
+        <i-col>
+          <Button type="primary" @click="sreachKeyword">搜索</Button>
+        </i-col>
+      </Row>
+    </Card>
     <!-- 厨房表格数据 -->
     <Card>
       <p slot="title">
@@ -53,10 +66,16 @@ export default {
   },
   data () {
     return {
+      // 搜索
+      sreach:{
+        openid:'',
+        keyword:'',
+      },
       columns: [
         {title: '申领ID', key: 'id', width: 80},
         {title: '申领日期', key: 'create_time'},
         {title: '区域', key: 'area_name'},
+        {title: 'openid', key: 'openid'},
         {title: '订单号', key: 'order_sn'},
         {title: '店铺名称', key: 'shop_name'},
         {title: '红包金额', key: 'coupon_value'},
