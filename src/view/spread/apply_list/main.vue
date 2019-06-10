@@ -3,7 +3,7 @@
     <Card shadow style="margin-top: 5px">
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col>
-          <Input v-model="sreach.openid" placeholder="请输入店铺名称"/>
+          <Input v-model="sreach.openid" placeholder="请输入openid"/>
         </i-col>
         <i-col>
           <Input v-model="sreach.keyword" placeholder="请输入店铺名称"/>
@@ -199,6 +199,10 @@ export default {
     }
   },
   methods: {
+    // 搜索
+    sreachKeyword(){
+      this.init({});
+    },
     // 图片预览
     handleView (imgUrl) {
       this.imgUrl = imgUrl
@@ -279,6 +283,8 @@ export default {
       })
     },
     init(data){
+      data.openid = !!this.sreach.openid ? this.sreach.openid.trim() : '';
+      data.keyword = !!this.sreach.keyword ? this.sreach.keyword.trim() : '';
       getSpreadUserOrderList(data).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
@@ -293,7 +299,7 @@ export default {
     }
   },
   mounted () {
-    this.init();
+    this.init({});
   },
   computed: {
 
