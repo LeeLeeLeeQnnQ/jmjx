@@ -146,8 +146,8 @@ export const getAreaList = (data) => {
 export const getSpreadUserOrderList = (data) => {
   return axios.request({
     url: '/api/UserOrder/index',
-    data,
-    method: 'post'
+    params: data,
+    method: 'get'
   })
 }
 
