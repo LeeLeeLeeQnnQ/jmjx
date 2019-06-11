@@ -222,6 +222,20 @@
         </TabPane>
         <TabPane label="退租凭证">
           <Form :label-width="100" class="h100">
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
+                <FormItem label="租金结算日期">
+                  <DatePicker type="date" placeholder="选择租金结算日期" style="width: 200px" :value="leaseinfo.settle_date" @on-change="getSettleDatePicker"></DatePicker>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
+                <FormItem label="公摊结束日期">
+                  <DatePicker type="date" placeholder="选择公摊结束日期" style="width: 200px" :value="leaseinfo.exit_date" @on-change="getExitDatePicker"></DatePicker>
+                </FormItem>
+              </i-col>
+            </Row>
             <FormItem label="财务打款凭证">
               <div class="img-upload-list" v-for="item in archive">
                 <img :src="item">
@@ -253,8 +267,6 @@
                 <i-col span="24">
                   <FormItem>
                     <Button type="primary" @click="addEndTableData">增加一条</Button>
-                    <!-- <Button type="primary" style="margin-left: 5px;" @click="computerRefund">退款计算</Button>
-                    <Alert type="warning" style="margin:5px 0;width: 400px;">只会计算退还押金、退还租金、商户未缴款</Alert> -->
                   </FormItem>
                 </i-col>
                 <i-col span="22" style="margin-top:8px;">
@@ -739,7 +751,7 @@ export default {
     },
     // 租期租约提交
     leaseinfoSubmit(){
-      let obj = { store_id : this.store_id };
+      let obj = { store_id : this.store_id , settle_date : this.leaseinfo.settle_date , exit_date : this.leaseinfo.exit_date};
       obj.archive = this.archive.length > 0 ? this.archive.join(",") : '';
       let arr = Object.assign(this.end_tableData);
       let arr2 = [];
@@ -918,6 +930,8 @@ export default {
 
     //租期租约卡片
     initLeaseinfo( data ){
+      this.leaseinfo.settle_date = data.settle_date;
+      this.leaseinfo.exit_date = data.exit_date;
       // 获取凭证图片 
       this.archive = data.archive.length > 0 ? data.archive.split(",") : '';
       // 获取退租表格
@@ -984,6 +998,14 @@ export default {
           }
         };
       })
+    },
+    // 获取退租时间
+    getSettleDatePicker (date) {
+      this.leaseinfo.settle_date = date
+    },
+    // 获取退租时间
+    getExitDatePicker (date) {
+      this.leaseinfo.exit_date = date
     },
     //初始化数据
     initData ( data ) {

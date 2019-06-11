@@ -42,19 +42,19 @@
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="申请退场时间">
-                  <DatePicker type="date" placeholder="选择租金结算日期" :value="leaseinfo.apply_date" @on-change="getApplyDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
+                  <DatePicker type="date" placeholder="申请退场时间" :value="leaseinfo.apply_date" @on-change="getApplyDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
               <i-col span="10" offset="2">
                 <FormItem label="租金结算日期">
-                  <DatePicker type="date" placeholder="选择退租日期" style="width: 200px" :value="leaseinfo.settle_date" @on-change="getSettleDatePicker"></DatePicker>
+                  <DatePicker type="date" placeholder="租金结算日期" style="width: 200px" :value="leaseinfo.settle_date" @on-change="getSettleDatePicker"></DatePicker>
                 </FormItem>
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="公摊结束日期" prop="quit_date">
-                  <DatePicker type="date" placeholder="选择退租日期" style="width: 200px" :value="leaseinfo.exit_date" @on-change="getExitDatePicker"></DatePicker>
+                  <DatePicker type="date" placeholder="公摊结束日期" style="width: 200px" :value="leaseinfo.exit_date" @on-change="getExitDatePicker"></DatePicker>
                 </FormItem>
               </i-col>
             </Row>
