@@ -151,6 +151,26 @@ export const getSpreadUserOrderList = (data) => {
   })
 }
 
+
+// 获取用户信息列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// UserOrder
+export const getSpreadUserList = (data) => {
+  return axios.request({
+    url: '/api/User/index',
+    params: data,
+    method: 'get'
+  })
+}
+
 // 编辑红包申请列表
 /*
   推广商户

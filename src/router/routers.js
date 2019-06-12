@@ -638,6 +638,16 @@ export default [
         },
         component: () => import('@/view/spread/config_list/main.vue')
       },
+      {
+        path: '/user_list',
+        name: 'user_list',
+        meta: {
+          icon: '_anzhuangshigong-xianxing',
+          title: '用户列表',
+          access: [704]
+        },
+        component: () => import('@/view/spread/user_list/main.vue')
+      },
     ]
   },
   // 401

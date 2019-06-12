@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Card shadow style="margin-top: 5px">
+    <Card shadow style="margin-bottom: 5px">
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col>
           <Input v-model="sreach.openid" placeholder="请输入openid"/>
