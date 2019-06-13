@@ -20,7 +20,7 @@
       title="添加商户账号"
       @on-ok="saveAddNewShopInfo" >
         <Form :model="newShopItem" :label-width="120" inline>
-          <FormItem label="所属厨房">
+          <FormItem label="所属商铺">
             <Select v-model="newShopItem.shop_id" style="width: 200px">
               <Option v-for="item in shop_list" :value="item.id" :key="item.id">{{ item.shop_name }}</Option>
             </Select>
@@ -45,7 +45,7 @@
       title="编辑商户账号"
       @on-ok="saveEditShopInfo" >
         <Form :model="editShopItem" :label-width="120" inline>
-          <FormItem label="所属厨房">
+          <FormItem label="所属商铺">
             <Select v-model="editShopItem.shop_id" style="width: 200px">
               <Option v-for="item in shop_list" :value="item.id" :key="item.id">{{ item.shop_name }}</Option>
             </Select>
