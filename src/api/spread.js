@@ -271,3 +271,103 @@ export const changeBannerStatus = (data) => {
 }
 
 
+
+// 商户账号列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const getShopUserList = (data) => {
+  return axios.request({
+    url: '/api/ShopUser/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+
+// 商户下拉
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const getShopsList = (data) => {
+  return axios.request({
+    url: '/api/Shop/getShops',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+// 增加新
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const addNewShopUser = (data) => {
+  return axios.request({
+    url: '/api/ShopUser/add',
+    data,
+    method: 'post'
+  })
+}
+
+
+// 修改
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const editShopUser = (data) => {
+  return axios.request({
+    url: '/api/ShopUser/edit',
+    data,
+    method: 'post'
+  })
+}
+
+
+// 删除
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const deleteShopUser = (data) => {
+  return axios.request({
+    url: '/api/ShopUser/delete',
+    data,
+    method: 'post'
+  })
+}

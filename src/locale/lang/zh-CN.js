@@ -47,5 +47,6 @@ export default {
   store_spread:'商户推广红包',
   store_spread_list:'推广红包列表',
   user_list:'公众号成员列表',
+  shop_member_list:'商户账号列表',
 
 }

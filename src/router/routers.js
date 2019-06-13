@@ -642,11 +642,21 @@ export default [
         path: '/user_list',
         name: 'user_list',
         meta: {
-          icon: '_anzhuangshigong-xianxing',
+          icon: '_jiaosequnti',
           title: '用户列表',
           access: [704]
         },
         component: () => import('@/view/spread/user_list/main.vue')
+      },
+      {
+        path: '/shop_member_list',
+        name: 'shop_member_list',
+        meta: {
+          icon: '_yonghuziliao',
+          title: '商户账号',
+          access: [705]
+        },
+        component: () => import('@/view/spread/member_list/main.vue')
       },
     ]
   },
