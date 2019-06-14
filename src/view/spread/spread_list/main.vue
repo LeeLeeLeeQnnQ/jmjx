@@ -674,7 +674,7 @@ export default {
     handleViewRechargeList(params) {
       this.recharge_store_id = params.row.id;
       this.rechargeBillList = [];
-      getShopPayList( { id : this.recharge_store_id } ).then(res => {
+      getShopPayList( { shop_id : this.recharge_store_id } ).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
           this.$Notice.warning({
@@ -885,7 +885,7 @@ export default {
     },
     // 充值页面新
     getRechargeNewPage(page){
-      getShopPayList( { id : this.recharge_store_id , page: page } ).then(res => {
+      getShopPayList( { shop_id : this.recharge_store_id , page: page } ).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
           this.$Notice.warning({

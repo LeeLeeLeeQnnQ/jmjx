@@ -107,8 +107,8 @@ export const depositSpreadStore = (data) => {
 export const getShopPayList = (data) => {
   return axios.request({
     url: '/api/ShopPay/index',
-    data,
-    method: 'post'
+    params: data,
+    method: 'get'
   })
 }
 
