@@ -3,6 +3,9 @@
     <Card shadow style="margin-bottom: 5px">
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col>
+          <DatePicker type="daterange" placeholder="选择时间段" style="min-width: 200px" @on-change="selectDate"></DatePicker>
+        </i-col>
+        <i-col>
           <Input v-model="sreach.keyword" placeholder="请输入关键字"/>
         </i-col>
         <i-col>
@@ -18,7 +21,7 @@
       <p slot="title">
           成员数量：{{total_num}}
       </p>
-      <tables ref="tables" v-model="userList" :columns="columns" />
+      <tables ref="tables" v-model="userList" :columns="columns" @on-sort-change="userSortTables"/>
       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
     </Card>
   </div>
@@ -35,12 +38,18 @@ export default {
   },
   data () {
     return {
+      sort_data:{
+        order:'',
+        key:'',
+      },
       // 用户u总数
       total_num:'',
       // 搜索
       sreach:{
         qr_scene_str:'',
         keyword:'',
+        start_time:'',
+        end_time:'',
       },
       columns: [
         {title: 'id', key: 'id', width: 80},
@@ -63,7 +72,7 @@ export default {
             }
         },
         {title: '渠道', key: 'qr_scene_str'},
-        {title: '是否关注中',
+        {title: '是否关注中', key: 'subscribe', sortable: 'custom' ,
           render: (h, params) => {
             let subscribe = params.row.subscribe*1
             if(subscribe == 0){
@@ -96,9 +105,25 @@ export default {
     }
   },
   methods: {
+    // 排序
+    userSortTables(sort_data){
+      if(sort_data.order == 'normal'){
+        this.sort_data.order = '';
+        this.sort_data.key = '';
+      }else{
+        this.sort_data.order = sort_data.order;
+        this.sort_data.key = sort_data.key;
+      }
+      this.init({page:this.page.current_page})
+    },
     // 搜索
     sreachKeyword(){
       this.init({});
+    },
+    // 选择时间
+    selectDate(date){
+      this.sreach.start_time = date[0]
+      this.sreach.end_time = date[1]
     },
     // 图片预览
     handleView (imgUrl) {
@@ -118,7 +143,8 @@ export default {
     },
     init(data){
       let td = this.trimData(this.sreach)
-      let obj = Object.assign(data,td)
+      let sd = this.trimData(this.sort_data)
+      let obj = Object.assign(data,td,sd)
       getSpreadUserList(data).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {

@@ -3,13 +3,29 @@
     <Card shadow style="margin-bottom: 5px">
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col>
+          <DatePicker type="daterange" placeholder="选择时间段" style="min-width: 200px" @on-change="selectDate"></DatePicker>
+        </i-col>
+        <i-col>
+          <Select v-model="sreach.zone_id" placeholder="选择区域" style="width: 200px">
+            <Option v-for="item in zoneList" :value="item.id" :key="item.id">{{ item.area_name }}</Option>
+          </Select>
+        </i-col>
+        <i-col>
+          <Select v-model="sreach.order_state" placeholder="选择状态" style="width: 200px">
+            <Option v-for="item in statusList" :value="item.order_state" :key="item.order_state">{{ item.status_name }}</Option>
+          </Select>
+        </i-col>
+        <i-col>
           <Input v-model="sreach.openid" placeholder="请输入openid"/>
         </i-col>
         <i-col>
-          <Input v-model="sreach.keyword" placeholder="请输入店铺名称"/>
+          <Input v-model="sreach.keyword" placeholder="请输入关键字"/>
         </i-col>
         <i-col>
           <Button type="primary" @click="sreachKeyword">搜索</Button>
+        </i-col>
+        <i-col>
+          <Button type="primary" @click="exportTable">导出表格</Button>
         </i-col>
       </Row>
     </Card>
@@ -58,7 +74,7 @@
 // 权限
 // UserOrder/index,UserOrder/state
 import Tables from '_c/tables'
-import { getSpreadUserOrderList , changeStateSpreadUserOrdert } from '@/api/spread'
+import { getSpreadUserOrderList , changeStateSpreadUserOrdert , getZoneList} from '@/api/spread'
 export default {
   name: 'apply_list',
   components: {
@@ -70,6 +86,10 @@ export default {
       sreach:{
         openid:'',
         keyword:'',
+        start_time:'',
+        end_time:'',
+        zone_id:'',
+        order_state:'',
       },
       columns: [
         {title: '申领ID', key: 'id', width: 80},
@@ -196,9 +216,34 @@ export default {
       return_remark:{},
       // 发放金额
       apply_money:{},
+      // 地区
+      zoneList:[],
+      // 审批状态
+      statusList:[
+        {order_state:'', status_name:'全部'},
+        {order_state:0, status_name:'未审核'},
+        {order_state:1, status_name:'已发放'},
+        {order_state:4, status_name:'未通过'},
+      ],
     }
   },
   methods: {
+    // 选择时间
+    selectDate(date){
+      this.sreach.start_time = date[0]
+      this.sreach.end_time = date[1]
+    },
+    // 导出
+    exportTable(){
+      let info =  Object.assign({},this.sreach)
+      var str = '';
+      for(let k in info){
+        str += ( k + '=' + info[k] + "&");
+      }
+      str = str.substr(0, str.length - 1)
+      // const href = "./api/Clue/export?" + str;
+      // window.open(href, '_blank')
+    },
     // 搜索
     sreachKeyword(){
       this.init({});
@@ -282,10 +327,21 @@ export default {
         this.init({ page:this.current_page });
       })
     },
+    getZoneList(){
+      getZoneList().then(res => {
+        const dbody = res.data
+        // 初始化函数
+        this.zoneList = dbody.data || [];
+        this.zoneList.unshift({
+          id:'',
+          area_name:"全部"
+        })
+      })
+    },
     init(data){
-      data.openid = !!this.sreach.openid ? this.sreach.openid.trim() : '';
-      data.keyword = !!this.sreach.keyword ? this.sreach.keyword.trim() : '';
-      getSpreadUserOrderList(data).then(res => {
+      let td = this.sreach;
+      let obj = Object.assign(data,td)
+      getSpreadUserOrderList(obj).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
           this.$Notice.warning({
@@ -300,6 +356,7 @@ export default {
   },
   mounted () {
     this.init({});
+    this.getZoneList();
   },
   computed: {
 

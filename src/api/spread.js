@@ -211,6 +211,7 @@ export const getBannerList = (data) => {
 }
 
 
+
 // AddNewBanner列表
 /*
   推广商户
@@ -371,3 +372,25 @@ export const deleteShopUser = (data) => {
     method: 'post'
   })
 }
+
+
+// Banner列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// Banner列表
+export const getZoneList = (data) => {
+  return axios.request({
+    url: '/api/area/getAreaList',
+    data,
+    method: 'get'
+  })
+}
+
+

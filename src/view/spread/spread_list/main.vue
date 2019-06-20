@@ -14,6 +14,7 @@
           @data-recharge="saveRechargeInfo" 
           @data-edit-tag="handleEditTagModal"
           @data-eidt-status = "handleEditStatus"
+          @data-eidt-sort = "handleEditSort"
       />
       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
     </Card>
@@ -247,6 +248,17 @@
           </FormItem>
         </Form>
     </Modal>
+    <Modal 
+      v-model="showEditSortModal"
+      title="修改店铺排序"
+      @on-ok="saveEditSortModalInfo" >
+        <Form :label-width="120" inline>
+          <FormItem label="更改排序">
+            <Input v-model="sort" placeholder="排位大的排前" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="">大的排前</FormItem>
+        </Form>
+    </Modal>
     <!-- 充值 -->
     <Modal 
       v-model="showRechargeModal"
@@ -402,7 +414,7 @@ export default {
         {
           title: '编辑',
           key: 'handle',
-          width:180,
+          width:270,
           button: [
             (h, params, vm) => {
               return h('Button', {
@@ -433,6 +445,20 @@ export default {
                   }
                 }},
               '状态变更')
+            },
+            (h, params, vm) => {
+              return h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                style: {margin: '5px'},
+                on: {
+                  'click': () => {
+                    vm.$emit('data-eidt-sort', params)
+                  }
+                }},
+              '变更排序')
             },
           ]
         },
@@ -546,6 +572,10 @@ export default {
       // 更改店铺状态
       showEditStatusModal:false,
       statusItem:'',
+      // 更改店铺排序
+      showEditSortModal:false,
+      sortId:'',
+      sort:0,
       // id
       spread_store_id: '',
       // 
@@ -912,6 +942,38 @@ export default {
         shop_state : this.statusItem , 
       }
       changeStateSpreadStore( data ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: "修改成功！"
+        })
+        this.init({ page:this.current_page });
+      })
+    },
+    // 显示更改店铺状态
+    handleEditSort(params){
+      this.sortId = params.row.id || '';
+      this.sort = params.row.sort || 0;
+      this.showEditSortModal = true;
+    },
+    // 保存变更
+    saveEditSortModalInfo(){
+      if(isNaN(this.sort) || (this.sort*1 >=100)){
+        this.$Notice.warning({
+          title: "排序数字错误！"
+        })
+        return
+      }
+      let data = {
+        id : this.sortId , 
+        sort : this.sort , 
+      }
+      editSpreadStore( data ).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
           this.$Notice.warning({
