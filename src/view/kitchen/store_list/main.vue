@@ -116,9 +116,9 @@
 import Tables from '_c/tables'
 import merge from 'webpack-merge'
 // 权限
-// /api/Kitchen/index,/api/StoreLease/index
-import { getKitchenList } from '@/api/setting'
-import { getAllShopList } from '@/api/data'
+// /api/Kitchen/index,/api/StoreLease/index,Index/getKitchenList
+// import { getKitchenList } from '@/api/setting'
+import { getKitchenList , getAllShopList } from '@/api/data'
 export default {
   name: 'kitchen-data-store-list',
   components: {
@@ -1010,9 +1010,9 @@ export default {
         return
       }
       // 初始化函数
-      this.kitchenList = dbody.data.list || [];
+      this.kitchenList = dbody.data || [];
       if(this.kitchenList.length > 0){
-        this.sreach_kitchen_id = this.$route.query.kitchen_id || this.kitchenList[this.kitchenList.length - 1].id;
+        this.sreach_kitchen_id = this.$route.query.kitchen_id*1 || this.kitchenList[this.kitchenList.length - 1].id*1;
         this.initData(this.sreach_kitchen_id);
         this.tabValue = this.$route.query.tabValue || "1"
         this.$router.push({

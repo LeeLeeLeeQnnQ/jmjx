@@ -361,6 +361,7 @@ export default {
       columns: [
         {title: '推广店铺ID', key: 'id',width:100},
         {title: '店铺名称', key: 'shop_name'},
+        {title: '排序', key: 'sort'},
         {title: '店铺电话', key: 'shop_phone'},
         { title: '余额',
           render: (h, params) => {

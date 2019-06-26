@@ -387,7 +387,7 @@ export const deleteShopUser = (data) => {
 // Banner列表
 export const getZoneList = (data) => {
   return axios.request({
-    url: '/api/area/getAreaList',
+    url: '/api/Area/getAreaList',
     data,
     method: 'get'
   })

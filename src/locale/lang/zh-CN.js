@@ -9,7 +9,9 @@ export default {
   kitchen_data_store_sale:'销控分析',
 
   kitchen: '店内运营管理',
-  kitchen_total_inspect_list:'日检列表',
+  kitchen_day_inspect_list:'日检列表',
+  kitchen_week_inspect_list:'周检列表',
+  kitchen_night_inspect_list:'夜检列表',
   kitchen_store_fee:'档口能源缴费',
   kitchen_store_fine:'罚款登记',
   kitchen_store_list:'商户列表',

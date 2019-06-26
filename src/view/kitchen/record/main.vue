@@ -170,7 +170,7 @@ export default {
       water_record_columns:[
         {title: '所属厨房', key: 'kitchen_name'},
         {title: '月份', key: 'month'},
-        {title: '电表名称', key: 'meter_name'},
+        {title: '水表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
         {title: '旧水表累计值', key: 'base_value'},
         {title: '倍率', key: 'multiple'},
@@ -208,28 +208,28 @@ export default {
             },
           ]
         },
-        // {
-        //   title: '操作',
-        //   key: 'handle',
-        //   width : 90,
-        //   button: [
-        //     // 不带气泡 一层嵌套
-        //     (h, params, vm) => {
-        //       return h('Button', {
-        //         style: {margin: '0'},
-        //         props: {
-        //           type: 'error',
-        //           size: 'small'
-        //         },
-        //         on: {
-        //           'click': () => {
-        //             vm.$emit('data-handle', params)
-        //           }
-        //         }},
-        //       '换表')
-        //     },
-        //   ]
-        // },
+        {
+          title: '操作',
+          key: 'handle',
+          width : 90,
+          button: [
+            // 不带气泡 一层嵌套
+            (h, params, vm) => {
+              return h('Button', {
+                style: {margin: '0'},
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-handle', params)
+                  }
+                }},
+              '换表')
+            },
+          ]
+        },
       ],
       // 电表信息 editMeterItem
       editMeterItem:{},

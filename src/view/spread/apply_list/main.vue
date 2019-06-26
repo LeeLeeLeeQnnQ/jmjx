@@ -6,7 +6,7 @@
           <DatePicker type="daterange" placeholder="选择时间段" style="min-width: 200px" @on-change="selectDate"></DatePicker>
         </i-col>
         <i-col>
-          <Select v-model="sreach.zone_id" placeholder="选择区域" style="width: 200px">
+          <Select v-model="sreach.area_id" placeholder="选择区域" style="width: 200px">
             <Option v-for="item in zoneList" :value="item.id" :key="item.id">{{ item.area_name }}</Option>
           </Select>
         </i-col>
@@ -72,7 +72,7 @@
 </template>
 <script>
 // 权限
-// UserOrder/index,UserOrder/state
+// UserOrder/index,UserOrder/state,Area/getAreaList
 import Tables from '_c/tables'
 import { getSpreadUserOrderList , changeStateSpreadUserOrdert , getZoneList} from '@/api/spread'
 export default {
@@ -241,8 +241,8 @@ export default {
         str += ( k + '=' + info[k] + "&");
       }
       str = str.substr(0, str.length - 1)
-      // const href = "./api/Clue/export?" + str;
-      // window.open(href, '_blank')
+      const href = "./api/UserOrder/export?" + str;
+      window.open(href, '_blank')
     },
     // 搜索
     sreachKeyword(){

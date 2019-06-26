@@ -6,6 +6,11 @@
           <DatePicker type="daterange" placeholder="选择时间段" style="min-width: 200px" @on-change="selectDate"></DatePicker>
         </i-col>
         <i-col>
+          <Select v-model="sreach.subscribe" placeholder="选择关注状态" style="width: 200px">
+            <Option v-for="item in subscribeList" :value="item.id" :key="item.id">{{ item.status_name }}</Option>
+          </Select>
+        </i-col>
+        <i-col>
           <Input v-model="sreach.keyword" placeholder="请输入关键字"/>
         </i-col>
         <i-col>
@@ -50,6 +55,7 @@ export default {
         keyword:'',
         start_time:'',
         end_time:'',
+        subscribe:''
       },
       columns: [
         {title: 'id', key: 'id', width: 80},
@@ -102,6 +108,12 @@ export default {
         total: 0
       },
       userList: [],
+      // 审批状态
+      subscribeList:[
+        {id:'', status_name:'全部'},
+        {id:0, status_name:'未关注'},
+        {id:1, status_name:'关注中'},
+      ],
     }
   },
   methods: {
@@ -134,16 +146,9 @@ export default {
     getNewPage(page){
       this.init({page:page})
     },
-    trimData(obj){
-      let td = obj || {};
-      for(let k  in  obj) {
-        obj[k] = obj[k].trim()
-      }
-      return td
-    },
     init(data){
-      let td = this.trimData(this.sreach)
-      let sd = this.trimData(this.sort_data)
+      let td = this.sreach
+      let sd = this.sort_data
       let obj = Object.assign(data,td,sd)
       getSpreadUserList(data).then(res => {
         const dbody = res.data

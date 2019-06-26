@@ -31,7 +31,7 @@ import { mapMutations } from 'vuex'
 import { getKitchenList } from '@/api/data'
 import { getTotalInspectList } from '@/api/standard'
 export default {
-  name: 'l-shop-inspect-list',
+  name: 'w-shop-inspect-list',
   components: {
     Tables
   },
@@ -130,7 +130,7 @@ export default {
       }
       this.setStorePaper( info );
       const route = {
-        name: 'kitchen_day_inspect',
+        name: 'kitchen_week_inspect',
         query: {
           type
         }

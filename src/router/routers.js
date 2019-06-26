@@ -232,24 +232,65 @@ export default [
         component: () => import('@/view/kitchen/eliminate/main.vue')
       },
       {
-        path: '/kitchen_total_inspect_list',
-        name: 'kitchen_total_inspect_list',
+        path: '/kitchen_day_inspect_list',
+        name: 'kitchen_day_inspect_list',
         meta: {
-          icon: '_renwu',
+          icon: '_xunjianjianyan',
           title: '日检列表',
           access: [307]
         },
         component: () => import('@/view/kitchen/inspect_list/main.vue')
       },
       {
-        path: '/kitchen_total_inspect',
-        name: 'kitchen_total_inspect',
+        path: '/kitchen_day_inspect',
+        name: 'kitchen_day_inspect',
         meta: {
           hideInMenu: true,
           icon: 'md-flower',
           notCache: true,
           title: route => `日检报告 : ${route.query.id}`,
           access: [308]
+        },
+        component: () => import('@/view/kitchen/inspect/main.vue')
+      },
+      // {
+      //   path: '/kitchen_week_inspect_list',
+      //   name: 'kitchen_week_inspect_list',
+      //   meta: {
+      //     icon: '_xunjianjianyan',
+      //     title: '周检列表',
+      //   },
+      //   component: () => import('@/view/kitchen/inspect_list/main.vue')
+      // },
+      // {
+      //   path: '/kitchen_week_inspect',
+      //   name: 'kitchen_week_inspect',
+      //   meta: {
+      //     hideInMenu: true,
+      //     icon: 'md-flower',
+      //     notCache: true,
+      //     title: route => `周检报告 : ${route.query.id}`,
+      //   },
+      //   component: () => import('@/view/kitchen/inspect/main.vue')
+      // },
+      // {
+      //   path: '/kitchen_night_inspect_list',
+      //   name: 'kitchen_night_inspect_list',
+      //   meta: {
+      //     icon: '_xunjianjianyan',
+      //     title: '夜检列表',
+      //   },
+      //   component: () => import('@/view/kitchen/inspect_list/main.vue')
+      // },
+      {
+        path: '/kitchen_night_inspect',
+        name: 'kitchen_night_inspect',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-flower',
+          notCache: true,
+          title: route => `夜检报告 : ${route.query.id}`,
+          // access: [308]
         },
         component: () => import('@/view/kitchen/inspect/main.vue')
       },
