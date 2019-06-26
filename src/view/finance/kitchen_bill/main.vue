@@ -92,7 +92,7 @@
                 <span>{{viewItem.overdue_fee}}</span>
             </FormItem>
             <FormItem label="代运营费" class="cellTit">
-                <span>{{viewItem.operate_fee}}</span>
+                <span>{{viewItem.operating_fee}}</span>
             </FormItem>
             <FormItem label="其他费用" class="cellTit">
                 <span>{{viewItem.other_fee}}</span>

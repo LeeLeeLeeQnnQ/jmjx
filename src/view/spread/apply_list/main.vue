@@ -72,7 +72,7 @@
 </template>
 <script>
 // 权限
-// UserOrder/index,UserOrder/state,Area/getAreaList
+// UserOrder/index,UserOrder/state,Area/getAreaList,UserOrder/export
 import Tables from '_c/tables'
 import { getSpreadUserOrderList , changeStateSpreadUserOrdert , getZoneList} from '@/api/spread'
 export default {
