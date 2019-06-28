@@ -248,7 +248,7 @@ export default [
           hideInMenu: true,
           icon: 'md-flower',
           notCache: true,
-          title: route => `日检报告 : ${route.query.id}`,
+          title: route => `日检报告`,
           access: [308]
         },
         component: () => import('@/view/kitchen/inspect/main.vue')
@@ -259,8 +259,9 @@ export default [
       //   meta: {
       //     icon: '_xunjianjianyan',
       //     title: '周检列表',
+      //     // access: [309]
       //   },
-      //   component: () => import('@/view/kitchen/inspect_list/main.vue')
+      //   component: () => import('@/view/kitchen/week_inspect_list/main.vue')
       // },
       // {
       //   path: '/kitchen_week_inspect',
@@ -269,9 +270,10 @@ export default [
       //     hideInMenu: true,
       //     icon: 'md-flower',
       //     notCache: true,
-      //     title: route => `周检报告 : ${route.query.id}`,
+      //     // access: [310],
+      //     title: route => `周检报告 `,
       //   },
-      //   component: () => import('@/view/kitchen/inspect/main.vue')
+      //   component: () => import('@/view/kitchen/week_inspect/main.vue')
       // },
       // {
       //   path: '/kitchen_night_inspect_list',
@@ -279,21 +281,22 @@ export default [
       //   meta: {
       //     icon: '_xunjianjianyan',
       //     title: '夜检列表',
+      //     // access: [311],
       //   },
-      //   component: () => import('@/view/kitchen/inspect_list/main.vue')
+      //   component: () => import('@/view/kitchen/night_inspect_list/main.vue')
       // },
-      {
-        path: '/kitchen_night_inspect',
-        name: 'kitchen_night_inspect',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-flower',
-          notCache: true,
-          title: route => `夜检报告 : ${route.query.id}`,
-          // access: [308]
-        },
-        component: () => import('@/view/kitchen/inspect/main.vue')
-      },
+      // {
+      //   path: '/kitchen_night_inspect',
+      //   name: 'kitchen_night_inspect',
+      //   meta: {
+      //     hideInMenu: true,
+      //     icon: 'md-flower',
+      //     notCache: true,
+      //     title: route => `夜检报告`,
+      //     // access: [312],
+      //   },
+      //   component: () => import('@/view/kitchen/night_inspect/main.vue')
+      // },
       {
         path: '/kitchen_store_fine',
         name: 'kitchen_store_fine',

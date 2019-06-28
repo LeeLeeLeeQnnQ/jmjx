@@ -804,7 +804,7 @@ export default {
           this.$Notice.warning({
             title: "添加成功！"
           })
-          this.init({ page:this.current_page });
+          this.init({ page:this.page.current_page });
         })
       }
     },
@@ -831,7 +831,7 @@ export default {
           this.$Notice.warning({
             title: "修改成功！"
           })
-          this.init({ page:this.current_page });
+          this.init({ page:this.page.current_page });
         })
       }
     },
@@ -854,7 +854,7 @@ export default {
         this.$Notice.warning({
           title: "充值成功！"
         })
-        this.init({ page:this.current_page });
+        this.init({ page:this.page.current_page });
       })
     },
     // 商户充值登记
@@ -907,7 +907,7 @@ export default {
         this.$Notice.warning({
           title: "编辑成功！"
         })
-        this.init({ page:this.current_page });
+        this.init({ page:this.page.current_page });
       })
     },
     // 选择新页面
@@ -953,7 +953,7 @@ export default {
         this.$Notice.warning({
           title: "修改成功！"
         })
-        this.init({ page:this.current_page });
+        this.init({ page:this.page.current_page });
       })
     },
     // 显示更改店铺状态
@@ -985,11 +985,12 @@ export default {
         this.$Notice.warning({
           title: "修改成功！"
         })
-        this.init({ page:this.current_page });
+        this.init({ page:this.page.current_page });
       })
     },
     // 初始化
     init( data ){
+      console.log(data)
       getSpreadStoreList( data ).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
@@ -1015,7 +1016,7 @@ export default {
         return
       }
       this.areaList = dbody.data || [];
-      this.init();
+      this.init({});
     })
   },
   computed: {

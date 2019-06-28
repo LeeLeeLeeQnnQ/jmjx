@@ -37,6 +37,7 @@ export default {
   },
   data () {
     return {
+      work_type:2,
       // 也属 数据
       page: {
         current_page: 1,
@@ -96,6 +97,7 @@ export default {
       let data = {
         work_date : this.curentTime2,
         kitchen_id : this.curentKitchen,
+        work_type : this.work_type,
       }
       getTotalInspectList( data ).then(res => {
         const dbody = res.data
@@ -111,6 +113,7 @@ export default {
       let data = {
         work_date : this.curentTime2,
         kitchen_id : this.curentKitchen,
+        work_type : this.work_type,
       }
       getTotalInspectList(data).then(res => {
         const dbody = res.data
@@ -124,16 +127,18 @@ export default {
     },
     handleView (params) {
       let info = params.row;
-      let type = 1;
+      let type = this.work_type + '' + this.curentKitchen + '' + '1';
       if(info.store_id*1 == 0){
-        type = 2;
+        type = this.work_type + '' + this.curentKitchen + '' + '2';
       }
       this.setStorePaper( info );
+      let query = {
+        type : type,
+        work_type : this.work_type,
+      }
       const route = {
         name: 'kitchen_night_inspect',
-        query: {
-          type
-        }
+        query: query
       }
       this.$router.push(route)
     },
@@ -157,6 +162,7 @@ export default {
       let data = {
         work_date : this.curentTime2,
         kitchen_id : this.curentKitchen,
+        work_type : this.work_type,
         page : page
       }
       getTotalInspectList(data).then(res => {
@@ -178,10 +184,11 @@ export default {
     getKitchenList().then(res => {
       const dbody = res.data
       this.kitchenList = dbody.data || []
-      this.curentKitchen = this.kitchenList[0].id
+      this.curentKitchen = this.kitchenList[this.kitchenList.length - 1].id
       let data = {
         work_date : this.curentTime2,
-        kitchen_id : this.curentKitchen
+        kitchen_id : this.curentKitchen,
+        work_type : this.work_type,
       }
       getTotalInspectList(data).then(res => {
         const dbody = res.data

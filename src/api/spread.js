@@ -11,10 +11,11 @@ import axios from '@/libs/api.request'
 /*
   
 */
-export const getSpreadStoreList = () => {
+export const getSpreadStoreList = (data) => {
   return axios.request({
     url: '/api/Shop/index',
-    method: 'post'
+    params: data,
+    method: 'get'
   })
 }
 

@@ -22,7 +22,7 @@
 import { getWorkOptionList, getWorkOptionDetail } from '@/api/standard'
 import Paper from '_c/paper'
 export default {
-  name: 'kitchen-report',
+  name: 'd-kitchen-report',
   components: {
     Paper
   },
@@ -67,21 +67,15 @@ export default {
     getWorkOptionList( { type: type } ).then(res => {
       const dbody = res.data
       this.paper = dbody.data
-      getWorkOptionDetail( { kitchen_id:info.kitchen_id , store_id:info.store_id , work_date:info.work_date } ).then(res => {
+      let obj = { kitchen_id:info.kitchen_id , store_id:info.store_id , work_date:info.work_date , work_type : this.$route.query.work_type}
+      getWorkOptionDetail( obj ).then(res => {
         const info = res.data
         let that = this
         if (info.code != 0) {
           this.$Notice.warning({
             title: info.msg
           })
-          // kitchen_total_inspect_list
-          const route = {
-            name: 'kitchen_total_inspect_list',
-            query: {
-              type
-            }
-          }
-          this.$router.push(route)
+          this.$router.go(-1)
           return
         }
         this.hTitle = info.data.work_date + ' / ' + info.data.store_no + ' / ' + info.data.store_name 
