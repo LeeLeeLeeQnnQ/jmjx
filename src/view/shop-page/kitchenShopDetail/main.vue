@@ -101,10 +101,22 @@
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
+<!--               <i-col span="10">
                 <FormItem label="上线日期" class="cellTit">
                   <span v-show="!!leaseinfo.online_date">{{leaseinfo.online_date}}</span>
                   <span v-show="!leaseinfo.online_date" class="noData">未填写</span>
+                </FormItem>
+              </i-col> -->
+              <i-col span="10">
+                <FormItem label="饿了么上线日期" class="cellTit">
+                  <span v-show="!!leaseinfo.ele_date">{{leaseinfo.ele_date}}</span>
+                  <span v-show="!leaseinfo.ele_date" class="noData">未填写</span>
+                </FormItem>
+              </i-col>
+              <i-col span="10" offset='2'>
+                <FormItem label="美团上线日期" class="cellTit">
+                  <span v-show="!!leaseinfo.meituan_date">{{leaseinfo.meituan_date}}</span>
+                  <span v-show="!leaseinfo.meituan_date" class="noData">未填写</span>
                 </FormItem>
               </i-col>
             </Row>
@@ -687,7 +699,9 @@ export default {
       this.leaseinfo.settle_date = data.settle_date || '';
       this.leaseinfo.end_date = data.end_date || '';
       this.leaseinfo.exit_date = data.exit_date || '';
-      this.leaseinfo.online_date = data.online_date || '';
+      this.leaseinfo.ele_date = data.ele_date || '';
+      this.leaseinfo.meituan_date = data.meituan_date || '';
+      // this.leaseinfo.online_date = data.online_date || '';
       this.leaseinfo.connect_date = data.connect_date || '';
       this.leaseinfo.work_id = data.work_id || '';
       this.leaseinfo.start_water = data.start_water || '';

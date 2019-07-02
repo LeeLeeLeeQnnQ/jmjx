@@ -50,5 +50,33 @@ export default {
   store_spread_list:'推广红包列表',
   user_list:'公众号成员列表',
   shop_member_list:'商户账号列表',
+  invite_list:'邀请列表',
 
+  analysis:'厨房数据分析',
+
+  analysis_entrance:'起租进度',
+
+  analysis_occupy:'入住率',
+  occupy_pie:'饼图分析',
+  occupy_table:'表格分析',
+
+  analysis_canvass:'招商分析',
+  canvass_sign:'签约分析',
+  canvass_view:'带看分析',
+
+  analysis_canvass:'招商分析',
+  canvass_sign:'签约分析',
+  canvass_view:'带看分析',
+
+  analysis_finance:'财务分析',
+  finance_income:'收入分析',
+  finance_expenditure:'支出分析',
+
+  analysis_finance:'财务分析',
+  finance_income:'收入分析',
+  finance_expenditure:'支出分析',
+
+  analysis_kitchen:'运营分析',
+  kitchen_equipment:'商户设备分析',
+  kitchen_member:'商户人员分析',
 }

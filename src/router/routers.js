@@ -94,6 +94,147 @@ export default [
       }
     ]
   },
+  // 数据分析
+  // {
+  //   path: '/analysis',
+  //   name: 'analysis',
+  //   meta: {
+  //     icon: '_baobiao',
+  //     title: '厨房数据分析',
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: '/analysis_entrance',
+  //       name: 'analysis_entrance',
+  //       meta: {
+  //         icon: '_moduanwangdian',
+  //         title: '起租进度',
+  //       },
+  //       component: () => import('@/view/analysis/entrance/main.vue')
+  //     },
+  //     {
+  //       path: '/analysis_occupy',
+  //       name: 'analysis_occupy',
+  //       meta: {
+  //         icon: '_mobankuangjia',
+  //         showAlways: true,
+  //         title: 'analysis_kitchen'
+  //       },
+  //       component: parentView,
+  //       children: [
+  //         {
+  //           path: '/occupy_pie',
+  //           name: 'occupy_pie',
+  //           meta: {
+  //             icon: '_bingtu',
+  //             title: 'occupy_pie'
+  //           },
+  //           component: () => import('@/view/analysis/occupy-pie/main.vue')
+  //         },
+  //         {
+  //           path: '/occupy_table',
+  //           name: 'occupy_table',
+  //           meta: {
+  //             icon: '_tiaoxingtu',
+  //             title: 'occupy_table'
+  //           },
+  //           component: () => import('@/view/analysis/occupy-table/main.vue')
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: '/analysis_canvass',
+  //       name: 'analysis_canvass',
+  //       meta: {
+  //         icon: '_hezuoguanxi',
+  //         showAlways: true,
+  //         title: 'analysis_canvass'
+  //       },
+  //       component: parentView,
+  //       children: [
+  //         {
+  //           path: '/canvass_sign',
+  //           name: 'canvass_sign',
+  //           meta: {
+  //             icon: '_dianpu',
+  //             title: 'canvass-sign'
+  //           },
+  //           component: () => import('@/view/analysis/canvass-sign/main.vue')
+  //         },
+  //         {
+  //           path: '/canvass_view',
+  //           name: 'canvass_view',
+  //           meta: {
+  //             icon: '_kuaidiyuan',
+  //             title: 'canvass-view'
+  //           },
+  //           component: () => import('@/view/analysis/canvass-view/main.vue')
+  //         }
+  //       ]
+  //     },
+  //     {
+  //       path: '/analysis_finance',
+  //       name: 'analysis_finance',
+  //       meta: {
+  //         icon: '_caiwu',
+  //         showAlways: true,
+  //         title: 'analysis_finance'
+  //       },
+  //       component: parentView,
+  //       children: [
+  //         {
+  //           path: '/finance_income',
+  //           name: 'finance_income',
+  //           meta: {
+  //             icon: '_daikuan-xianxing',
+  //             title: 'finance-income'
+  //           },
+  //           component: () => import('@/view/analysis/finance-income/main.vue')
+  //         },
+  //         {
+  //           path: '/finance_expenditure',
+  //           name: 'finance_expenditure',
+  //           meta: {
+  //             icon: '_huankuan-xianxing',
+  //             title: 'finance-expenditure'
+  //           },
+  //           component: () => import('@/view/analysis/finance-expenditure/main.vue')
+  //         },
+  //       ]
+  //     },
+  //     {
+  //       path: '/analysis_kitchen',
+  //       name: 'analysis_kitchen',
+  //       meta: {
+  //         icon: '_dianpu',
+  //         showAlways: true,
+  //         title: 'analysis_kitchen'
+  //       },
+  //       component: parentView,
+  //       children: [
+  //         {
+  //           path: '/kitchen_equipment',
+  //           name: 'kitchen_equipment',
+  //           meta: {
+  //             icon: '_PDAshouchigongzuoshebei',
+  //             title: 'kitchen-equipment'
+  //           },
+  //           component: () => import('@/view/analysis/kitchen-equipment/main.vue')
+  //         },
+  //         {
+  //           path: '/kitchen_member',
+  //           name: 'kitchen_member',
+  //           meta: {
+  //             icon: '_yonghuziliao',
+  //             title: 'kitchen-member'
+  //           },
+  //           component: () => import('@/view/analysis/kitchen-member/main.vue')
+  //         }
+  //       ]
+  //     },
+  //   ]
+  // },
   // 厨房数据
   {
     path: '/kitchen_data',
@@ -249,54 +390,54 @@ export default [
           icon: 'md-flower',
           notCache: true,
           title: route => `日检报告`,
-          access: [308]
+          access: [308],
         },
         component: () => import('@/view/kitchen/inspect/main.vue')
       },
-      // {
-      //   path: '/kitchen_week_inspect_list',
-      //   name: 'kitchen_week_inspect_list',
-      //   meta: {
-      //     icon: '_xunjianjianyan',
-      //     title: '周检列表',
-      //     // access: [309]
-      //   },
-      //   component: () => import('@/view/kitchen/week_inspect_list/main.vue')
-      // },
-      // {
-      //   path: '/kitchen_week_inspect',
-      //   name: 'kitchen_week_inspect',
-      //   meta: {
-      //     hideInMenu: true,
-      //     icon: 'md-flower',
-      //     notCache: true,
-      //     // access: [310],
-      //     title: route => `周检报告 `,
-      //   },
-      //   component: () => import('@/view/kitchen/week_inspect/main.vue')
-      // },
-      // {
-      //   path: '/kitchen_night_inspect_list',
-      //   name: 'kitchen_night_inspect_list',
-      //   meta: {
-      //     icon: '_xunjianjianyan',
-      //     title: '夜检列表',
-      //     // access: [311],
-      //   },
-      //   component: () => import('@/view/kitchen/night_inspect_list/main.vue')
-      // },
-      // {
-      //   path: '/kitchen_night_inspect',
-      //   name: 'kitchen_night_inspect',
-      //   meta: {
-      //     hideInMenu: true,
-      //     icon: 'md-flower',
-      //     notCache: true,
-      //     title: route => `夜检报告`,
-      //     // access: [312],
-      //   },
-      //   component: () => import('@/view/kitchen/night_inspect/main.vue')
-      // },
+      {
+        path: '/kitchen_week_inspect_list',
+        name: 'kitchen_week_inspect_list',
+        meta: {
+          icon: '_xunjianjianyan',
+          title: '周检列表',
+          access: [315]
+        },
+        component: () => import('@/view/kitchen/week_inspect_list/main.vue')
+      },
+      {
+        path: '/kitchen_week_inspect',
+        name: 'kitchen_week_inspect',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-flower',
+          notCache: true,
+          access: [316],
+          title: route => `周检报告 `,
+        },
+        component: () => import('@/view/kitchen/week_inspect/main.vue')
+      },
+      {
+        path: '/kitchen_night_inspect_list',
+        name: 'kitchen_night_inspect_list',
+        meta: {
+          icon: '_xunjianjianyan',
+          title: '夜检列表',
+          access: [317],
+        },
+        component: () => import('@/view/kitchen/night_inspect_list/main.vue')
+      },
+      {
+        path: '/kitchen_night_inspect',
+        name: 'kitchen_night_inspect',
+        meta: {
+          hideInMenu: true,
+          icon: 'md-flower',
+          notCache: true,
+          title: route => `夜检报告`,
+          access: [318],
+        },
+        component: () => import('@/view/kitchen/night_inspect/main.vue')
+      },
       {
         path: '/kitchen_store_fine',
         name: 'kitchen_store_fine',
@@ -555,6 +696,79 @@ export default [
       },
     ]
   },
+  // 传播
+  {
+    path: '/spread',
+    name: 'spread',
+    meta: {
+      icon: '_diamond',
+      title: '商户运营',
+      access: [700]
+    },
+    component: Main,
+    children: [
+      {
+        path: '/spread_list',
+        name: 'spread_list',
+        meta: {
+          icon: '_shouye-xianxing',
+          title: '商户运营列表',
+          access: [701]
+        },
+        component: () => import('@/view/spread/spread_list/main.vue')
+      },
+      {
+        path: '/apply_list',
+        name: 'apply_list',
+        meta: {
+          icon: '_hongbao-xianxing',
+          title: '申领列表',
+          access: [702]
+        },
+        component: () => import('@/view/spread/apply_list/main.vue')
+      },
+      {
+        path: '/config_list',
+        name: 'config_list',
+        meta: {
+          icon: '_anzhuangshigong-xianxing',
+          title: '小程序设置',
+          access: [703]
+        },
+        component: () => import('@/view/spread/config_list/main.vue')
+      },
+      {
+        path: '/user_list',
+        name: 'user_list',
+        meta: {
+          icon: '_jiaosequnti',
+          title: '用户列表',
+          access: [704]
+        },
+        component: () => import('@/view/spread/user_list/main.vue')
+      },
+      {
+        path: '/shop_member_list',
+        name: 'shop_member_list',
+        meta: {
+          icon: '_yonghuziliao',
+          title: '商户账号',
+          access: [705]
+        },
+        component: () => import('@/view/spread/member_list/main.vue')
+      },
+      {
+        path: '/invite_list',
+        name: 'invite_list',
+        meta: {
+          icon: '_zhucetianjiahaoyou',
+          title: '邀请列表',
+          access: [706]
+        },
+        component: () => import('@/view/spread/invite_list/main.vue')
+      },
+    ]
+  },
   // 配置
   {
     path: '/permission',
@@ -641,69 +855,7 @@ export default [
       },
     ]
   },
-  // 传播
-  {
-    path: '/spread',
-    name: 'spread',
-    meta: {
-      icon: '_diamond',
-      title: '商户运营',
-      access: [700]
-    },
-    component: Main,
-    children: [
-      {
-        path: '/spread_list',
-        name: 'spread_list',
-        meta: {
-          icon: '_shouye-xianxing',
-          title: '商户运营列表',
-          access: [701]
-        },
-        component: () => import('@/view/spread/spread_list/main.vue')
-      },
-      {
-        path: '/apply_list',
-        name: 'apply_list',
-        meta: {
-          icon: '_hongbao-xianxing',
-          title: '申领列表',
-          access: [702]
-        },
-        component: () => import('@/view/spread/apply_list/main.vue')
-      },
-      {
-        path: '/config_list',
-        name: 'config_list',
-        meta: {
-          icon: '_anzhuangshigong-xianxing',
-          title: '小程序设置',
-          access: [703]
-        },
-        component: () => import('@/view/spread/config_list/main.vue')
-      },
-      {
-        path: '/user_list',
-        name: 'user_list',
-        meta: {
-          icon: '_jiaosequnti',
-          title: '用户列表',
-          access: [704]
-        },
-        component: () => import('@/view/spread/user_list/main.vue')
-      },
-      {
-        path: '/shop_member_list',
-        name: 'shop_member_list',
-        meta: {
-          icon: '_yonghuziliao',
-          title: '商户账号',
-          access: [705]
-        },
-        component: () => import('@/view/spread/member_list/main.vue')
-      },
-    ]
-  },
+  
   // 401
   {
     path: '/401',

@@ -19,6 +19,9 @@
         <i-col>
           <Button type="primary" @click="sreachKeyword">搜索</Button>
         </i-col>
+        <i-col>
+          <Button type="primary" @click="exportTable">导出表格</Button>
+        </i-col>
       </Row>
     </Card>
     <!-- 厨房表格数据 -->
@@ -88,18 +91,10 @@ export default {
             }
           }
         },
-        {title: '关注时间',
-          render: (h, params) => {
-            let subscribe_time = params.row.subscribe_time*1000
-            if(isNaN(subscribe_time)){
-              return h('span', '')
-            }else{
-              let nd = new Date(subscribe_time)
-              let date = nd.toLocaleDateString().replace(/\//g, "-") + " " + nd.toTimeString().substr(0, 8)
-              return h('span', { style: {color: '#999'}}, date)
-            }
-          }
-        },
+        {title: '关注时间', key: 'create_time'},
+        {title: '首次返现时间', key: 'first_time', width: 100},
+        {title: '返现单数', key: 'order_total', width: 80},
+        {title: '最后返现时间', key: 'last_time', width: 100},
       ],
       page: {
         current_page: 1,
@@ -117,6 +112,17 @@ export default {
     }
   },
   methods: {
+    // 导出
+    exportTable(){
+      let info =  Object.assign({},this.sreach)
+      var str = '';
+      for(let k in info){
+        str += ( k + '=' + info[k] + "&");
+      }
+      str = str.substr(0, str.length - 1)
+      const href = "./api/User/export?" + str;
+      window.open(href, '_blank')
+    },
     // 排序
     userSortTables(sort_data){
       if(sort_data.order == 'normal'){
