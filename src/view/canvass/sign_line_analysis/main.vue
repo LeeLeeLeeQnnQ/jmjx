@@ -31,6 +31,13 @@
             </FormItem>
           </i-col>
           <i-col :md="6" :lg="6">
+            <FormItem label="客户来源">
+              <Select v-model="sreachInfo.customer_source" clearable style="width: 200px">
+                  <Option v-for="(item,index) in sources_list" :value="item" :key="index">{{ item }}</Option>
+                </Select>
+            </FormItem>
+          </i-col>
+          <i-col :md="6" :lg="6">
             <FormItem>
               <Button type="primary" @click="sreachBaseInfo">确定</Button>
             </FormItem>
@@ -68,6 +75,13 @@
           </Card>
         </i-col>
       </Row>
+      <Row :gutter="20" style="margin-top: 15px;">
+        <i-col :md="24" :lg="24" style="margin-bottom: 20px;">
+          <Card>
+            <chart-pie style="height: 300px;" :value="pie_data.customer_source" text="客户来源"></chart-pie>
+          </Card>
+        </i-col>
+      </Row>
     </Card>
   </div>
 </template>
@@ -97,6 +111,7 @@ export default {
         end_area:'',
         start_time:'',
         end_time:'',
+        customer_source:'',
       },
       // 过滤数据
       filter_arr:[],
@@ -112,7 +127,9 @@ export default {
         manage_lease:[],
         kitchen_name:[],
       },
-      bar_data:{}
+      bar_data:{},
+      // 数据来源
+      sources_list:["58渠道","微信群","电话渠道","转介绍-中介","转介绍-BD","转介绍-已签约客户","转介绍-非签约客户","已合作门店开分店","转介绍-招商同行","转介绍-品牌渠道","访客","官网","其他来源务必备注说明"],
     }
   },
   methods: {
@@ -136,11 +153,13 @@ export default {
         end_area:this.sreachInfo.end_area,
         start_time:this.sreachInfo.start_time,
         end_time:this.sreachInfo.end_time,
+        customer_source:this.sreachInfo.customer_source,
       }
       this.pie_data = {
         area:[],
         manage_lease:[],
         kitchen_name:[],
+        customer_source:[],
       }
       if(!!info.start_area && !!info.end_area){
         if( info.start_area <=0 ){
@@ -191,6 +210,10 @@ export default {
             // console.log(!info[k])
             // console.log(info[k])
             //   if( !info[k] ){arr.push('area')}
+              break;
+            case 'customer_source':
+            // 固定整个面积属性
+              arr.push('customer_source')
               break;
           }
         };

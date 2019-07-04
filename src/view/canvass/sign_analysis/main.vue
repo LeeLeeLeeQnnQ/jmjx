@@ -10,6 +10,11 @@
             <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
           </Select>
         </i-col>
+        <i-col :md="6" :lg="6">
+          <Select v-model="sreach_info.customer_source"  @on-change="selectSource" clearable style="width: 200px" placeholder="选择来源">
+            <Option v-for="(item,index) in sources_list" :value="item" :key="index">{{ item }}</Option>
+          </Select>
+        </i-col>
       </Row>
     </Card>
     <Card shadow style="margin-top: 5px">
@@ -45,6 +50,7 @@ export default {
         // 时间段
         start_time:'',
         end_time:'',
+        customer_source:'',
       },
       // 招商列表
       leasingList:'',
@@ -55,6 +61,7 @@ export default {
         {title: '商铺名', key: 'store_name'},
         {title: '签约时间', key: 'sign_date', width: 150,sortable: 'custom'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
+        {title: '客户来源', key: 'customer_source'},
         { title: '店铺状态',
           render: (h, params) => {
             let lease_type = params.row.lease_type*1
@@ -71,7 +78,7 @@ export default {
             } 
           }
         },
-        {title: '面积', key: 'area'},
+        {title: '面积', key: 'store_area'},
         {title: '押金', key: 'deposit_fee'},
         {title: '租金', key: 'month_rent'},
         {title: '入场费', key: 'entrance_fee'},
@@ -91,6 +98,8 @@ export default {
         order:'',
         key:'',
       },
+      // 数据来源
+      sources_list:["58渠道","微信群","电话渠道","转介绍-中介","转介绍-BD","转介绍-已签约客户","转介绍-非签约客户","已合作门店开分店","转介绍-招商同行","转介绍-品牌渠道","访客","官网","其他来源务必备注说明"],
     }
   },
   methods: {
@@ -111,6 +120,10 @@ export default {
     },
     // 选择招商经理
     selectManageLeaseId(){
+      let info = Object.assign({}, this.sreach_info);
+      this.initData(info)
+    },
+    selectSource(){
       let info = Object.assign({}, this.sreach_info);
       this.initData(info)
     },

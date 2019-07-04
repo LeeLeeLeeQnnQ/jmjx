@@ -13,10 +13,6 @@
       </Row>
     </Card>
     <Card shadow style="margin-top: 8px;">
-      <h3>店铺人员：{{ baseInfo.allstoreNoNum }}</h3>
-      <h3>平均值：{{ baseInfo.allmember }}</h3>
-    </Card>
-    <Card shadow style="margin-top: 8px;">
       <tables ref="tables" v-model="memberTableData" :columns="memberColumns" 
           @data-view="handleView"
       />
@@ -45,10 +41,6 @@ export default {
       },
       //设备表格头部
       memberColumns:[
-        {
-          title: '档口名称',
-          key: 'title'
-        },
         {
           title: '厨房名称',
           key: 'title'

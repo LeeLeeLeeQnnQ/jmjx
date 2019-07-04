@@ -341,6 +341,7 @@ export default {
         {title: '厨房', key: 'kitchen_name'},
         {title: '月份', key: 'month'},
         {title: '商户', key: 'store_name'},
+        {title: '商户ID', key: 'store_id'},
         {title: '档口号', key: 'store_no'},
         {title: '公摊天数', key: 'day_number'},
         { title: '经营费用',

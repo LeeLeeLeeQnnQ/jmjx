@@ -74,9 +74,9 @@ export default {
           render: (h, params) => {
             let is_pay = params.row.is_pay*1
             if(is_pay == 0){
-              return h('span', { style: {color: '#19be6b'}}, '未下单')
+              return h('span', { style: {color: '#19be6b'}}, '未返现')
             }else if (is_pay == 1) {
-              return h('span', { style: {color: '#2d8cf0'}}, '已下单')
+              return h('span', { style: {color: '#2d8cf0'}}, '已返现')
             }
           }
         },

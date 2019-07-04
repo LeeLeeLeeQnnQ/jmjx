@@ -51,6 +51,13 @@
               </Select>
             </FormItem>
           </i-col>
+          <i-col span="10" offset="2">
+            <FormItem label="类别选择">
+              <Select v-model="formItem.tagSelect" style="width: 200px">
+                  <Option v-for="(item,index) in tagList" :value="index" :key="item">{{ item }}</Option>
+              </Select>
+            </FormItem>
+          </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="20">
@@ -212,6 +219,7 @@ export default {
       workCategoryList:[],
       //报账日期 
       expense_date:'',
+      tagList:["工程款","退款","厨房运营","人员工资","店面租金","店面能源","公关费"]
     }
   },
   methods: {

@@ -13,11 +13,6 @@
       </Row>
     </Card>
     <Card shadow style="margin-top: 8px;">
-      <h3>数据总电压：{{ baseInfo.allVoltage }} V</h3>
-      <h3>数据总功率：{{ baseInfo.allKW }} KW</h3>
-      <h3>数据总燃气量：{{ baseInfo.allGas }} m³</h3>
-    </Card>
-    <Card shadow style="margin-top: 8px;">
       <tables ref="tables" v-model="equipmentTableData" :columns="equipmentColumns" 
       />
       <Page :total="page.total" :page-size="page.list_rows" style="margin-top:10px;" @on-change="getNewPage"/>
@@ -46,11 +41,7 @@ export default {
       //设备表格头部
       equipmentColumns:[
         {
-          title: '店铺名称',
-          key: 'title'
-        },
-        {
-          title: '所属厨房',
+          title: '厨房名称',
           key: 'title'
         },
         {
