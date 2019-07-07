@@ -95,146 +95,146 @@ export default [
     ]
   },
   // 数据分析
-  // {
-  //   path: '/analysis',
-  //   name: 'analysis',
-  //   meta: {
-  //     icon: '_baobiao',
-  //     title: '厨房数据分析',
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: '/analysis_entrance',
-  //       name: 'analysis_entrance',
-  //       meta: {
-  //         icon: '_moduanwangdian',
-  //         title: '起租进度',
-  //       },
-  //       component: () => import('@/view/analysis/entrance/main.vue')
-  //     },
-  //     {
-  //       path: '/analysis_occupy',
-  //       name: 'analysis_occupy',
-  //       meta: {
-  //         icon: '_mobankuangjia',
-  //         showAlways: true,
-  //         title: 'analysis_kitchen'
-  //       },
-  //       component: parentView,
-  //       children: [
-  //         {
-  //           path: '/occupy_pie',
-  //           name: 'occupy_pie',
-  //           meta: {
-  //             icon: '_bingtu',
-  //             title: 'occupy_pie'
-  //           },
-  //           component: () => import('@/view/analysis/occupy-pie/main.vue')
-  //         },
-  //         {
-  //           path: '/occupy_table',
-  //           name: 'occupy_table',
-  //           meta: {
-  //             icon: '_tiaoxingtu',
-  //             title: 'occupy_table'
-  //           },
-  //           component: () => import('@/view/analysis/occupy-table/main.vue')
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       path: '/analysis_canvass',
-  //       name: 'analysis_canvass',
-  //       meta: {
-  //         icon: '_hezuoguanxi',
-  //         showAlways: true,
-  //         title: 'analysis_canvass'
-  //       },
-  //       component: parentView,
-  //       children: [
-  //         {
-  //           path: '/canvass_sign',
-  //           name: 'canvass_sign',
-  //           meta: {
-  //             icon: '_dianpu',
-  //             title: 'canvass-sign'
-  //           },
-  //           component: () => import('@/view/analysis/canvass-sign/main.vue')
-  //         },
-  //         {
-  //           path: '/canvass_view',
-  //           name: 'canvass_view',
-  //           meta: {
-  //             icon: '_kuaidiyuan',
-  //             title: 'canvass-view'
-  //           },
-  //           component: () => import('@/view/analysis/canvass-view/main.vue')
-  //         }
-  //       ]
-  //     },
-  //     {
-  //       path: '/analysis_finance',
-  //       name: 'analysis_finance',
-  //       meta: {
-  //         icon: '_caiwu',
-  //         showAlways: true,
-  //         title: 'analysis_finance'
-  //       },
-  //       component: parentView,
-  //       children: [
-  //         {
-  //           path: '/finance_income',
-  //           name: 'finance_income',
-  //           meta: {
-  //             icon: '_daikuan-xianxing',
-  //             title: 'finance-income'
-  //           },
-  //           component: () => import('@/view/analysis/finance-income/main.vue')
-  //         },
-  //         {
-  //           path: '/finance_expenditure',
-  //           name: 'finance_expenditure',
-  //           meta: {
-  //             icon: '_huankuan-xianxing',
-  //             title: 'finance-expenditure'
-  //           },
-  //           component: () => import('@/view/analysis/finance-expenditure/main.vue')
-  //         },
-  //       ]
-  //     },
-  //     {
-  //       path: '/analysis_kitchen',
-  //       name: 'analysis_kitchen',
-  //       meta: {
-  //         icon: '_dianpu',
-  //         showAlways: true,
-  //         title: 'analysis_kitchen'
-  //       },
-  //       component: parentView,
-  //       children: [
-  //         {
-  //           path: '/kitchen_equipment',
-  //           name: 'kitchen_equipment',
-  //           meta: {
-  //             icon: '_PDAshouchigongzuoshebei',
-  //             title: 'kitchen-equipment'
-  //           },
-  //           component: () => import('@/view/analysis/kitchen-equipment/main.vue')
-  //         },
-  //         {
-  //           path: '/kitchen_member',
-  //           name: 'kitchen_member',
-  //           meta: {
-  //             icon: '_yonghuziliao',
-  //             title: 'kitchen-member'
-  //           },
-  //           component: () => import('@/view/analysis/kitchen-member/main.vue')
-  //         }
-  //       ]
-  //     },
-  //   ]
-  // },
+  {
+    path: '/analysis',
+    name: 'analysis',
+    meta: {
+      icon: '_baobiao',
+      title: '厨房数据分析',
+    },
+    component: Main,
+    children: [
+      {
+        path: '/analysis_entrance',
+        name: 'analysis_entrance',
+        meta: {
+          icon: '_moduanwangdian',
+          title: '起租进度',
+        },
+        component: () => import('@/view/analysis/entrance/main.vue')
+      },
+      {
+        path: '/analysis_occupy',
+        name: 'analysis_occupy',
+        meta: {
+          icon: '_mobankuangjia',
+          showAlways: true,
+          title: 'analysis_kitchen'
+        },
+        component: parentView,
+        children: [
+          {
+            path: '/occupy_pie',
+            name: 'occupy_pie',
+            meta: {
+              icon: '_bingtu',
+              title: 'occupy_pie'
+            },
+            component: () => import('@/view/analysis/occupy-pie/main.vue')
+          },
+          {
+            path: '/occupy_table',
+            name: 'occupy_table',
+            meta: {
+              icon: '_tiaoxingtu',
+              title: 'occupy_table'
+            },
+            component: () => import('@/view/analysis/occupy-table/main.vue')
+          }
+        ]
+      },
+      {
+        path: '/analysis_canvass',
+        name: 'analysis_canvass',
+        meta: {
+          icon: '_hezuoguanxi',
+          showAlways: true,
+          title: 'analysis_canvass'
+        },
+        component: parentView,
+        children: [
+          {
+            path: '/canvass_sign',
+            name: 'canvass_sign',
+            meta: {
+              icon: '_dianpu',
+              title: 'canvass-sign'
+            },
+            component: () => import('@/view/analysis/canvass-sign/main.vue')
+          },
+          {
+            path: '/canvass_view',
+            name: 'canvass_view',
+            meta: {
+              icon: '_kuaidiyuan',
+              title: 'canvass-view'
+            },
+            component: () => import('@/view/analysis/canvass-view/main.vue')
+          }
+        ]
+      },
+      {
+        path: '/analysis_finance',
+        name: 'analysis_finance',
+        meta: {
+          icon: '_caiwu',
+          showAlways: true,
+          title: 'analysis_finance'
+        },
+        component: parentView,
+        children: [
+          {
+            path: '/finance_income',
+            name: 'finance_income',
+            meta: {
+              icon: '_daikuan-xianxing',
+              title: 'finance-income'
+            },
+            component: () => import('@/view/analysis/finance-income/main.vue')
+          },
+          {
+            path: '/finance_expenditure',
+            name: 'finance_expenditure',
+            meta: {
+              icon: '_huankuan-xianxing',
+              title: 'finance-expenditure'
+            },
+            component: () => import('@/view/analysis/finance-expenditure/main.vue')
+          },
+        ]
+      },
+      {
+        path: '/analysis_kitchen',
+        name: 'analysis_kitchen',
+        meta: {
+          icon: '_dianpu',
+          showAlways: true,
+          title: 'analysis_kitchen'
+        },
+        component: parentView,
+        children: [
+          {
+            path: '/kitchen_equipment',
+            name: 'kitchen_equipment',
+            meta: {
+              icon: '_PDAshouchigongzuoshebei',
+              title: 'kitchen-equipment'
+            },
+            component: () => import('@/view/analysis/kitchen-equipment/main.vue')
+          },
+          {
+            path: '/kitchen_member',
+            name: 'kitchen_member',
+            meta: {
+              icon: '_yonghuziliao',
+              title: 'kitchen-member'
+            },
+            component: () => import('@/view/analysis/kitchen-member/main.vue')
+          }
+        ]
+      },
+    ]
+  },
   // 厨房数据
   {
     path: '/kitchen_data',

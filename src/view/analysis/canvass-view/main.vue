@@ -361,6 +361,7 @@ export default {
         })
         that.pie_data[ele] = r;
       });
+      console.log(this.pie_data)
     },
     // 获取饼图数据
     getBarData( data ){

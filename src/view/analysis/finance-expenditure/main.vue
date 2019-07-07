@@ -3,44 +3,39 @@
     <Card shadow>
       <Row :gutter="20">
         <i-col :xs="12" :md="12" :lg="12">
-          <Select v-model="sreach.kitchenIdList" multiple placeholder="请选择厨房">
+          <Select v-model="sreach.kitchen_id" multiple placeholder="请选择厨房">
             <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
           </Select>
         </i-col>
         <i-col :xs="6" :md="6" :lg="6">
-          <DatePicker type="month" placeholder="选择月份" :value="sreach.month" style="width: 200px"></DatePicker>
+          <DatePicker type="month" @on-change="selectDate" placeholder="选择月份" :value="sreach.expend_date" style="width: 200px"></DatePicker>
         </i-col>
         <i-col :xs="3" :md="3" :lg="3">
           <Button type="primary" shape="circle" long @click="sreachSubmit">搜索</Button>
         </i-col>
       </Row>
     </Card>
-    <Card shadow style="margin-top: 8px;">
-      <Row :gutter="40">
-        <i-col v-for="item in baseList" :xs="4" :md="4" :lg="4">
-          <h3>{{item.title}}</h3>
-          <h3>{{item.value }}</h3>
-        </i-col>
-      </Row>
-    </Card>
-    <Card shadow style="margin-top: 8px;">
-      <tables ref="tables" v-model="incomeTableData" :columns="incomeColumns" 
-        @data-view = "handleView"
-      />
-      <Page :total="page.total" :page-size="page.list_rows" style="margin-top:10px;" @on-change="getNewPage"/>
-    </Card>
+    <Row :gutter="20" style="margin-top: 15px;" v-for="item in column_data">
+      <i-col :md="24" :lg="24" style="margin-bottom: 20px;">
+        <Card>
+          <chart-column style="height: 300px;" :value="item.column" :text="item.kitchen_name"></chart-column>
+        </Card>
+      </i-col>
+    </Row>
   </div>
 </template>
 
 <script>
 //权限
 // 
-import { getKitchenList , getKitchenStoreQueryList } from '@/api/setting'
+import { getKitchenList  } from '@/api/setting'
+import { getKitchenExpendQuery , getExpendType  } from '@/api/finance'
 import Tables from '_c/tables'
+import { ChartColumn } from '_c/charts'
 export default {
   name: 'analysis_fiance_expenditure',
   components: {
-    Tables
+    ChartColumn
   },
   data () {
     return {
@@ -48,72 +43,116 @@ export default {
       kitchenList:[],
       // 搜索条件
       sreach:{
-        kitchenIdList:1,
+        kitchen_id:'',
+        expend_date:'',
+        expend_type:'0',
       },
-      //设备表格头部
-      incomeColumns:[
-        {
-          title: '厨房',
-          key: 'title'
-        },
-        {
-          title: '金额',
-          key: 'voltage'
-        },
-        {
-          title: '支出时间',
-          key: 'voltage'
-        },
-        {
-          title: '查看',
-          key: 'handle',
-          button: [
-            (h, params, vm) => {
-              return h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('data-view', params)
-                  }
-                }},
-              '查看')
-            },
-          ]
-        },
-      ],
-      //设备数据
-      incomeTableData:[{id:1,title:'1213',gas:1}],
-      // 基础数据
-      baseInfo:{
-        a:999
-      },
-      // 
-      baseList:[{title:'2',value:'123'}],
-      page: {
-        curmoney_page: 1,
-        last_page: '',
-        list_rows: 0,
-        total: 0
-      },
+      expendList:[],
+      // init 数据
+      baseinfo:[],
+      column_data:[],
+      kitchen_column:[],
+      tagList:[],
+      tagObj:{},
     }
   },
   methods: {
-    init( ){
-      
+    init( data ){
+      let sreach = this.sreach;
+      let obj = Object.assign({},data,sreach)
+      obj.kitchen_id = obj.kitchen_id.join(',')
+      this.getKitchenExpendQuery(obj);
     },
-    getNewPage(){
-
+    getKitchenExpendQuery(info){
+      getKitchenExpendQuery(info).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.baseinfo = dbody.data;
+        this.getKitchenChartColumnData(this.baseinfo);
+      })
     },
-    // 查看
-    handleView(){
-
+    getKitchenChartColumnData(data){
+      let obj = {};
+      let key_list = [];
+      data.forEach((item,index)=>{
+        if(key_list.includes(item.kitchen_id)){
+          obj[item.kitchen_id].list.push(item)
+        }else{
+          key_list.push(item.kitchen_id);
+          obj[item.kitchen_id] = {};
+          obj[item.kitchen_id].kitchen_name = item.kitchen_name;
+          obj[item.kitchen_id].list = [];
+          obj[item.kitchen_id].list.push(item)
+        }
+      })
+      let arr = [];
+      for (let key in obj) {
+        arr.push(obj[key])
+      }
+      this.getItemChartColumnData(arr);
+    },
+    getItemChartColumnData(arr){
+      let column_arr = [];
+      arr.forEach((item,index)=>{
+        let iobj = {};
+        iobj.kitchen_name = item.kitchen_name
+        let column = item.list || [];
+        let x_title = [];
+        let item_obj = Object.assign({},this.tagObj);
+        column.forEach((citem,cindex)=>{
+          if(!!item_obj[citem.expend_type] || item_obj[citem.expend_type] == 0){
+            item_obj[citem.expend_type] = (citem.money*1 + item_obj[citem.expend_type]*1).toFixed(2);
+          }
+        })
+        column_arr.push({
+          kitchen_name:item.kitchen_name,
+          column:item_obj
+        });
+      })
+      this.setData(column_arr)
+    },
+    setData(column_arr){
+      let column_data = [];
+      column_arr.forEach((item,index)=>{
+        let obj = {};
+        for (let k  in item.column) {
+          let arrdata = this.tagList.filter(item => 
+            k == item.type
+          );
+          let data = arrdata[0]
+          obj[data.name] = item.column[k]
+        }
+        column_data.push({
+          kitchen_name:item.kitchen_name,
+          column:obj
+        });
+      })
+      this.column_data = column_data;
+    },
+    // selectDate
+    selectDate(date){
+      this.sreach.expend_date = date;
     },
     // 搜索
     sreachSubmit(){
-      console.log(this.sreach)
+      if(this.sreach.kitchen_id.length <= 0){
+        this.$Notice.warning({
+          title: '厨房必须选择！'
+        })
+        return
+      }
+      if(!this.sreach.expend_date){
+        this.$Notice.warning({
+          title: '时间必须选择！'
+        })
+        return
+      }
+      this.init(this.sreach);
     },
   },
   computed: {
@@ -130,7 +169,24 @@ export default {
       }
       // 初始化函数
       this.kitchenList = dbody.data.list || [];
-    })  
+    });
+    getExpendType( ).then(res => {
+      const dbody = res.data
+      if(dbody.code != 0){
+        this.$Notice.warning({
+          title: dbody.msg
+        })
+        return
+      }
+      let obj = {}
+      dbody.data.forEach((item)=>{
+        if(item.category_id == 1){
+          obj[item.type] = 0;
+        }
+      })
+      this.tagList = dbody.data;
+      this.tagObj = obj;
+    })
   },
 }
 </script>

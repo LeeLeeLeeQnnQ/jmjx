@@ -340,7 +340,7 @@ export default {
     },
     init(data){
       let td = this.sreach;
-      let obj = Object.assign(data,td)
+      let obj = Object.assign({},data,td)
       getSpreadUserOrderList(obj).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {

@@ -42,6 +42,7 @@ export default {
       // 数据
       kitchen_expend_list:[],
       columns: [
+        {title: '支出类型', key: 'expend_type_name'},
         {title: '所属厨房', key: 'kitchen_name'},
         {title: '标题', key: 'title'},
         {title: '报账日期', key: 'expend_date'},

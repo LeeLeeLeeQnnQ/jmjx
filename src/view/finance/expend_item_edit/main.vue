@@ -38,13 +38,13 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
-            <FormItem label="报销日期">
-              <DatePicker :value="formItem.expense_date" format="yyyy-MM-dd" type="date" placeholder="选择报账日期" style="width: 200px" @on-change="selectExpenseDate"></DatePicker>
+            <FormItem label="类别选择">
+              <Select style="width: 200px" v-model="formItem.expend_type" @on-change="tagSelect">
+                  <Option v-for="(item,index) in tagList" :value="item.type" :key="item.type">{{ item.name }}</Option>
+              </Select>
             </FormItem>
           </i-col>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="10">
+          <i-col span="10"  offset="2" v-show="isShowKitchenList">
             <FormItem label="厨房选择" prop="kitchenSelect">
               <Select v-model="formItem.kitchenSelect" style="width: 200px">
                   <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
@@ -127,11 +127,12 @@
 //权限
 // /api/Index/getKitchenList,/api/StoreLease/queryList,/api/Index/getWorkCategory,/api/KitchenExpend/index,/api/KitchenExpend/show,/api/KitchenExpend/edit
 import { getKitchenList, getStoreList , getWorkCategoryList } from '@/api/data'
-import { getKitchenExpendList , showKitchenExpend , editKitchenExpend } from '@/api/finance'
+import { getKitchenExpendList , showKitchenExpend , editKitchenExpend , getExpendType } from '@/api/finance'
 export default {
   name: 'edit-expenses-order',
   data () {
     return {
+      isShowKitchenList:false,
       // 表格
       tableColumns: [
         {
@@ -212,9 +213,25 @@ export default {
       workCategoryList:[],
       //报账日期 
       expense_date:'',
+      tagList:[],
     }
   },
   methods: {
+    // tagSelect
+    tagSelect(expend_type){
+      let data = this.tagList.filter(item => 
+        item.type == expend_type
+      );
+      this.formItem.category_id = data[0].category_id;
+      this.formItem.expend_type = data[0].type;
+      if(this.formItem.category_id == 1){
+        this.isShowKitchenList = true;
+      }
+      if(this.formItem.category_id == 2){
+        this.isShowKitchenList = false;
+        this.formItem.kitchenSelect = '';
+      }
+    },
     // 选择报账日期
     selectExpenseDate( date ){
       this.formItem.expense_date = date;
@@ -283,7 +300,13 @@ export default {
         })
         return false
       }
-      if (!obj.kitchenSelect) {
+      if(!obj.expend_type || !obj.category_id){
+        this.$Notice.warning({
+          title: '请输入支出类别！'
+        })
+        return false
+      }
+      if (!obj.kitchenSelect && obj.category_id != 2) {
         this.$Notice.warning({
           title: '请选择厨房！'
         })
@@ -329,6 +352,8 @@ export default {
       data.title = info.title
       data.kitchen_id = info.kitchenSelect
       data.expend_date = info.expense_date
+      data.expend_type = info.expend_type
+      data.category_id = info.category_id
       data.remark = info.textarea
       data.images = info.uploadList
       data.list = info.tableData || {}
@@ -411,7 +436,11 @@ export default {
         this.formItem.id = id
         this.formItem.title = data.title
         this.formItem.expense_date = data.expend_date
-        this.formItem.kitchenSelect = data.kitchen_id
+        this.formItem.expend_type = data.expend_type
+        if( this.formItem.expend_type != 2){
+          this.isShowKitchenList = true;
+          this.formItem.kitchenSelect = data.kitchen_id
+        }
         let arr = !!data.images ? data.images.split(",") : [];
         arr.forEach( function(element, index) {
           let obj = {}
@@ -425,6 +454,18 @@ export default {
         this.tableTotal = (0 - data.money).toFixed(2)
       })
     },
+    getExpendType(){
+      getExpendType( ).then(res => {
+        const dbody = res.data
+        if(dbody.code != 0){
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.tagList = dbody.data;
+      })
+    }
   },
   computed: {
   },
@@ -442,7 +483,10 @@ export default {
         const dbody = res.data
         this.workCategoryList = dbody.data || [];
       })
-      this.initData( id );
+      this.getExpendType();
+      setTimeout(()=>{
+        this.initData( id );
+      },500)
     })
   }
 }

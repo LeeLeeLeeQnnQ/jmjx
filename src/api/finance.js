@@ -20,6 +20,27 @@ export const getKitchenExpendList = ( obj ) => {
   })
 }
 
+
+/*
+  获取厨房支出列表
+*/
+/*
+  kitchen_id
+*/
+/*
+  kitchen-data-kitchen-detail -- 支出列表
+  expenses-order  -- 支出列表
+  edit-expenses-order  -- 支出列表
+  finance-kitchen-expend-list  -- 支出列表
+*/
+export const getKitchenExpendQuery = ( obj ) => {
+  return axios.request({
+    url: '/api/KitchenExpend/queryList',
+    params: obj,
+    method: 'get'
+  })
+}
+
 /*
   新建一家店铺
 */
@@ -87,6 +108,24 @@ export const addKitchenExpend = ( data ) => {
     method: 'post'
   })
 }
+
+
+/*
+  获取厨房指出分类
+*/
+/*
+
+*/
+/*
+  expenses-order --  增加一条厨房支出
+*/
+export const getExpendType = (  ) => {
+  return axios.request({
+    url: '/api/KitchenExpend/getExpendType',
+    method: 'get'
+  })
+}
+
 
 /*
   获取一条支出详情

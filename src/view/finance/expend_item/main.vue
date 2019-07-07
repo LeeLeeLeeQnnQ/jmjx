@@ -38,24 +38,24 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
-            <FormItem label="报销日期">
-              <DatePicker :value="formItem.expense_date" format="yyyy-MM-dd" type="date" placeholder="选择报账日期" style="width: 200px" @on-change="selectExpenseDate"></DatePicker>
+            <FormItem label="类别选择">
+              <Select style="width: 200px" @on-change="tagSelect">
+                  <Option v-for="(item,index) in tagList" :value="index" :key="item.type">{{ item.name }}</Option>
+              </Select>
             </FormItem>
           </i-col>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="10">
+          <i-col span="10"  offset="2" v-show="isShowKitchenList">
             <FormItem label="厨房选择" prop="kitchenSelect">
               <Select v-model="formItem.kitchenSelect" style="width: 200px">
                   <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
               </Select>
             </FormItem>
           </i-col>
-          <i-col span="10" offset="2">
-            <FormItem label="类别选择">
-              <Select v-model="formItem.tagSelect" style="width: 200px">
-                  <Option v-for="(item,index) in tagList" :value="index" :key="item">{{ item }}</Option>
-              </Select>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="报销日期">
+              <DatePicker :value="formItem.expense_date" format="yyyy-MM-dd" type="date" placeholder="选择报账日期" style="width: 200px" @on-change="selectExpenseDate"></DatePicker>
             </FormItem>
           </i-col>
         </Row>
@@ -134,11 +134,12 @@
 //权限
 // /api/Index/getKitchenList,/api/StoreLease/queryList,/api/Index/getWorkCategory,/api/KitchenExpend/index,/api/KitchenExpend/add
 import { getKitchenList, getStoreList , getWorkCategoryList } from '@/api/data'
-import { getKitchenExpendList , addKitchenExpend } from '@/api/finance'
+import { getKitchenExpendList , addKitchenExpend , getExpendType } from '@/api/finance'
 export default {
   name: 'expenses-order',
   data () {
     return {
+      isShowKitchenList:false,
       // 表格
       tableColumns: [
         {
@@ -209,7 +210,7 @@ export default {
         title: '',
         money: '',
         remark: '',
-        quantity: 1
+        quantity: 1,
       },
       // 图片
       imgUrl: '',
@@ -219,10 +220,23 @@ export default {
       workCategoryList:[],
       //报账日期 
       expense_date:'',
-      tagList:["工程款","退款","厨房运营","人员工资","店面租金","店面能源","公关费"]
+      tagList:[],
     }
   },
   methods: {
+    // tagSelect
+    tagSelect(index){
+      let data  = this.tagList[index] || {};
+      this.formItem.category_id = data.category_id;
+      this.formItem.expend_type = data.type;
+      if(this.formItem.category_id == 1){
+        this.isShowKitchenList = true;
+      }
+      if(this.formItem.category_id == 2){
+        this.isShowKitchenList = false;
+        this.formItem.kitchenSelect = '';
+      }
+    },
     // 选择报账日期
     selectExpenseDate( date ){
       this.formItem.expense_date = date;
@@ -291,7 +305,13 @@ export default {
         })
         return false
       }
-      if (!obj.kitchenSelect) {
+      if(!obj.expend_type || !obj.category_id){
+        this.$Notice.warning({
+          title: '请输入支出类别！'
+        })
+        return false
+      }
+      if (!obj.kitchenSelect && obj.category_id != 2) {
         this.$Notice.warning({
           title: '请选择厨房！'
         })
@@ -336,6 +356,8 @@ export default {
       data.title = info.title
       data.kitchen_id = info.kitchenSelect
       data.expend_date = info.expense_date
+      data.expend_type = info.expend_type
+      data.category_id = info.category_id
       data.remark = info.textarea
       data.images = info.uploadList
       data.list = info.tableData || {}
@@ -404,6 +426,18 @@ export default {
       reader.onload = (event) => {
       }
     },
+    getExpendType(){
+      getExpendType( ).then(res => {
+        const dbody = res.data
+        if(dbody.code != 0){
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.tagList = dbody.data;
+      })
+    }
   },
   computed: {
   },
@@ -419,6 +453,7 @@ export default {
         const dbody = res.data
         this.workCategoryList = dbody.data || [];
       })
+      this.getExpendType();
     })
   }
 }
