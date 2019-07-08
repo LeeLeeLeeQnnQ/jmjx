@@ -99,6 +99,12 @@
                   <span v-show="!leaseinfo.entrance_fee" class="noData">未填写</span>
                 </FormItem>
               </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="增容费" class="cellTit">
+                  <span v-show="!!leaseinfo.zr_fee">{{leaseinfo.zr_fee}}</span>
+                  <span v-show="!leaseinfo.zr_fee" class="noData">未填写</span>
+                </FormItem>
+              </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
 <!--               <i-col span="10">

@@ -3,7 +3,7 @@
     <Card shadow>
       <Row :gutter="20">
         <i-col :xs="12" :md="12" :lg="12">
-          <Select v-model="sreach.kitchenIdList" multiple placeholder="请选择厨房">
+          <Select v-model="sreach.kitchen_id" multiple placeholder="请选择厨房">
             <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
           </Select>
         </i-col>
@@ -12,16 +12,32 @@
         </i-col>
       </Row>
     </Card>
-    <Card shadow style="margin-top: 8px;">
-      <Row :gutter="20" style="margin-top: 15px;">
+    <Card shadow style="margin-top: 8px;" v-show="isTotal">
+      <Row :gutter="20" style="margin-top: 15px;"  >
+        <h3 style="margin:8px 0;text-align: center;">总数据</h3>
         <i-col :md="12" :lg="12" style="margin-bottom: 20px;">
           <Card>
-            <chart-pie style="height: 300px;" :value="pie_data.occupy" text="入住率"></chart-pie>
+            <chart-pie v-if="!!total_data.occupy" style="height: 300px;" :value="total_data.occupy" text="入住率"></chart-pie>
           </Card>
         </i-col>
         <i-col :md="12" :lg="12" style="margin-bottom: 20px;">
           <Card>
-            <chart-pie style="height: 300px;" :value="pie_data.store_status" text="档口状态"></chart-pie>
+            <chart-pie  v-if="!!total_data.store_status" style="height: 300px;" :value="total_data.store_status" text="档口状态"></chart-pie>
+          </Card>
+        </i-col>
+      </Row>
+    </Card>
+    <Card shadow style="margin-top: 8px;" v-for="item in pie_data_list">
+      <Row :gutter="20" style="margin-top: 15px;"  >
+        <h3 style="margin:8px 0;text-align: center;">{{item.kitchen_name}}</h3>
+        <i-col :md="12" :lg="12" style="margin-bottom: 20px;">
+          <Card>
+            <chart-pie style="height: 300px;" :value="item.occupy" text="入住率"></chart-pie>
+          </Card>
+        </i-col>
+        <i-col :md="12" :lg="12" style="margin-bottom: 20px;">
+          <Card>
+            <chart-pie style="height: 300px;" :value="item.store_status" text="档口状态"></chart-pie>
           </Card>
         </i-col>
       </Row>
@@ -31,7 +47,7 @@
 
 <script>
 //权限
-// 
+// Kitchen/index,KitchenStore/querylist
 import { getKitchenList , getKitchenStoreQueryList } from '@/api/setting'
 import { ChartPie  } from '_c/charts'
 export default {
@@ -45,18 +61,18 @@ export default {
       kitchenList:[],
       // 搜索条件
       sreach:{
-        kitchenIdList:1,
+        kitchen_id:'',
       },
-      // 饼状图数据
-      pie_data:{
-        occupy:[],
-        store_status:[],
-      },
+      pie_data_list:[],
+      total_data:{},
+      isTotal:false,
     }
   },
   methods: {
     // 初始化数据
     initData( info ){
+      this.isTotal = false;
+      this.pie_data_list = [];
       getKitchenStoreQueryList( info ).then(res => {
         const dbody = res.data;
         if (dbody.code != 0) {
@@ -66,9 +82,57 @@ export default {
           return
         }
         let rdata = dbody.data || [];
-        this.setOccupyInfo(rdata);
-        this.setStatusInfo(rdata);
+        this.getKitchenData(rdata)
       })
+    },
+    // 
+    getKitchenData(data){
+      let obj = {};
+      let key_list = [];
+      data.forEach((item,index)=>{
+        if(key_list.includes(item.kitchen_id)){
+          obj[item.kitchen_id].list.push(item)
+        }else{
+          key_list.push(item.kitchen_id);
+          obj[item.kitchen_id] = {};
+          obj[item.kitchen_id].kitchen_name = item.kitchen_name;
+          obj[item.kitchen_id].kitchen_id = item.kitchen_id;
+          obj[item.kitchen_id].list = [];
+          obj[item.kitchen_id].list.push(item)
+        }
+      })
+      let arr = [];
+      for (let key in obj) {
+        arr.push(obj[key])
+      }
+      if(arr.length  == 0){
+        this.$Notice.warning({
+          title: '无匹配数据！'
+        })
+        return
+      }
+      if(arr.length  > 1){
+        let t_obj = {}; 
+        t_obj.occupy = this.setOccupyInfo(data)
+        t_obj.store_status = this.setStatusInfo(data)
+        this.total_data = t_obj;
+        this.isTotal = true;
+      }
+      if(arr.length  != this.sreach.kitchen_id.length){
+        this.$Notice.warning({
+          title: '部分厨房无支出数据！'
+        })
+      }
+      let n_obj = [];
+      arr.forEach((a_item)=>{
+        let obj = {}; 
+        obj.kitchen_id = a_item.kitchen_id;
+        obj.kitchen_name = a_item.kitchen_name;
+        obj.occupy = this.setOccupyInfo(a_item.list)
+        obj.store_status = this.setStatusInfo(a_item.list)
+        n_obj.push(obj);
+      })
+      this.pie_data_list = n_obj;
     },
     // 获取入住率
     setOccupyInfo( data ){
@@ -89,7 +153,7 @@ export default {
           pie.push({name:'空闲', value : count[k]})
         }
       }
-      this.pie_data.occupy = pie;
+      return pie;
     },
     // 获取厨房状态数据
     setStatusInfo( data ){
@@ -110,24 +174,31 @@ export default {
       for(let k in count){
         if(k == 'aaa'){
           pie.push({name:'租赁中', value : count[k]})
-        }else if (k = 'bbb') {
+        }else if (k == 'bbb') {
           pie.push({name:'转租中', value : count[k]})
-        }else if (k = 'ccc') {
+        }else if (k == 'ccc') {
           pie.push({name:'起租中', value : count[k]})
-        }else if (k = 'ddd') {
+        }else if (k == 'ddd') {
           pie.push({name:'空闲中', value : count[k]})
         }
       }
-      this.pie_data.store_status = pie;
+      return pie;
     },
-    init( ){
-      let info = {};
-      info.kitchen_id = this.sreach.kitchenIdList;
-      this.initData(info);
+    init( data ){
+      if(this.sreach.kitchen_id.length <= 0){
+        this.$Notice.warning({
+          title: '厨房必须选择！'
+        })
+        return
+      }
+      let sreach = this.sreach;
+      let obj = Object.assign({},data,sreach)
+      obj.kitchen_id = obj.kitchen_id.join(',')
+      this.initData(obj);
     },
     // 搜索
     sreachSubmit(){
-      console.log(this.sreach)
+      this.init({});
     },
   },
   computed: {
@@ -144,7 +215,6 @@ export default {
       }
       // 初始化函数
       this.kitchenList = dbody.data.list || [];
-      this.init();
     })  
   },
 }

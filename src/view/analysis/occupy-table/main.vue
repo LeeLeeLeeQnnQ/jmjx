@@ -3,31 +3,37 @@
     <Card shadow>
       <Row :gutter="20">
         <i-col :xs="12" :md="12" :lg="12">
-          <Select v-model="sreach.kitchenIdList" multiple placeholder="请选择厨房">
+          <Select v-model="sreach.kitchen_id" multiple placeholder="请选择厨房">
             <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
           </Select>
         </i-col>
         <i-col :xs="6" :md="6" :lg="6">
-          <DatePicker type="daterange" placeholder="选择时间区间" :value="sreach.month" style="width: 200px"></DatePicker>
+          <DatePicker @on-change="selectDate" type="month" placeholder="选择月份" style="width: 200px"></DatePicker>
         </i-col>
         <i-col :xs="3" :md="3" :lg="3">
           <Button type="primary" shape="circle" long @click="sreachSubmit">搜索</Button>
         </i-col>
       </Row>
     </Card>
-    <Card shadow style="margin-top: 8px;">
-      <tables
-        v-model="kitchen_s_data"
-        :columns="kitchen_data_columns"/>
-    </Card>
+    <Tabs style="margin-top: 12px;" type="card">
+        <TabPane v-for="item in kitchen_s_data" :label="item.kitchen_name">
+          <Card shadow style="margin-top: 8px;">
+            <tables
+              v-model="item.list"
+              :columns="kitchen_data_columns"/>
+          </Card>
+        </TabPane>
+    </Tabs>
+    
   </div>
 </template>
 
 <script>
 //权限
-// 
+// Kitchen/index,KitchenReside/queryList
 import Tables from '_c/tables'
-import { getKitchenList } from '@/api/setting'
+import { getKitchenList  } from '@/api/setting'
+import { getKitchenResideQueryList  } from '@/api/data'
 export default {
   name: 'analysis_occupy_table',
   components: {
@@ -39,33 +45,22 @@ export default {
       kitchenList:[],
       // 搜索条件
       sreach:{
-        kitchenIdList:[],
-        month:'2019-06',
+        kitchen_id:'',
+        month:'',
       },
       // 数据
-      kitchen_s_data:[
-        {
-          kitchen_name:"四道口",
-          days:"50",
-          total_days:"60",
-        },
-        {
-          kitchen_name:"总计",
-          days:"50",
-          total_days:"60",
-        }
-      ],
+      kitchen_s_data:[],
       kitchen_data_columns:[
-        {title: '名称', key: 'kitchen_name'},
+        {title: '档口号', key: 'store_no'},
         {title: '占用天数', key: 'days'},
-        {title: '自然天数', key: 'total_days'},
+        {title: '自然天数', key: 'days_total'},
         {
-          title: '入住率',
+          title: '占用率',
           key: 'occupy',
           render: (h, params) => {
             let days = params.row.days*1;
-            let total_days = params.row.total_days*1;
-            let occupy = (days/total_days).toFixed(2)
+            let days_total = params.row.days_total*1;
+            let occupy = (Math.round(days*1/days_total*1 * 10000)/100).toFixed(2) + '%'
             return h('span', { style: {color: '#ff9900'}} , occupy)
           }
         },
@@ -73,13 +68,88 @@ export default {
     }
   },
   methods: {
+    // selectDate
+    selectDate(date){
+      this.sreach.month = date;
+    },
     // 初始化数据
-    initData( ){
-      
+    initData( data ){
+      this.kitchen_s_data = [];
+      let sreach = this.sreach;
+      let obj = Object.assign({},data,sreach)
+      obj.kitchen_id = obj.kitchen_id.join(',')
+      this.getKitchenResideQueryList(obj)
     },
     // 搜索
     sreachSubmit(){
-      console.log(this.sreach)
+      if(this.sreach.kitchen_id.length <= 0){
+        this.$Notice.warning({
+          title: '厨房必须选择！'
+        })
+        return
+      }
+      if(!this.sreach.month){
+        this.$Notice.warning({
+          title: '时间必须选择！'
+        })
+        return
+      }
+      this.initData({})
+    },
+    getKitchenResideQueryList(info){
+      getKitchenResideQueryList(info).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        // 初始化函数
+        let t_data = dbody.data || []
+        this.getKitchenData(t_data);
+      })
+    },
+    getKitchenData(data){
+      let obj = {};
+      let key_list = [];
+      data.forEach((item,index)=>{
+        if(key_list.includes(item.kitchen_id)){
+          obj[item.kitchen_id].list.push(item)
+        }else{
+          key_list.push(item.kitchen_id);
+          obj[item.kitchen_id] = {};
+          obj[item.kitchen_id].kitchen_name = item.kitchen_name;
+          obj[item.kitchen_id].kitchen_id = item.kitchen_id;
+          obj[item.kitchen_id].list = [];
+          obj[item.kitchen_id].list.push(item)
+        }
+      })
+      let arr = [];
+      for (let key in obj) {
+        let total = {};
+        total.store_no = "厨房总计";
+        total.days = 0;
+        total.days_total = 0;
+        obj[key].list.forEach((i_t)=>{
+          total.days = i_t.days*1 + total.days*1
+          total.days_total = i_t.days_total*1 + total.days_total*1
+        })
+        obj[key].list.push(total)
+        arr.push(obj[key])
+      }
+      if(arr.length  == 0){
+        this.$Notice.warning({
+          title: '无匹配数据！'
+        })
+        return
+      }
+      if(arr.length  != this.sreach.kitchen_id.length){
+        this.$Notice.warning({
+          title: '部分厨房无入住数据！'
+        })
+      }
+      this.kitchen_s_data = arr;
     },
   },
   computed: {
@@ -96,7 +166,6 @@ export default {
       }
       // 初始化函数
       this.kitchenList = dbody.data.list || [];
-      this.initData();
     })  
   },
 }

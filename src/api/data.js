@@ -115,6 +115,23 @@ export const isExistCustome = ( info ) => {
 }
 
 
+/*
+  获取考个入住率
+*/
+/*
+  
+*/
+/*
+  
+*/
+export const getKitchenResideQueryList = ( info ) => {
+  return axios.request({
+    url: 'api/KitchenReside/queryList',
+    params: info,
+    method: 'get'
+  })
+}
+
 
 
 /*

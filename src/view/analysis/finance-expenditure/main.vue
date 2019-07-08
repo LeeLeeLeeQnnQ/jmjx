@@ -8,7 +8,7 @@
           </Select>
         </i-col>
         <i-col :xs="6" :md="6" :lg="6">
-          <DatePicker type="month" @on-change="selectDate" placeholder="选择月份" :value="sreach.expend_date" style="width: 200px"></DatePicker>
+          <DatePicker  @on-change="selectDate"  type="daterange"  placeholder="选择时间段" style="width: 200px"></DatePicker>
         </i-col>
         <i-col :xs="3" :md="3" :lg="3">
           <Button type="primary" shape="circle" long @click="sreachSubmit">搜索</Button>
@@ -18,6 +18,9 @@
     <Row :gutter="20" style="margin-top: 15px;" v-for="item in column_data">
       <i-col :md="24" :lg="24" style="margin-bottom: 20px;">
         <Card>
+          <p slot="title">
+           {{item.kitchen_name}}合计支出：{{item.total}}
+          </p>
           <chart-column style="height: 300px;" :value="item.column" :text="item.kitchen_name"></chart-column>
         </Card>
       </i-col>
@@ -27,7 +30,7 @@
 
 <script>
 //权限
-// 
+// Kitchen/index,KitchenExpend/queryList,KitchenExpend/getExpendType
 import { getKitchenList  } from '@/api/setting'
 import { getKitchenExpendQuery , getExpendType  } from '@/api/finance'
 import Tables from '_c/tables'
@@ -44,8 +47,9 @@ export default {
       // 搜索条件
       sreach:{
         kitchen_id:'',
-        expend_date:'',
-        expend_type:'0',
+        start_time:'',
+        end_time:'',
+        expend_type:'1',
       },
       expendList:[],
       // init 数据
@@ -58,6 +62,7 @@ export default {
   },
   methods: {
     init( data ){
+      this.column_data = [];
       let sreach = this.sreach;
       let obj = Object.assign({},data,sreach)
       obj.kitchen_id = obj.kitchen_id.join(',')
@@ -86,6 +91,7 @@ export default {
           key_list.push(item.kitchen_id);
           obj[item.kitchen_id] = {};
           obj[item.kitchen_id].kitchen_name = item.kitchen_name;
+          obj[item.kitchen_id].kitchen_id = item.kitchen_id;
           obj[item.kitchen_id].list = [];
           obj[item.kitchen_id].list.push(item)
         }
@@ -93,6 +99,17 @@ export default {
       let arr = [];
       for (let key in obj) {
         arr.push(obj[key])
+      }
+      if(arr.length  == 0){
+        this.$Notice.warning({
+          title: '无匹配数据！'
+        })
+        return
+      }
+      if(arr.length  != this.sreach.kitchen_id.length){
+        this.$Notice.warning({
+          title: '部分厨房无支出数据！'
+        })
       }
       this.getItemChartColumnData(arr);
     },
@@ -103,15 +120,19 @@ export default {
         iobj.kitchen_name = item.kitchen_name
         let column = item.list || [];
         let x_title = [];
+        let total = 0;
         let item_obj = Object.assign({},this.tagObj);
         column.forEach((citem,cindex)=>{
           if(!!item_obj[citem.expend_type] || item_obj[citem.expend_type] == 0){
             item_obj[citem.expend_type] = (citem.money*1 + item_obj[citem.expend_type]*1).toFixed(2);
+            total = (total*1 + item_obj[citem.expend_type]*1).toFixed(2);
           }
         })
         column_arr.push({
           kitchen_name:item.kitchen_name,
-          column:item_obj
+          kitchen_id:item.kitchen_id,
+          column:item_obj,
+          total:total
         });
       })
       this.setData(column_arr)
@@ -129,14 +150,18 @@ export default {
         }
         column_data.push({
           kitchen_name:item.kitchen_name,
-          column:obj
+          column:obj,
+          total:item.total,
+          kitchen_id:item.kitchen_id,
         });
       })
       this.column_data = column_data;
+      console.log(this.column_data)
     },
     // selectDate
     selectDate(date){
-      this.sreach.expend_date = date;
+      this.sreach.start_time = date[0];
+      this.sreach.end_time = date[1];
     },
     // 搜索
     sreachSubmit(){
@@ -146,13 +171,13 @@ export default {
         })
         return
       }
-      if(!this.sreach.expend_date){
+      if(!this.sreach.start_time || !this.sreach.end_time){
         this.$Notice.warning({
           title: '时间必须选择！'
         })
         return
       }
-      this.init(this.sreach);
+      this.init({});
     },
   },
   computed: {

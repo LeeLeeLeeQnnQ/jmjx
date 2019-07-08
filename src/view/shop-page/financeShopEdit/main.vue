@@ -120,7 +120,7 @@
                   <Input v-model="baseinfo.entrance_fee" placeholder="输入入场费"></Input>
                 </FormItem>
               </i-col>
-               <i-col span="10" offset="2">
+              <i-col span="10" offset="2">
                 <FormItem label="增容费">
                   <Input v-model="baseinfo.zr_fee" placeholder="输入增容费"></Input>
                 </FormItem>
