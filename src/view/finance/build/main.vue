@@ -90,6 +90,18 @@
           </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="收费周期" prop="rent_bill">
+              <Input v-model="formItem.rent_bill" placeholder="房租收费周期／月"></Input>
+            </FormItem>
+          </i-col>
+           <i-col span="10" offset="2">
+            <FormItem label="首期期数" prop="rent_start">
+              <Input v-model="formItem.rent_start" placeholder="首期起租缴纳房租期数／月"></Input>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="20">
             <FormItem label="图片上传">
               <div class="img-upload-list" v-for="item in uploadList">
@@ -248,6 +260,12 @@ export default {
         ],
         zr_fee:[
           { required: true, message: '填写增容费', trigger: 'change' }
+        ],
+        rent_bill:[
+          { required: true, message: '房租账单周期', trigger: 'change' }
+        ],
+        rent_start:[
+          { required: true, message: '首期起租缴纳房租期数', trigger: 'change' }
         ]
       },
       // 店长列表
@@ -501,6 +519,18 @@ export default {
       if (obj.pay.length <= 0) {
         this.$Notice.warning({
           title: '请上传起租凭证！'
+        })
+        return false
+      }
+      if (!obj.rent_bill || isNaN(obj.rent_bill)) {
+        this.$Notice.warning({
+          title: '请填写房租账单周期！'
+        })
+        return false
+      }
+      if (!obj.rent_start || isNaN(obj.rent_start)) {
+        this.$Notice.warning({
+          title: '请填写首期起租缴纳房租期数！'
         })
         return false
       }

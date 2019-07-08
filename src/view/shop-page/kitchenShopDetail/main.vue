@@ -107,6 +107,20 @@
               </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
+                <FormItem label="房租账单周期(月)" class="cellTit">
+                  <span v-show="!!leaseinfo.rent_bill">{{leaseinfo.rent_bill}}</span>
+                  <span v-show="!leaseinfo.rent_bill" class="noData">未填写</span>
+                </FormItem>
+              </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="首期起租缴纳房租期数" class="cellTit">
+                  <span v-show="!!leaseinfo.rent_start">{{leaseinfo.rent_start}}</span>
+                  <span v-show="!leaseinfo.rent_start" class="noData">未填写</span>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
 <!--               <i-col span="10">
                 <FormItem label="上线日期" class="cellTit">
                   <span v-show="!!leaseinfo.online_date">{{leaseinfo.online_date}}</span>
@@ -695,6 +709,8 @@ export default {
       this.leaseinfo.entrance_fee = data.entrance_fee || '';
       this.leaseinfo.other_fee = data.other_fee || '';
       this.leaseinfo.zr_fee = data.zr_fee || '';
+      this.leaseinfo.rent_bill = data.rent_bill || '';
+      this.leaseinfo.rent_start = data.rent_start || '';
       this.leaseinfo.gas_fee = data.gas_fee || '';
       this.leaseinfo.storage_fee = data.storage_fee || '';
       this.leaseinfo.one_fee = data.one_fee || '';

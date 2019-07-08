@@ -128,6 +128,13 @@
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
+                <FormItem label="收费周期" prop="rent_bill">
+                  <Input v-model="baseinfo.rent_bill" placeholder="房租收费周期／月"></Input>
+                </FormItem>
+              </i-col>
+            </Row>
+            <Row type="flex" justify="start" align="middle" :gutter="20">
+              <i-col span="10">
                 <FormItem>
                   <Button @click="baseinfoSubmit" type="warning">保存</Button>
                 </FormItem>
@@ -454,6 +461,12 @@ export default {
         })
         return false
       };
+      if (!obj.rent_bill || isNaN(obj.rent_bill)) {
+        this.$Notice.warning({
+          title: '请填写房租账单周期！'
+        })
+        return false
+      }
       return true
     },
     // 提交签约凭证
@@ -618,6 +631,7 @@ export default {
       this.baseinfo.deposit_fee = data.deposit_fee || '';
       this.baseinfo.entrance_fee = data.entrance_fee || '';
       this.baseinfo.zr_fee = data.zr_fee || '';
+      this.baseinfo.rent_bill = data.rent_bill || '';
       this.baseinfo.sign_date = data.sign_date || '';
       this.baseinfo.customer_id = data.customer_id || '';
       getManageList().then(res => {
