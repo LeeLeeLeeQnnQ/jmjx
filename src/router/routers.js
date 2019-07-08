@@ -101,7 +101,7 @@ export default [
     meta: {
       icon: '_baobiao',
       title: '厨房数据分析',
-      // access: [800]
+      access: [800]
     },
     component: Main,
     children: [
@@ -154,7 +154,7 @@ export default [
         meta: {
           icon: '_hezuoguanxi',
           showAlways: true,
-          title: 'analysis_canvass'
+          title: 'analysis_canvass',
           access: [830]
         },
         component: parentView,
@@ -164,7 +164,7 @@ export default [
             name: 'canvass_sign',
             meta: {
               icon: '_dianpu',
-              title: 'canvass-sign'
+              title: 'canvass-sign',
               access: [831]
             },
             component: () => import('@/view/analysis/canvass-sign/main.vue')
@@ -174,7 +174,7 @@ export default [
             name: 'canvass_view',
             meta: {
               icon: '_kuaidiyuan',
-              title: 'canvass-view'
+              title: 'canvass-view',
               access: [832]
             },
             component: () => import('@/view/analysis/canvass-view/main.vue')

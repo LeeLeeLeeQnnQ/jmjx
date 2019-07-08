@@ -49,7 +49,7 @@ export default {
         kitchen_id:'',
         start_time:'',
         end_time:'',
-        expend_type:'1',
+        category_id:'1',
       },
       expendList:[],
       // init 数据
