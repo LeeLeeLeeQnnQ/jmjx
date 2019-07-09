@@ -708,6 +708,17 @@ export default [
         },
         component: () => import('@/view/finance/kitchen_bill/main.vue')
       },
+      {
+        path: '/finance_error_quit',
+        name: 'finance_error_quit',
+        meta: {
+          icon: '_zhucetianjiahaoyou',
+          hideInMenu: true,
+          title: route => `异常退款 : ${route.query.id}`,
+          access: [512]
+        },
+        component: () => import('@/view/finance/error_quit/main.vue')
+      },
     ]
   },
   // 传播

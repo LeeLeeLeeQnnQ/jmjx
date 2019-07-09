@@ -1042,26 +1042,19 @@ export default {
 
     // 异常退款弹窗
     showStoreRefundModal(params){
+      this.rufund_id = '';
       this.rufund_id = params.row.store_id
       this.storeRefundModal = true;
     },
     quitKitchen(){
       let obj = {};
-      obj.store_id = this.rufund_id;
+      obj.id = this.rufund_id;
       obj.kitchen_id = this.sreach_kitchen_id;
-      obj.lease_type = 2;
-      obj.apply_date = this.curentTime();
-      obj.is_start = 1;
-      quitKitchen(obj).then(res => {
-        const dbody = res.data
-        if (dbody.code == 0) {
-          this.settleShop();
-        } else {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-        }
-      })
+      const route = {
+        name: 'finance_error_quit',
+        query: obj
+      }
+      this.$router.push(route)
     },
     curentTime(){ 
         var now = new Date();
@@ -1086,26 +1079,8 @@ export default {
         clock += day;
         return(clock); 
     },
-    // 异常退款
-    settleShop(  ){
-      settleShop( this.rufund_id ).then(res => {
-        const dbody = res.data
-        if (dbody.code != 0) {
-          this.$Notice.warning({
-            desc: dbody.msg
-          })
-          return
-        }
-        this.$Notice.warning({
-          title: "操作完成！"
-        })
-        this.storeRefundModal = false;
-        this.initData(this.sreach_kitchen_id);
-      })
-    },
     // 初始化函数
     initData( kitchen_id ){
-      console.log(kitchen_id)
       // 全部列表
       this.getAllShops( kitchen_id );
       // 起租中

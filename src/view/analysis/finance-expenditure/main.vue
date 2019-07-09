@@ -120,22 +120,27 @@ export default {
         iobj.kitchen_name = item.kitchen_name
         let column = item.list || [];
         let x_title = [];
-        let total = 0;
         let item_obj = Object.assign({},this.tagObj);
         column.forEach((citem,cindex)=>{
           if(!!item_obj[citem.expend_type] || item_obj[citem.expend_type] == 0){
             item_obj[citem.expend_type] = (citem.money*1 + item_obj[citem.expend_type]*1).toFixed(2);
-            total = (total*1 + item_obj[citem.expend_type]*1).toFixed(2);
           }
         })
         column_arr.push({
           kitchen_name:item.kitchen_name,
           kitchen_id:item.kitchen_id,
           column:item_obj,
-          total:total
+          total:this.getTotal(item_obj)
         });
       })
       this.setData(column_arr)
+    },
+    getTotal(obj){
+      let total = 0;
+      for (let kk in obj) {
+        total = obj[kk]*1 + total*1;
+      }
+      return total.toFixed(2);
     },
     setData(column_arr){
       let column_data = [];
@@ -156,7 +161,6 @@ export default {
         });
       })
       this.column_data = column_data;
-      console.log(this.column_data)
     },
     // selectDate
     selectDate(date){
