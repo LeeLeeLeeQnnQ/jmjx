@@ -180,6 +180,28 @@
               </FormItem>
             </Form>
           </Modal>
+          <Modal v-model="edit_showModal" title="修改设备" @on-ok="saveEditModalInfo">
+            <Form :model="connectEditItem" :label-width="80">
+              <FormItem label="设备名称">
+                <Input v-model="connectEditItem.title" placeholder="输入设备名称" style="width: 200px"></Input>
+              </FormItem>
+              <FormItem label="设备数量">
+                <Input v-model="connectEditItem.quantity" placeholder="输入数量" style="width: 200px"></Input>
+              </FormItem>
+              <FormItem label="电压V/每个设备">
+                <Input v-model="connectEditItem.voltage" placeholder="输入电压V/每个设备" style="width: 200px"></Input>
+              </FormItem>
+              <FormItem label="功率KW/每个设备">
+                <Input v-model="connectEditItem.kw" placeholder="输入功率KW/每个设备" style="width: 200px"></Input>
+              </FormItem>
+              <FormItem label="燃气量 m³">
+                <Input v-model="connectEditItem.gas" placeholder="输入燃气量 m³" style="width: 200px"></Input>
+              </FormItem>
+              <FormItem label="备注">
+                  <Input v-model="connectEditItem.remark" type="textarea" :autosize="{minRows: 5,maxRows: 5}" placeholder="请输入备注"></Input>
+              </FormItem>
+            </Form>
+          </Modal>
           <Form :label-width="100">
             <FormItem label="设备清单">
               <div class="img-upload-list" v-for="item in connectImgList">
@@ -207,7 +229,7 @@
                 </div>
               </Upload>
             </FormItem>
-            <FormItem label="起租表格">
+            <FormItem label="设备表格">
               <Row type="flex" justify="start" align="middle" :gutter="20">
                 <i-col span="24">
                   <FormItem>
@@ -357,6 +379,18 @@ export default {
           render: (h, params) => {
             return h('div', [
               h('Button', {
+                style: {marginRight: '5px'},
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.connectTable_EditItem(params)
+                  }
+                }
+              }, '编辑'),
+              h('Button', {
                 props: {
                   type: 'error',
                   size: 'small'
@@ -372,12 +406,33 @@ export default {
         }
       ],
       connectTable:[],
+      // 编辑
+      edit_showModal:false,
+      connectEditItem:{},
+      editIndex:'',
     }
   },
   methods: {
     // 删除表格信息
     connectTable_removeItem (index) {
       this.connectTable.splice(index, 1)
+    },
+    // 编辑表格信息
+    connectTable_EditItem(params){
+      this.connectEditItem = {};
+      this.editIndex = '';
+      this.editIndex = params.index;
+      let editItem = params.row;
+      this.connectEditItem = Object.assign({},editItem);
+      this.edit_showModal = true;
+    },
+    saveEditModalInfo(){
+      if(!this.regModalInfo(this.connectEditItem)){
+        return
+      }
+      let tabledata = this.connectTable.concat();
+      tabledata[this.editIndex] = this.connectEditItem;
+      this.connectTable = tabledata;
     },
     // 基本资料卡片
     // 提交基本卡片

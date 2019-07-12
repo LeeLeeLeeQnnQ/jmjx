@@ -323,7 +323,7 @@
                 </div>
               </Upload>
             </FormItem>
-            <FormItem label="起租表格">
+            <FormItem label="设备表格">
               <Row type="flex" justify="start" align="middle" :gutter="20">
                 <i-col span="24">
                   <FormItem>
