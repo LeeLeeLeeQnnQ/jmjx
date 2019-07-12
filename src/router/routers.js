@@ -109,7 +109,7 @@ export default [
         meta: {
           icon: '_moduanwangdian',
           title: '起租进度',
-          // access: [810]
+          access: [810]
         },
         component: () => import('@/view/analysis/entrance/main.vue')
       },
@@ -196,7 +196,7 @@ export default [
             meta: {
               icon: '_daikuan-xianxing',
               title: 'finance-income',
-              // access: [841]
+              access: [841]
             },
             component: () => import('@/view/analysis/finance-income/main.vue')
           },
@@ -219,7 +219,7 @@ export default [
           icon: '_dianpu',
           showAlways: true,
           title: 'analysis_kitchen',
-          // access: [850]
+          access: [850]
         },
         component: parentView,
         children: [
@@ -229,7 +229,7 @@ export default [
             meta: {
               icon: '_PDAshouchigongzuoshebei',
               title: 'kitchen-equipment',
-              // access: [851]
+              access: [851]
             },
             component: () => import('@/view/analysis/kitchen-equipment/main.vue')
           },
@@ -239,7 +239,7 @@ export default [
             meta: {
               icon: '_yonghuziliao',
               title: 'kitchen-member',
-              // access: [852]
+              access: [852]
             },
             component: () => import('@/view/analysis/kitchen-member/main.vue')
           }
