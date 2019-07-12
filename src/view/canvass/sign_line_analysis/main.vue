@@ -59,7 +59,7 @@
       <Row :gutter="20" style="margin-top: 15px;">
         <i-col :md="24" :lg="24" style="margin-bottom: 20px;">
           <Card>
-            <chart-pie style="height: 300px;" :value="pie_data.area" text="档口面积"></chart-pie>
+            <chart-pie style="height: 300px;" :value="pie_data.store_area" text="档口面积"></chart-pie>
           </Card>
         </i-col>
       </Row>
@@ -123,7 +123,7 @@ export default {
       leasingList:[],
       // 饼状图数据
       pie_data:{
-        area:[],
+        store_area:[],
         manage_lease:[],
         kitchen_name:[],
       },
@@ -156,7 +156,7 @@ export default {
         customer_source:this.sreachInfo.customer_source,
       }
       this.pie_data = {
-        area:[],
+        store_area:[],
         manage_lease:[],
         kitchen_name:[],
         customer_source:[],
@@ -206,7 +206,7 @@ export default {
               break;
             case 'end_area':
             // 固定整个面积属性
-              arr.push('area')
+              arr.push('store_area')
             // console.log(!info[k])
             // console.log(info[k])
             //   if( !info[k] ){arr.push('area')}

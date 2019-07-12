@@ -109,7 +109,7 @@ export default [
         meta: {
           icon: '_moduanwangdian',
           title: '起租进度',
-          access: [810]
+          access: [801]
         },
         component: () => import('@/view/analysis/entrance/main.vue')
       },
