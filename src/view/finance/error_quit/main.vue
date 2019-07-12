@@ -119,7 +119,7 @@
 import { getShopDetail , setEndShopEdit , getWorkCategoryList } from '@/api/data'
 import { setFileStore } from '@/api/finance'
 export default {
-  name: 'finance-store-handle2',
+  name: 'finance-store-quit',
   data () {
     return {
       // kitchen_id

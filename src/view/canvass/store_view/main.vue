@@ -184,7 +184,14 @@
             </i-col>
           </Row>
           <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
+            <i-col span="10" v-if="hasEmployee">
+              <FormItem label="招商经理">
+                <Select v-model="addModal.employee_id"  @on-change="selectAddManageLease" style="width: 200px">
+                  <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="10" v-else>
               <FormItem label="招商经理">
                 <Select v-model="addModal.employee_id" disabled @on-change="selectAddManageLease" style="width: 200px">
                   <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
@@ -281,7 +288,14 @@
             </i-col>
           </Row>
           <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
+            <i-col span="10" v-if="hasEmployee">
+              <FormItem label="招商经理">
+                <Select v-model="editModal.employee_id"  @on-change="selectAddManageLease" style="width: 200px">
+                  <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
+                </Select>
+              </FormItem>
+            </i-col>
+            <i-col span="10" v-else>
               <FormItem label="招商经理">
                 <Select v-model="editModal.employee_id" disabled @on-change="selectAddManageLease" style="width: 200px">
                   <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
@@ -395,6 +409,7 @@ export default {
       start_time:'',
       end_time:'',
       group_name:'',
+      hasEmployee:true,
       // 表格
       view_columns:[
         {title: '所属团队', key: 'group_name'},
@@ -663,7 +678,7 @@ export default {
         group_name:this.group_name,
         page : page
       }
-      this.initData({ info })
+      this.initData(info)
     },
     // 增加带看
     addViewItem(){
@@ -697,15 +712,28 @@ export default {
                 });
           this.addModal = dbody.data;
           this.addModal.total_count = dbody.data.total_count*1 + 1;
+          let employee_id = this.addModal.employee_id;
+          this.hasEmployee = this.isHasEmployee(employee_id);
           this.showOldAddModal = true;
         }
       })
+    },
+    isHasEmployee(id){
+      let boo = true;
+      this.leasingList.forEach((item)=>{
+        if(item.id == id){
+          boo = false
+        }
+      })
+      return boo;
     },
     // 编辑显示弹窗
     handleEdit(params){
       let data = params.row;
       this.editModal = {};
       this.editModal = data;
+      let employee_id = this.editModal.employee_id;
+      this.hasEmployee = this.isHasEmployee(employee_id);
       this.showEditModal = true;
     },
     // 删除一条带看
@@ -838,11 +866,11 @@ export default {
         this.view_list = dbody.data.list || [];
         this.page = dbody.data.page;
       })
-      this.getKitchenList();
-      this.getLeasingList();
     },
   },
   created () {
+    this.getKitchenList();
+    this.getLeasingList();
     this.initData();
   }
 }

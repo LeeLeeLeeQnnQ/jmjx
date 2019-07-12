@@ -84,14 +84,7 @@ export default {
       columns: [
         {title: '厨房ID', key: 'id', width: 80},
         {title: '厨房名称', key: 'kitchen_name'},
-        { title: '档口数量',
-          render: (h, params) => {
-            let a = params.row.use_total
-            let b = params.row.wait_total
-            let c = params.row.free_total
-            return h('span', a*1+b*1+c*1)
-          }
-        },
+        { title: '档口数量', key: 'store_total'},
         {title: '店长', key: 'manage_name', width: 80},
         {title: '店长电话', key: 'manage_phone'},
         { title: '总房租(实价)',

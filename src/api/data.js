@@ -44,6 +44,25 @@ export const getSignShopList = ( info ) => {
   })
 }
 
+
+
+/*
+  厨房入场进度获取
+*/
+/*
+  kitchen_id:'',
+*/
+/*
+  
+*/
+export const queryStoreProgress = ( info ) => {
+  return axios.request({
+    url: '/api/StoreLease/queryStoreProgress',
+    params: info,
+    method: 'get'
+  })
+}
+
 /*
   招商签约分析不分页查询
 */
@@ -132,7 +151,41 @@ export const getKitchenResideQueryList = ( info ) => {
   })
 }
 
+/*
+  获取考个设备列表
+*/
+/*
+  
+*/
+/*
+  
+*/
+export const getKitchenStoreDeviceList = ( info ) => {
+  return axios.request({
+    url: 'api/Kitchen/getStoreDevice',
+    params: info,
+    method: 'get'
+  })
+}
 
+
+
+/*
+  获取人员
+*/
+/*
+  
+*/
+/*
+  
+*/
+export const getKitchenStoreEmployeeList = ( info ) => {
+  return axios.request({
+    url: 'api/Kitchen/getStoreEmployee',
+    params: info,
+    method: 'get'
+  })
+}
 
 /*
   获取权限下的厨房列表

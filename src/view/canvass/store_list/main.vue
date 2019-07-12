@@ -21,7 +21,8 @@
         </Row>
       </Card>
     </div>
-    <Tabs :animated="false" @on-click="setCard" style="margin-top: 5px;" :value="tabValue">
+    <!-- <Tabs :animated="false" @on-click="setCard" style="margin-top: 5px;" :value="tabValue"> -->
+    <Tabs :animated="false" style="margin-top: 5px;">
         <TabPane label="起租中" name="1">
           <tables
             ref="start_shops_tables"

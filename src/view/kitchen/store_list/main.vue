@@ -21,7 +21,8 @@
         </Row>
       </Card>
     </div>
-    <Tabs :animated="false" style="margin-top: 5px;" @on-click="setCard" :value="tabValue">
+    <!-- <Tabs :animated="false" style="margin-top: 5px;" @on-click="setCard" :value="tabValue"> -->
+    <Tabs :animated="false" style="margin-top: 5px;" >
         <Button @click="quitStore" size="small" slot="extra">店铺退租</Button>
         <TabPane label="起租中" name="1">
           <tables

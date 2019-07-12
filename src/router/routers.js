@@ -35,7 +35,6 @@ export default [
     redirect: '/home',
     component: Main,
     meta: {
-      notCache: true,
       access: [100]
     },
     children: [
@@ -44,7 +43,6 @@ export default [
         name: 'home',
         meta: {
           title: '首页',
-          notCache: true,
           icon: '_shouye'
         },
         component: () => import('@/view/single-page/home')
@@ -57,6 +55,7 @@ export default [
     name: '_kitchenDataShopDetail',
     meta: {
       hideInMenu: true,
+      notCache: true,
     },
     component: Main,
     children: [
@@ -88,7 +87,6 @@ export default [
         meta: {
           icon: '_shezhi',
           title: '修改用户设置',
-          notCache: true
         },
         component: () => import('@/view/single-page/setting/main.vue')
       }
@@ -105,16 +103,16 @@ export default [
     },
     component: Main,
     children: [
-      // {
-      //   path: '/analysis_entrance',
-      //   name: 'analysis_entrance',
-      //   meta: {
-      //     icon: '_moduanwangdian',
-      //     title: '起租进度',
-      //     // access: [810]
-      //   },
-      //   component: () => import('@/view/analysis/entrance/main.vue')
-      // },
+      {
+        path: '/analysis_entrance',
+        name: 'analysis_entrance',
+        meta: {
+          icon: '_moduanwangdian',
+          title: '起租进度',
+          // access: [810]
+        },
+        component: () => import('@/view/analysis/entrance/main.vue')
+      },
       {
         path: '/analysis_occupy',
         name: 'analysis_occupy',
@@ -132,7 +130,7 @@ export default [
             meta: {
               icon: '_bingtu',
               title: 'occupy_pie',
-              access: [821]
+              access: [821],
             },
             component: () => import('@/view/analysis/occupy-pie/main.vue')
           },
@@ -192,16 +190,16 @@ export default [
         },
         component: parentView,
         children: [
-          // {
-          //   path: '/finance_income',
-          //   name: 'finance_income',
-          //   meta: {
-          //     icon: '_daikuan-xianxing',
-          //     title: 'finance-income',
-          //     // access: [841]
-          //   },
-          //   component: () => import('@/view/analysis/finance-income/main.vue')
-          // },
+          {
+            path: '/finance_income',
+            name: 'finance_income',
+            meta: {
+              icon: '_daikuan-xianxing',
+              title: 'finance-income',
+              // access: [841]
+            },
+            component: () => import('@/view/analysis/finance-income/main.vue')
+          },
           {
             path: '/finance_expenditure',
             name: 'finance_expenditure',
@@ -214,39 +212,39 @@ export default [
           },
         ]
       },
-      // {
-      //   path: '/analysis_kitchen',
-      //   name: 'analysis_kitchen',
-      //   meta: {
-      //     icon: '_dianpu',
-      //     showAlways: true,
-      //     title: 'analysis_kitchen',
-      //     // access: [850]
-      //   },
-      //   component: parentView,
-      //   children: [
-      //     {
-      //       path: '/kitchen_equipment',
-      //       name: 'kitchen_equipment',
-      //       meta: {
-      //         icon: '_PDAshouchigongzuoshebei',
-      //         title: 'kitchen-equipment',
-      //         // access: [851]
-      //       },
-      //       component: () => import('@/view/analysis/kitchen-equipment/main.vue')
-      //     },
-      //     {
-      //       path: '/kitchen_member',
-      //       name: 'kitchen_member',
-      //       meta: {
-      //         icon: '_yonghuziliao',
-      //         title: 'kitchen-member',
-      //         // access: [852]
-      //       },
-      //       component: () => import('@/view/analysis/kitchen-member/main.vue')
-      //     }
-      //   ]
-      // },
+      {
+        path: '/analysis_kitchen',
+        name: 'analysis_kitchen',
+        meta: {
+          icon: '_dianpu',
+          showAlways: true,
+          title: 'analysis_kitchen',
+          // access: [850]
+        },
+        component: parentView,
+        children: [
+          {
+            path: '/kitchen_equipment',
+            name: 'kitchen_equipment',
+            meta: {
+              icon: '_PDAshouchigongzuoshebei',
+              title: 'kitchen-equipment',
+              // access: [851]
+            },
+            component: () => import('@/view/analysis/kitchen-equipment/main.vue')
+          },
+          {
+            path: '/kitchen_member',
+            name: 'kitchen_member',
+            meta: {
+              icon: '_yonghuziliao',
+              title: 'kitchen-member',
+              // access: [852]
+            },
+            component: () => import('@/view/analysis/kitchen-member/main.vue')
+          }
+        ]
+      },
     ]
   },
   // 厨房数据

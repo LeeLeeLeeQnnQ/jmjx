@@ -42,7 +42,8 @@
           <Button type="error" size="large" long @click="quitKitchen">确认</Button>
       </div>
     </Modal>
-    <Tabs :animated="false" @on-click="setCard" style="margin-top: 5px;" :value="tabValue">
+    <!-- <Tabs :animated="false" @on-click="setCard" style="margin-top: 5px;" :value="tabValue"> -->
+    <Tabs :animated="false" style="margin-top: 5px;">
         <Button @click="buildStore" size="small" slot="extra">店铺建档</Button>
         <Button @click="periodStoreModalshow = true" size="small" slot="extra" style="margin-left: 3px;">周期表格</Button>
         <TabPane label="起租中" name="1" >
@@ -1047,6 +1048,7 @@ export default {
       this.storeRefundModal = true;
     },
     quitKitchen(){
+      this.storeRefundModal = false;
       let obj = {};
       obj.id = this.rufund_id;
       obj.kitchen_id = this.sreach_kitchen_id;

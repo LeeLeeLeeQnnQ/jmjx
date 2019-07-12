@@ -24,7 +24,9 @@
             <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
           </div> -->
           <Content class="content-wrapper">
-            <keep-alive :include="cacheList">
+            <keep-alive :exclude="cacheList">
+            <!-- <keep-alive exclude="kitchenDataShopDetail"> -->
+            <!-- <keep-alive > -->
               <router-view/>
             </keep-alive>
             <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
@@ -82,7 +84,8 @@ export default {
       return getUsername()
     },
     cacheList () {
-      return ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
+      return ['ParentView','edit-expenses-order','canvass_shop_edit','finance-store-edit','finance-store-edit2','finance-store-handle','finance-store-handle2','kitchen_shop_detail','kitchen_shop_edit','kitchen_shop_edit2','kitchen_shop_handle','kitchen_shop_handle2','edit_Member','edit_permisson','d-kitchen-report','n-kitchen-report','n-kitchen-report','w-kitchen-report','kitchen-data-kitchen-detail','finance-store-quit','kitchen-data-store-list']
+      // return ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
     },
     menuList () {
       return this.$store.getters.menuList
@@ -96,6 +99,9 @@ export default {
     unreadCount () {
       return this.$store.state.user.unreadCount
     },
+    notCacheName () {
+      return (this.$route.meta && this.$route.meta.notCache) ? this.$route.name : ''
+    }
   },
   methods: {
     ...mapMutations([
@@ -165,6 +171,7 @@ export default {
      * @description 初始化设置面包屑导航和标签导航
      */
     // this.setTagNavList()
+    // console.log(this.tagNavList)
     // this.setHomeRoute(routers)
     // this.addTag({
     //   route: this.$store.state.app.homeRoute

@@ -41,6 +41,24 @@ export const getKitchenExpendQuery = ( obj ) => {
   })
 }
 
+
+/*
+  获取厨房支出收入
+*/
+/*
+  kitchen_id
+*/
+/*
+  
+*/
+export const getKitchenIncomeQuery = ( obj ) => {
+  return axios.request({
+    url: '/api/KitchenIncome/queryList',
+    params: obj,
+    method: 'get'
+  })
+}
+
 /*
   新建一家店铺
 */
@@ -122,6 +140,23 @@ export const addKitchenExpend = ( data ) => {
 export const getExpendType = (  ) => {
   return axios.request({
     url: '/api/KitchenExpend/getExpendType',
+    method: 'get'
+  })
+}
+
+
+/*
+  获取厨房收入分类
+*/
+/*
+
+*/
+/*
+  expenses-order --  增加一条厨房支出
+*/
+export const getIncomeType = (  ) => {
+  return axios.request({
+    url: '/api/KitchenIncome/getIncomeType',
     method: 'get'
   })
 }

@@ -30,9 +30,9 @@
 
 <script>
 //权限
-// Kitchen/index,KitchenExpend/queryList,KitchenExpend/getExpendType
+// Kitchen/index,KitchenIncome/queryList,KitchenIncome/getIncomeType
 import { getKitchenList  } from '@/api/setting'
-import { getKitchenExpendQuery , getExpendType  } from '@/api/finance'
+import { getKitchenIncomeQuery , getIncomeType  } from '@/api/finance'
 import Tables from '_c/tables'
 import { ChartColumn } from '_c/charts'
 export default {
@@ -51,6 +51,7 @@ export default {
         end_time:'',
         category_id:'1',
       },
+      expendList:[],
       // init 数据
       baseinfo:[],
       column_data:[],
@@ -65,10 +66,10 @@ export default {
       let sreach = this.sreach;
       let obj = Object.assign({},data,sreach)
       obj.kitchen_id = obj.kitchen_id.join(',')
-      this.getKitchenExpendQuery(obj);
+      this.getKitchenIncomeQuery(obj);
     },
-    getKitchenExpendQuery(info){
-      getKitchenExpendQuery(info).then(res => {
+    getKitchenIncomeQuery(info){
+      getKitchenIncomeQuery(info).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
           this.$Notice.warning({
@@ -107,7 +108,7 @@ export default {
       }
       if(arr.length  != this.sreach.kitchen_id.length){
         this.$Notice.warning({
-          title: '部分厨房无支出数据！'
+          title: '部分厨房无收入数据！'
         })
       }
       this.getItemChartColumnData(arr);
@@ -121,8 +122,8 @@ export default {
         let x_title = [];
         let item_obj = Object.assign({},this.tagObj);
         column.forEach((citem,cindex)=>{
-          if(!!item_obj[citem.expend_type] || item_obj[citem.expend_type] == 0){
-            item_obj[citem.expend_type] = (citem.money*1 + item_obj[citem.expend_type]*1).toFixed(2);
+          if(!!item_obj[citem.income_type] || item_obj[citem.income_type] == 0){
+            item_obj[citem.income_type] = (citem.money*1 + item_obj[citem.income_type]*1).toFixed(2);
           }
         })
         column_arr.push({
@@ -198,7 +199,7 @@ export default {
       // 初始化函数
       this.kitchenList = dbody.data.list || [];
     });
-    getExpendType( ).then(res => {
+    getIncomeType( ).then(res => {
       const dbody = res.data
       if(dbody.code != 0){
         this.$Notice.warning({

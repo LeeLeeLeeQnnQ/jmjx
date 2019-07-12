@@ -365,7 +365,6 @@ export default {
     leaseinfoSubmit( ){
       this.leaseinfo.kitchen_id = this.kitchen_id;
       this.leaseinfo.store_id = this.store_id;
-      console.log(this.leaseinfo)
       setStartShopEdit(this.leaseinfo).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
