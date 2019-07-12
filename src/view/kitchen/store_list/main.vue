@@ -121,7 +121,7 @@ import merge from 'webpack-merge'
 // import { getKitchenList } from '@/api/setting'
 import { getKitchenList , getAllShopList } from '@/api/data'
 export default {
-  name: 'kitchen-data-store-list',
+  name: 'kitchen-store-list',
   components: {
     Tables
   },
@@ -1013,7 +1013,7 @@ export default {
       // 初始化函数
       this.kitchenList = dbody.data || [];
       if(this.kitchenList.length > 0){
-        this.sreach_kitchen_id = this.$route.query.kitchen_id*1 || this.kitchenList[this.kitchenList.length - 1].id*1;
+        this.sreach_kitchen_id = this.$route.query.kitchen_id || this.kitchenList[this.kitchenList.length - 1].id;
         this.initData(this.sreach_kitchen_id);
         this.tabValue = this.$route.query.tabValue || "1"
         this.$router.push({

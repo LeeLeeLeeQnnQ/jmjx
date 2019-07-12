@@ -20,7 +20,7 @@
 
 <script>
 //权限
-// 
+// Kitchen/index,Kitchen/getStoreDevice
 import { getKitchenList } from '@/api/setting'
 import { getKitchenStoreEmployeeList  } from '@/api/data'
 import Tables from '_c/tables'

@@ -757,7 +757,7 @@ export default {
       this.kitchenList = dbody.data.list || [];
       if(this.kitchenList.length > 0){
         this.kitchenList.forEach( function(element, index) {
-          if( element.id*1  == that.sreach_kitchen_id*1 ){
+          if( element.id  == that.sreach_kitchen_id ){
             that.kitchen_name = element.kitchen_name
             that.initData(that.sreach_kitchen_id);
             that.tabValue = that.$route.query.tabValue || "1"
