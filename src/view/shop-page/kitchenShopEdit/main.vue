@@ -83,6 +83,11 @@
                   <DatePicker type="date" placeholder="选择公摊起始日期" :value="leaseinfo.entrance_date" @on-change="getEntranceDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="入场时间">
+                  <DatePicker type="date" placeholder="选择入场时间" :value="leaseinfo.join_date" @on-change="getJoinDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
+                </FormItem>
+              </i-col>
 <!--               <i-col span="10" offset="2">
                 <FormItem label="店铺收费基数">
                   <Input v-model="leaseinfo.pay_base" placeholder="输入店铺收费基数" style="width: 200px"></Input>
@@ -490,6 +495,10 @@ export default {
     getEntranceDatePicker(date){
       this.leaseinfo.entrance_date = date
     },
+    // 设置入场日期
+    getJoinDatePicker(date){
+      this.leaseinfo.join_date = date
+    },
     // 基本资料
     initBaseinfo(data){
       this.baseinfo.store_name = data.store_name || '';
@@ -504,6 +513,8 @@ export default {
       this.leaseinfo.connect_date = data.connect_date || '';
       // 公摊起始日期
       this.leaseinfo.entrance_date = data.entrance_date || '';
+      // 入场日期
+      this.leaseinfo.join_date = data.join_date || '';
       // 起租电表
       this.leaseinfo.start_energy = data.start_energy || '';
       // 起租水表
@@ -536,6 +547,7 @@ export default {
 
     // 保存按钮
     leaseinfoSubmit( ){
+      
       this.leaseinfo.kitchen_id = this.kitchen_id;
       this.leaseinfo.store_id = this.store_id;
       this.leaseinfo.start_letter = '';

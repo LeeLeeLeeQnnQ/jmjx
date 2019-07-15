@@ -8,7 +8,7 @@
           </Select>
         </i-col>
         <i-col :xs="6" :md="6" :lg="6">
-          <DatePicker  @on-change="selectDate"  type="daterange"  placeholder="选择时间段" style="width: 200px"></DatePicker>
+          <DatePicker  @on-change="selectDate"  type="month"  placeholder="选择时间" style="width: 200px"></DatePicker>
         </i-col>
         <i-col :xs="3" :md="3" :lg="3">
           <Button type="primary" shape="circle" long @click="sreachSubmit">搜索</Button>
@@ -164,8 +164,7 @@ export default {
     },
     // selectDate
     selectDate(date){
-      this.sreach.start_time = date[0];
-      this.sreach.end_time = date[1];
+      this.sreach.month= date;
     },
     // 搜索
     sreachSubmit(){
@@ -175,7 +174,7 @@ export default {
         })
         return
       }
-      if(!this.sreach.start_time || !this.sreach.end_time){
+      if(!this.sreach.month){
         this.$Notice.warning({
           title: '时间必须选择！'
         })

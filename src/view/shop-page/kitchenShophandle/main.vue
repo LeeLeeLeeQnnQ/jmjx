@@ -24,6 +24,11 @@
                   <DatePicker type="date" placeholder="选择公摊起始日期" :value="leaseinfo.entrance_date" @on-change="getEntranceDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="入场时间">
+                  <DatePicker type="date" placeholder="选择入场时间" :value="leaseinfo.join_date" @on-change="getJoinDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
+                </FormItem>
+              </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -99,6 +104,10 @@ export default {
     getEntranceDatePicker(date){
       this.leaseinfo.entrance_date = date
     },
+    // 设置入场日期
+    getJoinDatePicker(date){
+      this.leaseinfo.join_date = date
+    },
     //租期租约卡片
     initLeaseinfo( data ){
       // 起租日期
@@ -107,6 +116,8 @@ export default {
       this.leaseinfo.connect_date = data.connect_date || '';
       // 公摊起始日期
       this.leaseinfo.entrance_date = data.entrance_date || '';
+      // 入场日期
+      this.leaseinfo.join_date = data.join_date || '';
       // 水电表底数
       this.leaseinfo.start_energy = data.start_energy || '';
       this.leaseinfo.start_water = data.start_water || '';
@@ -122,6 +133,12 @@ export default {
       if(!this.leaseinfo.entrance_date){
         this.$Notice.warning({
           title: "公摊起始日期必须填写！"
+        })
+        return
+      }
+      if(!this.leaseinfo.join_date){
+        this.$Notice.warning({
+          title: "入场日期必须填写！"
         })
         return
       }

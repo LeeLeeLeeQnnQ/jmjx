@@ -8,7 +8,7 @@
           </Select>
         </i-col>
         <i-col :xs="6" :md="6" :lg="6">
-          <DatePicker @on-change="selectDate" type="month" placeholder="选择月份" style="width: 200px"></DatePicker>
+          <DatePicker @on-change="selectDate" multiple type="month" placeholder="选择月份" style="width: 200px"></DatePicker>
         </i-col>
         <i-col :xs="3" :md="3" :lg="3">
           <Button type="primary" shape="circle" long @click="sreachSubmit">搜索</Button>

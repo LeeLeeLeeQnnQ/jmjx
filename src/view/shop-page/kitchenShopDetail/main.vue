@@ -170,6 +170,12 @@
                   <span v-show="!leaseinfo.entrance_date" class="noData">未填写</span>
                 </FormItem>
               </i-col>
+              <i-col span="10" offset='2'>
+                <FormItem label="入场日期" class="cellTit">
+                  <span v-show="!!leaseinfo.join_date">{{leaseinfo.join_date}}</span>
+                  <span v-show="!leaseinfo.join_date" class="noData">未填写</span>
+                </FormItem>
+              </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -723,6 +729,7 @@ export default {
       this.leaseinfo.exit_date = data.exit_date || '';
       this.leaseinfo.ele_date = data.ele_date || '';
       this.leaseinfo.meituan_date = data.meituan_date || '';
+      this.leaseinfo.join_date = data.join_date || '';
       // this.leaseinfo.online_date = data.online_date || '';
       this.leaseinfo.connect_date = data.connect_date || '';
       this.leaseinfo.work_id = data.work_id || '';
