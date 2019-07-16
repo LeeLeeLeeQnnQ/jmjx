@@ -191,13 +191,13 @@
     <div class="page_footer">
         <p>请以下列形式付款：</p>
         <p>汇款至下列账户：</p>
-        <p>账户名称：王乙同</p>
-        <p>开户银行：中国邮政储蓄银行北京昌平区北七家支行</p>
+        <p>账户名称：{{print_info.card_name}}</p>
+        <p>开户银行：{{print_info.card_bank}}</p>
         <div class="zhanghao">
-            <div>银行帐号：6217 9910 0000 6021 260</div>
+            <div>银行帐号：{{print_info.card_no}}</div>
             <div class="line_box">
                 <p class="line"></p>
-                <p>北京金同餐饮管理有限公司</p>
+                <p>{{print_info.company}}</p>
             </div>
         </div>
         <div class="remark">
@@ -207,7 +207,7 @@
           <p>3.管理费：本月店内员工的人员成本。</p>
           <p>4.推广费：活动期间为X个品牌提供的推广费用。（费用明细已另行提供给各参与商户）</p>
           <p>5.代收税款：为代收代缴店面管理公司税款，不在我公司物业费收费范围内，不予开具发票（含在收据内）</p>
-          <p>6.我方于每月25日发送您收款单，如需查询，请联系店面经理</p>
+          <p>6.我方于每月{{print_info.operate_day}}日发送您收款单，如需查询，请联系店面经理</p>
           <p>7.请您对收款单确认并签收、次月1日起，按照每日1%利息收取滞纳金，逾期10日进行断电处理</p>
           <div class="contect">
               <p>地址：</p>

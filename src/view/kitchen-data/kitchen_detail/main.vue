@@ -71,6 +71,45 @@
               </FormItem>
             </i-col>
           </Row>
+          <Divider />
+          <Row type="flex" justify="start" align="middle" :gutter="20">
+            <i-col span="10" >
+              <FormItem label="账户名称" >
+                <Input v-model="kitchen.card_name" placeholder="例如：王乙同" style="width: 200px"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="10" offset="2">
+              <FormItem label="开户银行" >
+                <Input v-model="kitchen.card_bank" placeholder="例如：中国邮政储蓄银行北京昌平区北七家支行" style="width: 200px"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Row type="flex" justify="start" align="middle" :gutter="20">
+            <i-col span="10">
+              <FormItem label="银行帐号" >
+                <Input v-model="kitchen.card_no" placeholder="例如：6217 9910 0000 6021 260" style="width: 200px"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="10" offset="2">
+              <FormItem label="公司名称" >
+                <Input v-model="kitchen.company" placeholder="例如：北京金同餐饮管理有限公司" style="width: 200px"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Divider />
+          <Row type="flex" justify="start" align="middle" :gutter="20">
+            <i-col span="10">
+              <FormItem label="租金账单日" >
+                <Input v-model="kitchen.rent_day" placeholder="不大于28" style="width: 200px"></Input>
+              </FormItem>
+            </i-col>
+            <i-col span="10" offset="2">
+              <FormItem label="运营账单日" >
+                <Input v-model="kitchen.operate_day" placeholder="不大于28" style="width: 200px"></Input>
+              </FormItem>
+            </i-col>
+          </Row>
+          <Divider />
           <Row type="flex" justify="start" align="middle" :gutter="20">
             <i-col span="10">
               <FormItem>
@@ -390,37 +429,40 @@ export default {
     },
     // 初始化数据
     setBaseInfo( obj ){
-      this.eidtkitchen = {};
-      this.eidtkitchen.id = obj.id;
-      this.eidtkitchen.position = 0;
-      this.eidtkitchen.kitchen_name = obj.kitchen_name;
-      this.eidtkitchen.manage_name = obj.manage_name;
-      this.eidtkitchen.manage_phone = obj.manage_phone;
-      this.eidtkitchen.kitchen_rent = obj.kitchen_rent;
-      this.eidtkitchen.garbage_fee = obj.garbage_fee;
-      this.eidtkitchen.flue_fee = obj.flue_fee;
-      this.eidtkitchen.kill_fee = obj.kill_fee;
-      this.eidtkitchen.network_fee = obj.network_fee;
-      this.eidtkitchen.health_fee = obj.health_fee;
-      this.eidtkitchen.water_fee = obj.water_fee;
-      this.eidtkitchen.energy_fee = obj.energy_fee;
+      this.eidtkitchen = Object.assign({position:0},obj);
+      delete this.eidtkitchen.create_time
+      delete this.eidtkitchen.update_time
+      if( isNaN(this.eidtkitchen.rent_day) || isNaN(this.eidtkitchen.operate_day)){
+        this.$Notice.warning({
+            title: '账单日期输入错误'
+          })
+        return false
+      }
+      if(this.eidtkitchen.rent_day*1 > 28 || this.eidtkitchen.operate_day*1 > 28){
+        this.$Notice.warning({
+            title: '账单日期不能大于28'
+          })
+        return false
+      }
+      return true;
     },
     // 第一页
     editBaseinfo(){
-      this.setBaseInfo( this.kitchen )
-      editKitchen(this.eidtkitchen).then(res => {
-        const dbody = res.data
-        if (dbody.code != 0) {
+      if(this.setBaseInfo( this.kitchen )){
+        editKitchen(this.eidtkitchen).then(res => {
+          const dbody = res.data
+          if (dbody.code != 0) {
+            this.$Notice.warning({
+              title: dbody.msg
+            })
+            return
+          }
+          // 处理成功逻辑
           this.$Notice.warning({
-            title: dbody.msg
+            title: "保存成功！"
           })
-          return
-        }
-        // 处理成功逻辑
-        this.$Notice.warning({
-          title: "保存成功！"
         })
-      })
+      }
     },
     // 第二页 档口页面
     // 获取档口列表

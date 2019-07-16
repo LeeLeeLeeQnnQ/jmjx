@@ -27,23 +27,35 @@
           <p>场地使用费+管理费</p>
         </div>
         <div class="page_main_item">
-          <span><i>5.</i>款项明细日期：</span>
-          <p>{{print_info.rent_start_date}}至{{print_info.rent_end_date}}</p>
+          <span><i>5.</i>月度账单日期：</span>
+          <p>{{start_date}}至{{print_info.rent_end_date}}</p>
         </div>
         <div class="page_main_item">
-          <span><i>6.</i>滞纳金起算日：</span>
+          <span><i>6.</i>月度账单金额：</span>
+          <p>{{print_info.rent_fee}}元</p>
+        </div>
+        <div class="page_main_item">
+          <span><i>7.</i>切齐账单日期：</span>
+          <p>{{print_info.cut_start_date}}至{{print_info.cut_end_date}}</p>
+        </div>
+        <div class="page_main_item">
+          <span><i>8.</i>切齐账单金额：</span>
+          <p>{{print_info.cut_fee}}元</p>
+        </div>
+        <div class="page_main_item">
+          <span><i>9.</i>滞纳金起算日：</span>
           <p></p>
         </div>
         <div class="page_main_item">
-          <span><i>7.</i>末付滞纳金金额：</span>
+          <span><i>10.</i>末付滞纳金金额：</span>
           <p>{{print_info.rent_overdue_fee}}元</p>
         </div>
         <div class="page_main_item">
-          <span><i>8.</i>房租减免金额：</span>
+          <span><i>11.</i>房租减免金额：</span>
           <p>{{print_info.rent_exempt_fee}}元</p>
         </div>
         <div class="page_main_item">
-          <span><i>9.</i>应付款合计：</span>
+          <span><i>12.</i>应付款合计：</span>
           <p>{{total}}元 </p>
         </div>
     </div>
@@ -55,17 +67,17 @@
         <div class="page_footer_main">
           <p>汇款信息：</p>
           <p class="ti2">
-            <span>账户名称：王乙同</span>
+            <span>账户名称：{{print_info.card_name}}</span>
           </p>
           <p  class="ti2">
-            <span>开户行：中国邮政储蓄银行北京昌平区北七家支行</span>
+            <span>开户行：{{print_info.card_bank}}</span>
           </p>
           <p  class="ti2">
-            <span>卡号：6217991000006021260</span>
+            <span>卡号：{{print_info.card_no}}</span>
           </p>
         </div>
         <div class="page_footer_bottom">
-          <p>北京金同餐饮管理有限公司</p>
+          <p>{{print_info.company}}</p>
           <p>{{currentdate}}</p>
         </div>
     </div>
@@ -87,6 +99,7 @@ export default {
       month:'',
       lastday:'',
       currentdate:'',
+      start_date:'',
       total:'',
     }
   },
@@ -122,12 +135,27 @@ export default {
       var arr = dateString.toLocaleDateString().replace(new RegExp('/','g'),"-").split("-");
      return arr[arr.length-1];
     },
+    // 获取自然开始时间
+    getStartDate(info){
+      let rent_end_date = info.rent_end_date;
+      if(!rent_end_date){
+        return
+      }
+      let rent_start_date = info.rent_start_date;
+      if(!info.cut_end_date || !info.cut_start_date){
+        return rent_start_date
+      }
+      let arr = rent_end_date.split('-');
+      arr[2] = "01";
+      return arr.join('-')
+    },
     formValue(info){
       let date = info.month ? info.month :  '0000-00';
       let arr = date.split('-');
       this.year = arr[0] || '';
       this.month = arr[1] || '';
       this.lastday = this.getCurrentMonthLast(date);
+      this.start_date = this.getStartDate(info);
       this.currentdate = this.getCurentTime();
       this.total = (info.rent_fee*1 + info.rent_overdue_fee*1 - info.rent_exempt_fee*1).toFixed(2);
     },
@@ -187,7 +215,7 @@ export default {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      height: 3em;
+      height: 2em;
     }
     .page_main .page_main_item span{
       width: 150px;
