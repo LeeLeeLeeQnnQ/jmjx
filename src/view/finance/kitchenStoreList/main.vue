@@ -196,7 +196,7 @@ export default {
             if( confirm_time > 0 ){
               return h('span', { style: {color: '#ff9900'}}, '财务已确认')
             }else{
-              return h('span', { style: {color: '#19be6b'}}, '财务已建档')
+              return h('span', { style: {color: '#19be6b'}}, '已建档')
             }
           }
         },

@@ -84,7 +84,7 @@ export default {
       return getUsername()
     },
     cacheList () {
-      return ['ParentView','edit-expenses-order','canvass_shop_edit','finance-store-edit','finance-store-edit2','finance-store-handle','finance-store-handle2','kitchen_shop_detail','kitchen_shop_edit','kitchen_shop_edit2','kitchen_shop_handle','kitchen_shop_handle2','edit_Member','edit_permisson','d-kitchen-report','n-kitchen-report','n-kitchen-report','w-kitchen-report','kitchen-data-kitchen-detail','finance-store-quit','kitchen-data-store-list']
+      return ['ParentView','edit-expenses-order','canvass_shop_edit','finance-store-edit','finance-store-edit2','finance-store-handle','finance-store-handle2','kitchen_shop_detail','kitchen_shop_edit','kitchen_shop_edit2','kitchen_shop_handle','kitchen_shop_handle2','edit_Member','edit_permisson','d-kitchen-report','n-kitchen-report','n-kitchen-report','w-kitchen-report','kitchen-data-kitchen-detail','finance-store-quit','kitchen-data-store-list','build-kichen','canvass_store_pre_build']
       // return ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
     },
     menuList () {

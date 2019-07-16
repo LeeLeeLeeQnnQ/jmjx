@@ -267,7 +267,7 @@
               </Row>
             </FormItem>
             <Divider orientation="left" dashed>租约凭证</Divider>
-            <FormItem label="合同资料">
+            <FormItem label="意向合同">
               <Row type="flex" justify="start" align="middle" :gutter="20">
                 <i-col span="22">
                   <div class="img-upload-list" v-for="item in voucherinfo.contract">
@@ -303,7 +303,7 @@
                 </i-col>
               </Row>
             </FormItem>
-            <FormItem label="店铺合同">
+            <FormItem label="正式合同">
               <Row type="flex" justify="start" align="middle" :gutter="20">
                 <i-col span="22">
                   <div class="img-upload-list" v-for="item in voucherinfo.store_contract">

@@ -526,6 +526,35 @@ export default [
         },
         component: () => import('@/view/canvass/store_view/main.vue')
       },
+
+
+
+      // {
+      //   path: '/canvass_store_view_new',
+      //   name: 'canvass_store_view_new',
+      //   meta: {
+      //     icon: '_kuaidiyuan',
+      //     title: '带看管理',
+      //     access: [403]
+      //   },
+      //   component: () => import('@/view/canvass/store_view_new/main.vue')
+      // },
+      // {
+      //   path: '/canvass_store_pre_build',
+      //   name: 'canvass_store_pre_build',
+      //   meta: {
+      //     hideInMenu: true,
+      //     notCache: true,
+      //     icon: '_bingtu',
+      //     title: route => `{{ 商户列表 }}-${route.query.customer_id}`,
+      //     access: [403]
+      //   },
+      //   component: () => import('@/view/canvass/pre_build/main.vue')
+      // },
+
+
+
+
       {
         path: '/view_analysis_body',
         name: 'view_analysis_body',
