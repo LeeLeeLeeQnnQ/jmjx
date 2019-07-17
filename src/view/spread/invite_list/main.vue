@@ -3,13 +3,24 @@
     <Card shadow style="margin-bottom: 5px">
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col>
+          <DatePicker type="daterange" placeholder="选择时间段" style="min-width: 200px" @on-change="selectDate"></DatePicker>
+        </i-col>
+        <i-col>
           <Input v-model="sreach.user_id" placeholder="请输入邀请人ID"/>
         </i-col>
         <i-col>
           <Input v-model="sreach.invite_id" placeholder="请输入被邀请人ID"/>
         </i-col>
         <i-col>
+          <Select v-model="sreach.is_pay" placeholder="选择返现状态" style="width: 200px">
+            <Option v-for="item in payList" :value="item.is_pay" :key="item.is_pay">{{ item.status_name }}</Option>
+          </Select>
+        </i-col>
+        <i-col>
           <Button type="primary" @click="sreachKeyword">搜索</Button>
+        </i-col>
+        <i-col>
+          <Button type="primary" @click="exportTable">导出表格</Button>
         </i-col>
       </Row>
     </Card>
@@ -36,6 +47,9 @@ export default {
       sreach:{
         user_id:'',
         invite_id:'',
+        start_date:'',
+        end_date:'',
+        is_pay:'',
       },
       columns: [
         {title: '邀请人ID', key: 'user_id', width:100},
@@ -70,7 +84,7 @@ export default {
               },)
             }
         },
-        {title: '是否下单', key: 'is_pay',
+        {title: '是否返现', key: 'is_pay',
           render: (h, params) => {
             let is_pay = params.row.is_pay*1
             if(is_pay == 0){
@@ -80,6 +94,7 @@ export default {
             }
           }
         },
+        { title: '返现时间', key: 'pay_time'},
       ],
       page: {
         current_page: 1,
@@ -88,6 +103,12 @@ export default {
         total: 0
       },
       inviteList: [],
+      // 审批状态
+      payList:[
+        {is_pay:'', status_name:'全部'},
+        {is_pay:0, status_name:'未返现'},
+        {is_pay:1, status_name:'已返现'},
+      ],
     }
   },
   methods: {
@@ -108,6 +129,17 @@ export default {
     // 选择新页面
     getNewPage(page){
       this.init({page:page})
+    },
+    // 导出
+    exportTable(){
+      let info =  Object.assign({},this.sreach)
+      var str = '';
+      for(let k in info){
+        str += ( k + '=' + info[k] + "&");
+      }
+      str = str.substr(0, str.length - 1)
+      const href = "./api/UserInvite/export?" + str;
+      window.open(href, '_blank')
     },
     init(data){
       let td = this.sreach
