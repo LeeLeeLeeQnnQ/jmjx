@@ -770,6 +770,16 @@ export default [
         component: () => import('@/view/spread/spread_list/main.vue')
       },
       {
+        path: '/spread_sort_list',
+        name: 'spread_sort_list',
+        meta: {
+          icon: '_hongbao-xianxing',
+          title: '排序列表',
+          access: [707]
+        },
+        component: () => import('@/view/spread/sort_list/main.vue')
+      },
+      {
         path: '/apply_list',
         name: 'apply_list',
         meta: {

@@ -20,6 +20,43 @@ export const getSpreadStoreList = (data) => {
 }
 
 
+// 获取列表
+/*
+  获取列表
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+export const getSpreadStoreQueryList = (data) => {
+  return axios.request({
+    url: '/api/Shop/queryList',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+// 获取列表
+/*
+  获取列表
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+export const setStoreSort = (data) => {
+  return axios.request({
+    url: '/api/Shop/sort',
+    data,
+    method: 'post'
+  })
+}
+
 // 增加一个推广商户
 /*
   推广商户

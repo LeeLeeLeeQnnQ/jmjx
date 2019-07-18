@@ -1,7 +1,19 @@
 <template>
   <div>
     <!-- 厨房表格数据 -->
-    <Card>
+    <Card shadow>
+      <Row :gutter="20">
+        <i-col :xs="4" :md="4" :lg="4">
+          <Select v-model="sreachInfo.area_id">
+            <Option v-for="item in areaList" :value="item.id" :key="item.id">{{ item.area_name }}</Option>
+          </Select>
+        </i-col>
+        <i-col :xs="4" :md="4" :lg="4">
+          <Button type="primary" @click="sreachKeyword">搜索</Button>
+        </i-col>
+      </Row>
+    </Card>
+    <Card style="margin-top: 8px;">
       <p slot="title">
           推广商户列表
       </p>
@@ -352,6 +364,9 @@ export default {
   },
   data () {
     return {
+      sreachInfo:{
+        area_id:'',
+      },
       // 图片
       imgUrl: '',
       visible: false,
@@ -587,6 +602,9 @@ export default {
     }
   },
   methods: {
+    sreachKeyword(){
+      this.init({ });
+    },
     // 图片预览
     handleView (imgUrl) {
       this.imgUrl = imgUrl
@@ -990,8 +1008,8 @@ export default {
     },
     // 初始化
     init( data ){
-      console.log(data)
-      getSpreadStoreList( data ).then(res => {
+      let info = Object.assign({} , data , this.sreachInfo)
+      getSpreadStoreList( info ).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {
           this.$Notice.warning({
@@ -1016,7 +1034,6 @@ export default {
         return
       }
       this.areaList = dbody.data || [];
-      this.init({});
     })
   },
   computed: {

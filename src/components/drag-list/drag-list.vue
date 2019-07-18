@@ -85,8 +85,11 @@ export default {
 .drag-list-wrapper{
   height: 100%;
   .drag-list-con{
-    width: 50%;
+    width: 45%;
     float: left;
+  }
+  .con2{
+    /*margin-left: 5%;*/
   }
 }
 </style>

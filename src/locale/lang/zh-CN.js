@@ -44,7 +44,8 @@ export default {
   spread:'运营推广',
   spread_list:'推广商户列表',
   apply_list:'申领列表',
-  config_list:'小程序设置',
+  config_list:'Banner设置',
+  spread_sort_list:'推广商户排序',
 
   store_spread:'商户推广红包',
   store_spread_list:'推广红包列表',
