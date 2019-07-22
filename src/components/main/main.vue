@@ -24,7 +24,7 @@
             <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
           </div> -->
           <Content class="content-wrapper">
-            <keep-alive :exclude="cacheList">
+            <keep-alive :exclude="exCludeList">
             <!-- <keep-alive exclude="kitchenDataShopDetail"> -->
             <!-- <keep-alive > -->
               <router-view/>
@@ -83,9 +83,10 @@ export default {
     userName () {
       return getUsername()
     },
-    cacheList () {
-      return ['ParentView','edit-expenses-order','canvass_shop_edit','finance-store-edit','finance-store-edit2','finance-store-handle','finance-store-handle2','kitchen_shop_detail','kitchen_shop_edit','kitchen_shop_edit2','kitchen_shop_handle','kitchen_shop_handle2','edit_Member','edit_permisson','d-kitchen-report','n-kitchen-report','n-kitchen-report','w-kitchen-report','kitchen-data-kitchen-detail','finance-store-quit','kitchen-data-store-list','build-kichen','canvass_store_pre_build']
-      // return ['ParentView', ...this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []]
+    exCludeList () {
+      let exCludeArr = ['ParentView']
+      this.flatRoutersArr(routers,exCludeArr)
+      return exCludeArr
     },
     menuList () {
       return this.$store.getters.menuList
@@ -130,6 +131,16 @@ export default {
         name,
         params,
         query
+      })
+    },
+    flatRoutersArr(tree,line){
+      tree.map((item)=>{
+        if(item.meta && item.meta.notCache){
+          line.push(item.name)
+        }
+        if(item.children){
+          this.flatRoutersArr(item.children,line);
+        }
       })
     },
     handleCollapsedChange (state) {

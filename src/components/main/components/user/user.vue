@@ -55,7 +55,7 @@ export default {
     },
     setting () {
       this.$router.push({
-        name: 'user_setting'
+        name: 'userSetting'
       })
     },
     handleClick (name) {

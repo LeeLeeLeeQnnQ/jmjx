@@ -213,7 +213,7 @@
 // /api/Index/getEmployeeList,/api/Index/getEmployeeList,/api/StoreLease/show,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/StoreLease/edit, ,Clue/existCustomer
 import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , getWorkCategoryList ,isExistCustome } from '@/api/data'
 export default {
-  name: 'finance-store-edit',
+  name: 'financeShopEdit',
   data () {
     return {
       // kitchen_id

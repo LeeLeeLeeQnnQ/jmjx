@@ -88,11 +88,6 @@
                   <DatePicker type="date" placeholder="选择入场时间" :value="leaseinfo.join_date" @on-change="getJoinDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
                 </FormItem>
               </i-col>
-<!--               <i-col span="10" offset="2">
-                <FormItem label="店铺收费基数">
-                  <Input v-model="leaseinfo.pay_base" placeholder="输入店铺收费基数" style="width: 200px"></Input>
-                </FormItem>
-              </i-col> -->
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -274,7 +269,7 @@ import { getShopDetail , setStartShopEdit } from '@/api/data'
 import { getStoreEmployeeList , addStoreEmployee , editStoreEmployee , deleteStoreEmployee } from '@/api/kitchen'
 import { showStoreDevice , editStoreDevice } from '@/api/kitchen'
 export default {
-  name: 'kitchen_shop_edit',
+  name: 'kitchenShopEdit',
   components: {
     Tables
   },

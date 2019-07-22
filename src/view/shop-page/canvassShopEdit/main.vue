@@ -21,61 +21,6 @@
                 </FormItem>
               </i-col>
             </Row>
-<!--             <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="月租金">
-                  <Input v-model="leaseinfo.month_rent" placeholder="输入月租金"></Input>
-                </FormItem>
-              </i-col>
-               <i-col span="10" offset="2">
-                <FormItem label="押金">
-                  <Input v-model="leaseinfo.deposit_fee" placeholder="输入押金"></Input>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="入场费">
-                  <Input v-model="leaseinfo.entrance_fee" placeholder="输入入场费"></Input>
-                </FormItem>
-              </i-col>
-               <i-col span="10" offset="2">
-                <FormItem label="增容费">
-                  <Input v-model="leaseinfo.zr_fee" placeholder="输入增容费"></Input>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="燃气费">
-                  <Input v-model="leaseinfo.gas_fee" placeholder="输入燃气费"></Input>
-                </FormItem>
-              </i-col>
-              <i-col span="10" offset="2">
-                <FormItem label="一次性费用">
-                  <Input v-model="leaseinfo.one_fee" placeholder="输入一次性费用"></Input>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="上线日期">
-                  <DatePicker type="date" placeholder="选择上线日期" :value="leaseinfo.online_date" @on-change="getOnlineDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
-                </FormItem>
-              </i-col>
-               <i-col span="10" offset="2">
-                <FormItem label="免租期">
-                  <Input v-model="leaseinfo.free_day" placeholder="输入免租期"></Input>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="到期时间">
-                  <DatePicker type="date" placeholder="选择到期时间" :value="leaseinfo.end_date" @on-change="getEndDatePicker"  format="yyyy-MM-dd" style="width: 200px"></DatePicker>
-                </FormItem>
-              </i-col>
-            </Row> -->
             <Row type="flex" justify="start" align="middle" :gutter="20" style="margin-bottom: 300px;">
               <i-col span="10">
                 <FormItem>
@@ -237,7 +182,7 @@ import Tables from '_c/tables'
 // /api/StoreLease/show,/api/StoreLease/edit
 import { getShopDetail , setStartShopEdit } from '@/api/data'
 export default {
-  name: 'canvass_shop_edit',
+  name: 'canvassShopEdit',
   components: {
     Tables
   },

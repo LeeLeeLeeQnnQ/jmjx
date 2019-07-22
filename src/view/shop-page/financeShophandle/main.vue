@@ -118,7 +118,7 @@
 import { confirmShopStart } from '@/api/finance'
 import { getShopDetail , getKitchenList , setStartShopEdit , getWorkCategoryList } from '@/api/data'
 export default {
-  name: 'finance-store-handle',
+  name: 'financeShopHandle',
   data () {
     return {
       // kitchen_id

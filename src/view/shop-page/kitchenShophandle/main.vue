@@ -71,7 +71,7 @@ import Tables from '_c/tables'
 import { getShopDetail , setStartShopEdit } from '@/api/data'
 import { startShopStart } from '@/api/finance'
 export default {
-  name: 'kitchen_shop_handle',
+  name: 'kitchenShopHandle',
   components: {
     Tables
   },
