@@ -162,6 +162,11 @@
                   <Input v-model="baseinfo.rent_bill" placeholder="房租收费周期／月"></Input>
                 </FormItem>
               </i-col>
+              <i-col span="10" offset="2">
+                <FormItem label="首期起租缴纳房租期数" prop="rent_start">
+                  <Input v-model="baseinfo.rent_start" placeholder="首期起租缴纳房租期数／月"></Input>
+                </FormItem>
+              </i-col>
             </Row>
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
@@ -617,6 +622,12 @@ export default {
         })
         return false
       }
+      if (!obj.rent_start || isNaN(obj.rent_start) || obj.rent_start > 12) {
+        this.$Notice.warning({
+          title: '请正确填写首期起租缴纳房租期数！'
+        })
+        return false
+      }
       return true
     },
     // 提交签约凭证
@@ -826,6 +837,7 @@ export default {
       this.baseinfo.entrance_fee = data.entrance_fee || '';
       this.baseinfo.zr_fee = data.zr_fee || '';
       this.baseinfo.rent_bill = data.rent_bill || '';
+      this.baseinfo.rent_start = data.rent_start || '';
       this.baseinfo.sign_date = data.sign_date || '';
       this.baseinfo.customer_id = data.customer_id || '';
       getManageList().then(res => {

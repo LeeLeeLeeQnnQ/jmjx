@@ -24,6 +24,9 @@
     <!-- <Tabs :animated="false" style="margin-top: 5px;" @on-click="setCard" :value="tabValue"> -->
     <Tabs :animated="false" style="margin-top: 5px;" >
         <Button @click="quitStore" size="small" slot="extra">店铺退租</Button>
+<!--         <TabPane label="测试" name="0">
+          <KSLStartShopsTables  />
+        </TabPane> -->
         <TabPane label="起租中" name="1">
           <tables
             ref="start_shops_tables"
@@ -115,6 +118,7 @@
 
 <script>
 import Tables from '_c/tables'
+// import KSLStartShopsTables from './components/KSLStartShopsTables'
 import merge from 'webpack-merge'
 // 权限
 // /api/Kitchen/index,/api/StoreLease/index,Index/getKitchenList
@@ -123,7 +127,8 @@ import { getKitchenList , getAllShopList } from '@/api/data'
 export default {
   name: 'kitchenShopList',
   components: {
-    Tables
+    Tables,
+    // KSLStartShopsTables
   },
   data () {
     return {

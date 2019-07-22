@@ -32,7 +32,8 @@
         </div>
         <div class="page_main_item">
           <span><i>6.</i>月度账单金额：</span>
-          <p>{{print_info.rent_fee}}元</p>
+          <p v-if="print_info.rent_fee">{{print_info.rent_fee}}元</p>
+          <p v-else="print_info.rent_fee"></p>
         </div>
         <div class="page_main_item">
           <span><i>7.</i>切齐账单日期：</span>
@@ -154,6 +155,15 @@ export default {
       let arr = date.split('-');
       this.year = arr[0] || '';
       this.month = arr[1] || '';
+
+      // 硬规划数据
+      let cut_fee = (info.cut_fee*1).toFixed(2)
+      let rent_fee = (info.rent_fee*1).toFixed(2)
+      if(cut_fee == rent_fee){
+        info.rent_fee = ''
+        info.rent_end_date = ''
+      }
+
       this.lastday = this.getCurrentMonthLast(date);
       this.start_date = this.getStartDate(info);
       this.currentdate = this.getCurentTime();
@@ -218,7 +228,7 @@ export default {
       height: 2em;
     }
     .page_main .page_main_item span{
-      width: 150px;
+      width: 170px;
     }
     .page_main .page_main_item i{
       font-style:normal; 
@@ -230,7 +240,7 @@ export default {
       text-indent: 0em;
       /*padding: 0 3em 2px;*/
       padding-bottom: 2px;
-      width: 300px;
+      width: 330px;
       height: 2em;
     }
 
