@@ -70,7 +70,12 @@
       </Row>
     </Card>
     <Card style="margin-top:5px;min-height: 220px;">
-      <tables :columns="view_columns" v-model="view_list" @data-edit="handleEdit" @data-dele="handleDele"></tables>
+      <tables :columns="view_columns"
+        v-model="view_list"
+        @data-build="handlePreBuild"
+        @data-edit="handleEdit"
+        @data-dele="handleDele">
+      </tables>
       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
       <Modal v-model="showNewAddModal" title="添加带看信息" @on-ok="saveNewAddModalInfo" :mask-closable="false" width="64%;">
         <Form :model="addModal" :label-width="80">
@@ -454,6 +459,7 @@ export default {
         {
           title: '操作',
           key: 'handle',
+          width :160,
           button: [
             (h, params, vm) => {
               return h('Poptip', {
@@ -475,6 +481,20 @@ export default {
                   },
                 }, '删除')
               ])
+            },
+            (h, params, vm) => {
+              return h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {marginLeft: '5px'},
+                on: {
+                  'click': () => {
+                    vm.$emit('data-build', params)
+                  }
+                }},
+              '预建档')
             },
           ]
         }
@@ -752,6 +772,17 @@ export default {
         })
         this.view_list = this.view_list.filter(obj => obj.id !== id)
       })
+    },
+    // handlePreBuild 预建档
+    handlePreBuild(params){
+      let customer_id = params.row.customer_id;
+      const route = {
+        name: 'canvassShopPreBuild',
+        query: {
+          customer_id
+        }
+      }
+      this.$router.push(route)
     },
     // 编辑一条带看
     saveEditModalInfo(  ){

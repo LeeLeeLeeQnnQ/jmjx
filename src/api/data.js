@@ -482,90 +482,56 @@ export const setNewPWD = (data) => {
 }
 
 
-// 作废接口
-// ===============================================================
-// 除了归档的
-// export const getShopList = ( page ) => {
-//   const data = { 'lease_type': 5 }
-//   if(!!page){ data.page  = page };
-//   return axios.request({
-//     url: '/api/StoreLease/index',
-//     data,
-//     method: 'post'
-//   })
-// }
+/*
+  获取预减档 列表
+*/
+/*
+  
+*/
+/*
+  获取预减档 列表
+*/
+export const getPrebuildList = (info) => {
+  return axios.request({
+    url: '/api/StoreReady/index',
+    params: info,
+    method: 'post'
+  })
+}
 
-// // 除了归档的
-// export const getActiveShopList = ( obj ) => {
-//   obj.lease_type = 5 ;
-//   return axios.request({
-//     url: '/api/StoreLease/index',
-//     params: obj,
-//     method: 'get'
-//   })
-// }
+/*
+  获取预减档 列表
+*/
+/*
+  
+*/
+/*
+  获取预减档 列表
+*/
+export const getPrebuildQueryPage = (info) => {
+  return axios.request({
+    url: '/api/StoreReady/queryPage',
+    params: info,
+    method: 'post'
+  })
+}
 
-// export const getActiveNopageShopList = ( obj ) => {
-//   obj.lease_type = 5 ;
-//   return axios.request({
-//     url: '/api/StoreLease/queryList',
-//     params: obj,
-//     method: 'get'
-//   })
-// }
 
-// // 起租列表
-// export const getStartShopList = ( page ) => {
-//   const data = { 'lease_type': 1 }
-//   if(!!page){ data.page  = page };
-//   return axios.request({
-//     url: '/api/StoreLease/index',
-//     data,
-//     method: 'post'
-//   })
-// }
 
-// // 起租列表
-// export const getNormalShopList = ( page ) => {
-//   const data = { 'lease_type': 2 }
-//   if(!!page){ data.page  = page };
-//   return axios.request({
-//     url: '/api/StoreLease/index',
-//     data,
-//     method: 'post'
-//   })
-// }
 
-// // 起租列表
-// export const getEndShopList = ( page ) => {
-//   const data = { 'lease_type': 3 }
-//   if(!!page){ data.page  = page };
-//   return axios.request({
-//     url: '/api/StoreLease/index',
-//     data,
-//     method: 'post'
-//   })
-// }
-
-// // 起租列表
-// export const getEliminateShopList = ( page ) => {
-//   const data = { 'lease_type': 4 }
-//   if(!!page){ data.page  = page };
-//   return axios.request({
-//     url: '/api/StoreLease/index',
-//     data,
-//     method: 'post'
-//   })
-// }
-// //上传图片
-// export const uploadImg = (file) => {
-//   const data = { file: file }
-//   return axios.request({
-//     url: '/api/Index/upload',
-//     data
-//   })
-// }
-// ===============================================================
+/*
+  id id 
+*/
+/*
+  
+*/
+export const deletePrebuildItem = (data) => {
+  return axios.request({
+    url: 'api/StoreReady/delete',
+    data,
+    method: 'post'
+  })
+}
 
 
 

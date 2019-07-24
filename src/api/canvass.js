@@ -149,7 +149,57 @@ export const getWebBookList = ( obj ) => {
 }
 
 
+/*
+  店铺预建档案
+*/
+/*
+  *
+*/
+/*
+  
+*/
+export const setPreBuild = ( data ) => {
+  return axios.request({
+    url: '/api/StoreReady/add',
+    data,
+    method: 'post'
+  })
+}
 
+/*
+  店铺预建档案
+*/
+/*
+  *
+*/
+/*
+  
+*/
+export const showPreBuildItem = ( data ) => {
+  return axios.request({
+    url: '/api/StoreReady/show',
+    data,
+    method: 'post'
+  })
+}
+
+
+/*
+  编辑预建档案
+*/
+/*
+  *
+*/
+/*
+  
+*/
+export const editPreBuildItem = ( data ) => {
+  return axios.request({
+    url: '/api/StoreReady/edit',
+    data,
+    method: 'post'
+  })
+}
 
  
 /*

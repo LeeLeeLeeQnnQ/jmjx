@@ -32,7 +32,6 @@ export default {
           },
           width: 80
         },
-        {title: '所属厨房', key: 'kitchen_name',width : 150},
         {title: '上次登录 ',
           render: (h, params) => {
             let time = params.row.login_time

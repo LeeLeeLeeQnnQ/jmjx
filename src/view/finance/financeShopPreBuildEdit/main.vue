@@ -17,7 +17,7 @@
           </i-col>
           <i-col span="10" offset="2">
             <FormItem label="客户ID" prop="customer_id">
-              <Input v-model="formItem.customer_id" readonly placeholder="客户ID"></Input>
+              <Input v-model="formItem.customer_id" disabled placeholder="客户ID"></Input>
             </FormItem>
           </i-col>
         </Row>
@@ -98,21 +98,16 @@
           <i-col span="20">
             <FormItem label="转账凭证上传">
               <div class="img-upload-list" v-for="item in uploadList">
-                  <template v-if="item.status === 'finished'">
-                      <img :src="item.url">
-                      <div class="img-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                      </div>
-                  </template>
-                  <template v-else>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                  </template>
+                <img :src="item">
+                <div class="img-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
+                    <Icon type="ios-trash-outline" @click.native="handleUploadListRemove(item)"></Icon>
+                </div>
               </div>
               <Upload
                 ref="upload"
                 :show-upload-list="false"
-                :on-success="handleSuccess"
+                :on-success="handleSuccessUploadImg"
                 :format="['jpg','jpeg','png']"
                 :max-size="4200"
                 :on-format-error="handleFormatError"
@@ -159,10 +154,9 @@
             </FormItem>
           </i-col>
         </Row>
-
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <FormItem>
-            <Button @click="handleSubmit('formItem')" type="primary">预建档</Button>
+            <Button @click="confiremModel = true" type="error">允许建档</Button>
           </FormItem>
         </Row>
       </Form>
@@ -170,18 +164,29 @@
     <Modal title="预览图" v-model="visible">
         <img :src="imgUrl" v-if="visible" style="width: 100%">
     </Modal>
+    <Modal v-model="confiremModel" width="360">
+      <p slot="header" style="color:#f60;text-align:center">
+          <Icon type="ios-information-circle"></Icon>
+          <span>确认允许建档么？</span>
+      </p>
+      <div slot="footer">
+          <Button type="error" size="large" long @click="handleSubmit">确认</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
 //权限
-// StoreReady/add,Index/getKitchenList,Index/getStoreNo,Index/getEmployeeList,Index/getWorkCategory,Clue/existCustomer
-import { setPreBuild } from '@/api/canvass'
+// StoreLease/add,StoreReady/show,Index/getKitchenList,Index/getStoreNo,Index/getEmployeeList,Index/getWorkCategory,Clue/existCustomer
+import { setKitchen } from '@/api/finance'
+import { showPreBuildItem } from '@/api/canvass'
 import { getKitchenList, getStoreNoList, getLeasingList ,getWorkCategoryList , isExistCustome } from '@/api/data'
 export default {
-  name: 'canvassShopPreBuild',
+  name: 'financeShopPreBuildEdit',
   data () {
     return {
+      confiremModel:false,
       // 表哥数据
       // 列表提交项
       formItem: {
@@ -398,16 +403,18 @@ export default {
     setOrderInfo (info) {
       let arr = []
       let that = this
-      this.uploadList.forEach(function (i, j) {
-        arr.push(i.url)
-      })
-      info.pay = arr.join(',')
+      info.pay = info.pay.join(',')
       info.contract = info.contract.join(',')
-      setPreBuild(info).then(res => {
+
+      delete info.create_time 
+      delete info.update_time 
+      delete info.id 
+
+      setKitchen(info).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
           this.$Notice.warning({
-            title: '预创建完成！'
+            title: '建档完成！'
           })
           setTimeout(function () {
             that.$router.go(-1)
@@ -425,19 +432,23 @@ export default {
       this.visible = true
     },
     // 删除图片
-    handleRemove (file) {
-      const fileList = this.$refs.upload.fileList
-      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
-      this.uploadList.splice(fileList.indexOf(file), 1)
+    handleUploadListRemove (file) {
+      this.uploadList.splice(this.uploadList.indexOf(file), 1)
+    },
+    handleRemoveContractImg (file) {
+      this.contract.splice(this.uploadList.indexOf(file), 1)
     },
     // 获取图片
-    handleSuccess (res, file) {
+    handleSuccessUploadImg (res, file) {
       if (res.code == 0) {
-        let obj = {}
-        obj.url = res.data
-        obj.status = 'finished'
-        obj.showProgress = false
-        this.uploadList.push(obj)
+        if(!this.contract){
+          this.uploadList = [];
+        }
+        this.uploadList.push(res.data)
+      }else{
+        this.$Notice.warning({
+          title: '图片上传失败',
+        })
       }
     },
     // 获取起租凭证图片
@@ -484,7 +495,6 @@ export default {
       let that = this
       this.kitchenList.forEach(function (item) {
         if (item.id == id) {
-          that.formItem.manage_name = item.manage_name
           that.formItem.kitchen_name = item.kitchen_name
         }
       })
@@ -503,26 +513,49 @@ export default {
           that.formItem.manage_lease = item.fullname
         }
       })
+    },
+    // showPreBuildItem
+    showPreBuildItem(){
+      let obj = { id:this.formItem.id }
+      showPreBuildItem( obj ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          setTimeout(function (argument) {
+            that.$router.go(-1)
+          }, 1000)
+          return
+        }
+        this.formItem = dbody.data;
+        this.uploadList = !! dbody.data.pay ? dbody.data.pay.split(',') : [];
+        this.contract = !! dbody.data.contract ? dbody.data.contract.split(',') : [];
+        this.selectKitchen();
+      })
+      this.$refs.formItem.resetFields()
     }
   },
   created: function () {
-    this.formItem.customer_id = this.$route.query.customer_id
-    this.$nextTick(function () {
-      getKitchenList().then(res => {
-        const dbody = res.data
-        this.kitchenList = dbody.data
-      })
-      getLeasingList().then(res => {
-        const dbody = res.data
-        this.leasingList = dbody.data
-      })
-      getWorkCategoryList( "7" ).then(res => {
-        const dbody = res.data
-        this.workCategoryList = dbody.data || [];
-      })
-      this.$refs.formItem.resetFields()
+    this.formItem.id = this.$route.query.id
+    getKitchenList().then(res => {
+      const dbody = res.data
+      this.kitchenList = dbody.data
     })
-  }
+    getLeasingList().then(res => {
+      const dbody = res.data
+      this.leasingList = dbody.data
+    })
+    getWorkCategoryList( "7" ).then(res => {
+      const dbody = res.data
+      this.workCategoryList = dbody.data || [];
+    })
+  },
+  mounted () {
+    this.$nextTick(function () {
+      this.showPreBuildItem();
+    })
+  },
 }
 </script>
 <style lang="less">

@@ -42,6 +42,16 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
+            <FormItem label="权限组" prop="group_id">
+                <Select v-model="formItem.group_id">
+                  <Option v-for="item in permission_group" :value="item.id" :key="item.id">{{ item.group_name }}</Option>
+                </Select>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Divider />
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
             <FormItem label="所属厨房" prop="kitchen_id">
                 <Select v-model="formItem.kitchen_id" multiple>
                   <Option v-for="item in kitchen_list" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
@@ -51,10 +61,20 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
-            <FormItem label="权限组" prop="group_id">
-                <Select v-model="formItem.group_id">
-                  <Option v-for="item in permission_group" :value="item.id" :key="item.id">{{ item.group_name }}</Option>
-                </Select>
+            <FormItem label="档口数据权限" prop="obtain_store">
+                <RadioGroup v-model="formItem.obtain_store">
+                  <Radio label="1">获取所在厨房全部档口</Radio>
+                  <Radio label="2">获取所在厨房部分档口</Radio>
+              </RadioGroup>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20" v-if="(formItem.obtain_store == 2) && (formItem.kitchen_id.length > 0)">
+          <i-col span="20">
+            <FormItem label="权限档口">
+              <CheckboxGroup v-model="formItem.store">
+                <Checkbox label="苹果" disabled></Checkbox>
+              </CheckboxGroup>
             </FormItem>
           </i-col>
         </Row>
@@ -91,9 +111,13 @@ export default {
         fullname: '',
         gender: '',
         group_id: '',
-        kitchen_id: '',
-        password: '',
-        confirm_password: ''
+        kitchen_id: [],
+        password1: '',
+        password2: '',
+        remark: '',
+        obtain_data:'',
+        obtain_store:'',
+        store:[]
       },
       password: '',
       ruleValidate: {
@@ -106,6 +130,12 @@ export default {
           { type: 'string', max: 50, message: '姓名不能超过50个字', trigger: 'blur' }
         ],
         gender: [
+          { required: true}
+        ],
+        obtain_data: [
+          { required: true}
+        ],
+        obtain_store: [
           { required: true}
         ],
         group_id: [

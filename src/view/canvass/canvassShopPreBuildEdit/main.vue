@@ -17,7 +17,7 @@
           </i-col>
           <i-col span="10" offset="2">
             <FormItem label="客户ID" prop="customer_id">
-              <Input v-model="formItem.customer_id" readonly placeholder="客户ID"></Input>
+              <Input v-model="formItem.customer_id" disabled placeholder="客户ID"></Input>
             </FormItem>
           </i-col>
         </Row>
@@ -98,21 +98,16 @@
           <i-col span="20">
             <FormItem label="转账凭证上传">
               <div class="img-upload-list" v-for="item in uploadList">
-                  <template v-if="item.status === 'finished'">
-                      <img :src="item.url">
-                      <div class="img-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-                      </div>
-                  </template>
-                  <template v-else>
-                      <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-                  </template>
+                <img :src="item">
+                <div class="img-upload-list-cover">
+                    <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
+                    <Icon type="ios-trash-outline" @click.native="handleUploadListRemove(item)"></Icon>
+                </div>
               </div>
               <Upload
                 ref="upload"
                 :show-upload-list="false"
-                :on-success="handleSuccess"
+                :on-success="handleSuccessUploadImg"
                 :format="['jpg','jpeg','png']"
                 :max-size="4200"
                 :on-format-error="handleFormatError"
@@ -162,7 +157,7 @@
 
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <FormItem>
-            <Button @click="handleSubmit('formItem')" type="primary">预建档</Button>
+            <Button @click="handleSubmit('formItem')" type="primary">修改</Button>
           </FormItem>
         </Row>
       </Form>
@@ -176,10 +171,10 @@
 <script>
 //权限
 // /api/StoreLease/add,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/Index/getEmployeeList,/api/Index/getWorkCategory,Clue/existCustomer
-import { setKitchen } from '@/api/finance'
-import { getKitchenList, getStoreNoList, getLeasingList, getManageList ,getWorkCategoryList , isExistCustome } from '@/api/data'
+import {  editPreBuildItem , showPreBuildItem } from '@/api/canvass'
+import { getKitchenList, getStoreNoList, getLeasingList ,getWorkCategoryList , isExistCustome } from '@/api/data'
 export default {
-  name: 'canvassShopPreBuild',
+  name: 'canvassShopPreBuildEdit',
   data () {
     return {
       // 表哥数据
@@ -188,8 +183,6 @@ export default {
         store_name: '',
         shopkeeper: '',
         shopkeeper_phone: '',
-        manage_id: '',
-        manage_name: '',
         manage_lease_id: '',
         manage_lease: '',
         kitchen_id: '',
@@ -214,9 +207,6 @@ export default {
         ],
         shopkeeper_phone: [
           { required: true, message: '店铺联系人手机号不能为空', trigger: 'blur' }
-        ],
-        manage_id: [
-          { required: true, message: '店长不能为空', trigger: 'change' }
         ],
         manage_lease_id: [
           { required: true, message: '招商经理不能为空', trigger: 'change' }
@@ -246,9 +236,6 @@ export default {
           { required: true, message: '首期起租缴纳房租期数', trigger: 'change' }
         ]
       },
-      // 店长列表
-      manageList: [],
-      // manageList:[],
       // 招商经理列表
       leasingList: [],
       // leasingList:[],
@@ -257,54 +244,6 @@ export default {
       // 档口列表
       shopList: [],
 
-      // 表格头
-      tableColumns: [
-        {
-          title: '名称',
-          key: 'title'
-        },
-        {
-          title: '收支',
-          key: 'rent_type',
-          render: (h, params) => {
-            return h('strong', params.row.rent_type*1 == 1 ? '收入' : '支出')
-          }
-        },
-        {
-          title: '数量',
-          key: 'quantity'
-        },
-        {
-          title: '金额',
-          key: 'money'
-        },
-        {
-          title: '备注',
-          key: 'remark'
-        },
-        {
-          title: '操作',
-          key: 'handle',
-          width: 150,
-          align: 'center',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.removeItem(params.index)
-                    this.tableTotal = this.getTableSum()
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ],
       // 图片
       imgUrl: '',
       visible: false,
@@ -372,12 +311,6 @@ export default {
       if (!obj.shopkeeper_phone || !phoneReg.test(obj.shopkeeper_phone)) {
         this.$Notice.warning({
           title: '请输入正确店主手机号！'
-        })
-        return false
-      }
-      if (!obj.manage_id || !obj.manage_name) {
-        this.$Notice.warning({
-          title: '请选择店长！'
         })
         return false
       }
@@ -460,16 +393,17 @@ export default {
     setOrderInfo (info) {
       let arr = []
       let that = this
-      this.uploadList.forEach(function (i, j) {
-        arr.push(i.url)
-      })
-      info.pay = arr.join(',')
+      info.pay = info.pay.join(',')
       info.contract = info.contract.join(',')
-      setKitchen(info).then(res => {
+
+      delete info.create_time 
+      delete info.update_time 
+
+      editPreBuildItem(info).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
           this.$Notice.warning({
-            title: '预创建完成！'
+            title: '修改完成！'
           })
           setTimeout(function () {
             that.$router.go(-1)
@@ -487,19 +421,23 @@ export default {
       this.visible = true
     },
     // 删除图片
-    handleRemove (file) {
-      const fileList = this.$refs.upload.fileList
-      this.$refs.upload.fileList.splice(fileList.indexOf(file), 1)
-      this.uploadList.splice(fileList.indexOf(file), 1)
+    handleUploadListRemove (file) {
+      this.uploadList.splice(this.uploadList.indexOf(file), 1)
+    },
+    handleRemoveContractImg (file) {
+      this.contract.splice(this.uploadList.indexOf(file), 1)
     },
     // 获取图片
-    handleSuccess (res, file) {
+    handleSuccessUploadImg (res, file) {
       if (res.code == 0) {
-        let obj = {}
-        obj.url = res.data
-        obj.status = 'finished'
-        obj.showProgress = false
-        this.uploadList.push(obj)
+        if(!this.contract){
+          this.uploadList = [];
+        }
+        this.uploadList.push(res.data)
+      }else{
+        this.$Notice.warning({
+          title: '图片上传失败',
+        })
       }
     },
     // 获取起租凭证图片
@@ -555,16 +493,6 @@ export default {
         this.shopList = dbody.data
       })
     },
-    // 依据店长ID获取店长姓名
-    selectmanageName () {
-      let key = this.formItem.manage_id
-      let that = this
-      this.manageList.forEach(function (item) {
-        if (item.id == key) {
-          that.formItem.manage_name = item.fullname
-        }
-      })
-    },
     // 依据招商ID获取店长姓名
     selectmanageLease () {
       let key = this.formItem.manage_lease_id
@@ -574,30 +502,49 @@ export default {
           that.formItem.manage_lease = item.fullname
         }
       })
+    },
+    // showPreBuildItem
+    showPreBuildItem(){
+      let obj = { id:this.formItem.id }
+      showPreBuildItem( obj ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          setTimeout(function (argument) {
+            that.$router.go(-1)
+          }, 1000)
+          return
+        }
+        this.formItem = dbody.data;
+        this.uploadList = !! dbody.data.pay ? dbody.data.pay.split(',') : [];
+        this.contract = !! dbody.data.contract ? dbody.data.contract.split(',') : [];
+        this.selectKitchen();
+      })
+      this.$refs.formItem.resetFields()
     }
   },
   created: function () {
     this.formItem.id = this.$route.query.id
-    this.$nextTick(function () {
-      getKitchenList().then(res => {
-        const dbody = res.data
-        this.kitchenList = dbody.data
-      })
-      getLeasingList().then(res => {
-        const dbody = res.data
-        this.leasingList = dbody.data
-      })
-      getManageList().then(res => {
-        const dbody = res.data
-        this.manageList = dbody.data
-      })
-      getWorkCategoryList( "7" ).then(res => {
-        const dbody = res.data
-        this.workCategoryList = dbody.data || [];
-      })
-      this.$refs.formItem.resetFields()
+    getKitchenList().then(res => {
+      const dbody = res.data
+      this.kitchenList = dbody.data
     })
-  }
+    getLeasingList().then(res => {
+      const dbody = res.data
+      this.leasingList = dbody.data
+    })
+    getWorkCategoryList( "7" ).then(res => {
+      const dbody = res.data
+      this.workCategoryList = dbody.data || [];
+    })
+  },
+  mounted () {
+    this.$nextTick(function () {
+      this.showPreBuildItem();
+    })
+  },
 }
 </script>
 <style lang="less">

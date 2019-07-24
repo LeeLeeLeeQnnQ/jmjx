@@ -86,9 +86,7 @@ export default {
         {title: '厨房ID', key: 'id', width: 80},
         {title: '厨房名称', key: 'kitchen_name'},
         { title: '档口数量', key: 'store_total'},
-        {title: '负责人', key: 'manage_name', width: 80},
         {title: '店长', key: 'manage_name', width: 80},
-        {title: '店长电话', key: 'manage_phone'},
         { title: '总房租(实价)',
           render: (h, params) => {
             let a = (params.row.rent_total*1/10000).toFixed(2)+'万';

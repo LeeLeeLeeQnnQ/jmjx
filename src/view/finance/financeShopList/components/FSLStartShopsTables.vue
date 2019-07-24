@@ -1,16 +1,26 @@
 <template>
   <div>
-    <tables
-      v-model="start_shops_list"
-      :columns="start_shops_columns"
-      @data-view="showShopCard"
-      @data-edit="editShopCard"
-      @data-handle="handleShopCard"
+    <Modal v-model="storeRefundModal" width="360">
+      <p slot="header" style="color:#f60;text-align:center">
+          <Icon type="ios-information-circle"></Icon>
+          <span>确认商户异常退款么？</span>
+      </p>
+      <div slot="footer">
+          <Button type="error" size="large" long @click="quitKitchen">确认</Button>
+      </div>
+    </Modal>
+    <tables 
+      v-model="start_shops_list" 
+      :columns="start_shops_columns" 
+      @data-view="showShopCard" 
+      @data-edit="editStartCard" 
+      @data-handle="handleStartCard"
+      @data-refund="showStoreRefundModal"
       @on-sort-change="startShopsSortTables"/>
     <Page
-      style="margin-top:10px;"
       :total="start_shops_page.total"
       :page-size="start_shops_page.list_rows"
+      style="margin-top:10px;"
       @on-change="getStartShopsNewPage"/>
   </div>
 </template>
@@ -19,7 +29,7 @@
 import Tables from '_c/tables'
 import { getAllShopList } from '@/api/data'
 export default {
-  name: 'KSLStartShopsTables',
+  name: 'FSLStartShopsTables',
   components: {
     Tables
   },
@@ -33,6 +43,9 @@ export default {
   },
   data () {
     return {
+      // 异常退款！
+      storeRefundModal:false,
+      rufund_id:'',
       //起租中
       start_shops_columns: [
         {title: 'ID', key: 'id', width: 80},
@@ -60,6 +73,12 @@ export default {
             } 
           }
         },
+        { title: '首期未缴',
+          render: (h, params) => {
+            let unpaid_fee = params.row.unpaid_fee*1
+            return h('span', unpaid_fee)
+          }
+        },
         {title: '操作状态',
           render: (h, params) => {
             let confirm_time = params.row.confirm_time*1
@@ -73,10 +92,12 @@ export default {
         {
           title: '查看',
           key: 'handle',
+          width: 80,
           button: [
             // 不带气泡 一层嵌套
             (h, params, vm) => {
-              return h('Button', {style: {margin: '0'},
+              return h('Button', {
+                style: {margin: '0'},
                 props: {
                   type: 'info',
                   size: 'small'
@@ -93,10 +114,12 @@ export default {
         {
           title: '编辑',
           key: 'handle',
+          width: 80,
           button: [
             // 不带气泡 一层嵌套
             (h, params, vm) => {
-              return h('Button', {style: {margin: '0'},
+              return h('Button', {
+                style: {margin: '0'},
                 props: {
                   type: 'primary',
                   size: 'small'
@@ -113,28 +136,58 @@ export default {
         {
           title: '操作',
           key: 'handle',
+          width: 100,
           button: [
             // 不带气泡 一层嵌套
             (h, params, vm) => {
               let confirm_time = params.row.confirm_time*1
               if( confirm_time > 0 ){
-                return h('Button', {style: {margin: '0'},
+                return ''
+              }
+              return h('Button', {
+                style: {margin: '0'},
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-handle', params)
+                  }
+                }},
+              '允许起租')
+            },
+          ]
+        },
+        {
+          title: '异常退款',
+          key: 'handle',
+          width: 100,
+          button: [
+            (h, params, vm) => {
+              return h('Poptip', {
+                props: {
+                  confirm: true,
+                  title: '商户异常退款！',
+                  placement: "left-start"
+                },
+                on: {
+                  'on-ok': () => {
+                    vm.$emit('data-refund', params)
+                  }
+                }
+              }, [
+                h('Button', {
                   props: {
                     type: 'error',
                     size: 'small'
                   },
-                  on: {
-                    'click': () => {
-                      vm.$emit('data-handle', params)
-                    }
-                  }},
-                '店铺起租')
-              }else{
-                return ''
-              }
-            },
+                  style: {marginLeft: '0'}
+                }, '异常退款')
+              ])
+            }
           ]
-        }
+        },
       ],
       start_shops_list: [],
       start_shops_page: {
@@ -150,7 +203,7 @@ export default {
       },
     }
   },
-  methods: {
+  methods: {    
     // 获取起租中
     getStartShops( data ){
       let info = Object.assign({}, this.sreachInfo , this.start_sort_data , data)
@@ -176,34 +229,8 @@ export default {
       }
       this.getStartShops({page : this.start_shops_page.current_page});
     },
-    // 起租中编辑
-    editShopCard( params ){
-      let id = params.row.store_id
-      let kitchen_id = params.row.kitchen_id
-      const route = {
-        name: 'kitchenShopEdit',
-        query: {
-          id,
-          kitchen_id
-        }
-      }
-      this.$router.push(route)
-    },
-    // 起租中操作
-    handleShopCard( params ){
-      let id = params.row.store_id
-      let kitchen_id = params.row.kitchen_id
-      const route = {
-        name: 'kitchenShopHandle',
-        query: {
-          id,
-          kitchen_id
-        }
-      }
-      this.$router.push(route)
-    },
     // 表格查看栏
-    showShopCard( params ){
+    showShopCard(params){
       let id = params.row.store_id
       let kitchen_id = params.row.kitchen_id
       const route = {
@@ -212,6 +239,46 @@ export default {
           id,
           kitchen_id
         }
+      }
+      this.$router.push(route)
+    },
+    // 起租 租赁中编辑
+    editStartCard(params){
+      let id = params.row.store_id
+      const route = {
+        name: 'financeShopEdit',
+        query: {
+          id
+        }
+      }
+      this.$router.push(route)
+    },
+    // 财务润恤起租
+    handleStartCard(params){
+      let id = params.row.store_id
+      const route = {
+        name: 'financeShopHandle',
+        query: {
+          id
+        }
+      }
+      this.$router.push(route)
+    },
+    // 异常退款弹窗
+    showStoreRefundModal(params){
+      this.rufund_id = '';
+      this.rufund_id = params.row.store_id
+      this.storeRefundModal = true;
+    },
+    // 异常退款
+    quitKitchen(){
+      this.storeRefundModal = false;
+      let obj = {};
+      obj.id = this.rufund_id;
+      obj.kitchen_id = this.sreach_kitchen_id;
+      const route = {
+        name: 'financeErrorQuit',
+        query: obj
       }
       this.$router.push(route)
     },

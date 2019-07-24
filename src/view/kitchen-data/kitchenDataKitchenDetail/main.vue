@@ -2,193 +2,10 @@
   <Card shadow>
     <Tabs>
       <TabPane label="基础资料">
-        <Form v-model="kitchen" :label-width="100">
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="厨房名称" >
-                <Input v-model="kitchen.kitchen_name" placeholder="输入厨房名称" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="负责人" >
-                <Input v-model="kitchen.manage_name" placeholder="输入负责人名称" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="负责人电话" >
-                <Input v-model="kitchen.manage_phone" placeholder="输入负责人电话" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <i-col span="10">
-            <FormItem label="店长">
-                <Select v-model="kitchen.manage_id" style="width: 200px">
-                  <Option  v-for="item in manageList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
-                </Select>
-            </FormItem>
-          </i-col>
-          <Divider />
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="应支出房租" >
-                <Input v-model="kitchen.kitchen_rent" placeholder="输入应支出房租(每月)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="垃圾及隔油池" >
-                <Input v-model="kitchen.garbage_fee" placeholder="输入垃圾及隔油池(固定费用)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="烟道清洗" >
-                <Input v-model="kitchen.flue_fee" placeholder="输入烟道清洗(固定费用)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="消杀" >
-                <Input v-model="kitchen.kill_fee" placeholder="输入消杀(固定费用)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="网络使用费" >
-                <Input v-model="kitchen.network_fee" placeholder="输入网络使用费(固定费用)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="卫生费" >
-                <Input v-model="kitchen.health_fee" placeholder="输入卫生费(固定费用)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="电费基数" >
-                <Input v-model="kitchen.energy_fee" placeholder="输入电费基数(固定费用)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="水费基数" >
-                <Input v-model="kitchen.water_fee" placeholder="输入水费基数(固定费用)" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Divider />
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10" >
-              <FormItem label="账户名称" >
-                <Input v-model="kitchen.card_name" placeholder="例如：王乙同" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="开户银行" >
-                <Input v-model="kitchen.card_bank" placeholder="例如：中国邮政储蓄银行北京昌平区北七家支行" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="银行帐号" >
-                <Input v-model="kitchen.card_no" placeholder="例如：6217 9910 0000 6021 260" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="公司名称" >
-                <Input v-model="kitchen.company" placeholder="例如：北京金同餐饮管理有限公司" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Divider />
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem label="租金账单日" >
-                <Input v-model="kitchen.rent_day" placeholder="不大于28" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-            <i-col span="10" offset="2">
-              <FormItem label="运营账单日" >
-                <Input v-model="kitchen.operate_day" placeholder="不大于28" style="width: 200px"></Input>
-              </FormItem>
-            </i-col>
-          </Row>
-          <Divider />
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="10">
-              <FormItem>
-                 <Button type="primary" @click="editBaseinfo">保存</Button>
-              </FormItem>
-            </i-col>
-          </Row>
-        </Form>
+        <KDSLKitchenBaseForm :kitchen_id = "kitchen_id" />
       </TabPane>
       <TabPane label="档口列表">
-        <Card style="padding-top: 2em;">
-          <a href="#" slot="extra" @click.prevent="showAddModalFn">
-              新建档口
-          </a>
-          <tables ref="tables" v-model="kitchenStoreList" :columns="storeColumns" 
-            @data-edit="handleEdit"
-            @data-dele="handleDele"
-          />
-          <Page :total="store_page.total" :page-size="store_page.list_rows" style="margin-top:10px;" 
-            @on-change="getNewKitchenStorePage"/>
-          <Modal v-model="showAddModal" title="添加档口" @on-ok="saveAddModalInfo">
-            <Form :model="addStore" :label-width="80">
-              <FormItem label="档口名称">
-                <Input v-model="addStore.store_no" placeholder="输入档口名称" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="店铺面积">
-                <Input v-model="addStore.area" placeholder="输入店铺面积" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="原价入场费">
-                <Input v-model="addStore.entrance_fee" placeholder="输入原价入场费" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="实际入场费">
-                <Input v-model="addStore.entrance_sell" placeholder="输入实际入场费" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="原价租金">
-                <Input v-model="addStore.rent_fee" placeholder="输入原价租金" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="实际租金">
-                <Input v-model="addStore.rent_sell" placeholder="输入实际租金" style="width: 200px"></Input>
-              </FormItem>
-            </Form>
-          </Modal>
-          <Modal v-model="showEditModal" title="修改店铺数据" @on-ok="saveEditModalInfo">
-            <Form :model="editStore" :label-width="80">
-              <FormItem label="档口名称">
-                <Input v-model="editStore.store_no" placeholder="输入档口名称" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="店铺面积">
-                <Input v-model="editStore.area" placeholder="输入店铺面积" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="原价入场费">
-                <Input v-model="editStore.entrance_fee" placeholder="输入原价入场费" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="实际入场费">
-                <Input v-model="editStore.entrance_sell" placeholder="输入实际入场费" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="原价租金">
-                <Input v-model="editStore.rent_fee" placeholder="输入原价租金" style="width: 200px"></Input>
-              </FormItem>
-              <FormItem label="实际租金">
-                <Input v-model="editStore.rent_sell" placeholder="输入实际租金" style="width: 200px"></Input>
-              </FormItem>
-            </Form>
-          </Modal>
-          <Modal
-              title="删除操作"
-              v-model="showDeleModal"
-              @on-ok="saveDeleModalInfo"
-              :style="{top: '20px'}">
-              <p>确认删除档口吗？</p>
-          </Modal>
-        </Card>
+        
       </TabPane>
       <TabPane label="公摊表">
           <Card>
@@ -236,15 +53,17 @@
 
 <script>
 import Tables from '_c/tables'
+import KDSLKitchenBaseForm from './components/KDSLKitchenBaseForm'
 // 权限
 // /api/Kitchen/index,/api/KitchenStore/index,/api/KitchenStore/add,/api/KitchenStore/edit,/api/KitchenStore/delete,/api/KitchenMeter/queryList,/api/KitchenMeter/add,/api/KitchenMeter/delete,/api/KitchenExpend/index
-import { getKitchenList , getKitchenStoreList , addKitchenStore , editKitchenStore, deleKitchenStore , editKitchen , getKitchenMeterList , addKitchenMeter ,deleteKitchenMeter } from '@/api/setting'
+import { getKitchenList , getKitchenStoreList , addKitchenStore , editKitchenStore , deleKitchenStore , editKitchen , getKitchenMeterList , addKitchenMeter ,deleteKitchenMeter } from '@/api/setting'
 import { getKitchenExpendList } from '@/api/finance'
 import { getManageList } from '@/api/data'
 export default {
   name: 'kitchenDataKitchenDetail',
   components: {
-    Tables
+    Tables,
+    KDSLKitchenBaseForm
   },
   data () {
     return {
@@ -427,9 +246,10 @@ export default {
           return
         }
         let kitchenList = dbody.data.list || [];
-        kitchenList.forEach( function(element, index) {
-          if(that.kitchen_id*1 == element.id*1){
-            that.kitchen = element;
+        kitchenList.forEach( (element, index)=>{
+          if(this.kitchen_id*1 == element.id*1){
+            this.kitchen = element;
+            console.log(element)
             // that.initBaseInfo( that.kitchen );
           }
           return
@@ -448,6 +268,12 @@ export default {
       this.eidtkitchen = Object.assign({position:0},obj);
       delete this.eidtkitchen.create_time
       delete this.eidtkitchen.update_time
+      if(!this.eidtkitchen.manage_id){
+        this.$Notice.warning({
+            title: '店长必须选择！'
+          })
+        return false
+      }
       if( isNaN(this.eidtkitchen.rent_day) || isNaN(this.eidtkitchen.operate_day)){
         this.$Notice.warning({
             title: '账单日期输入错误'
@@ -465,7 +291,13 @@ export default {
     // 第一页
     editBaseinfo(){
       if(this.setBaseInfo( this.kitchen )){
-        editKitchen(this.eidtkitchen).then(res => {
+        let data = Object.assign({},this.eidtkitchen);
+        this.manageList.forEach((item)=>{
+          if(item.id == data.manage_id){
+             data.manage_name =  item.fullname
+          }
+        })
+        editKitchen(data).then(res => {
           const dbody = res.data
           if (dbody.code != 0) {
             this.$Notice.warning({
@@ -734,7 +566,7 @@ export default {
   created () {
     this.$nextTick(()=>{
         this.kitchen_id = this.$route.query.kitchen_id;
-        this.getKitchen();
+        // this.getKitchen();
         this.getManageList();
         this.getKitchenStoreList({ kitchen_id : this.kitchen_id});
         this.getKitchenExpendList({ kitchen_id : this.kitchen_id});

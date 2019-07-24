@@ -1,17 +1,17 @@
 <template>
   <div>
     <tables
-      v-model="start_shops_list"
-      :columns="start_shops_columns"
+      v-model="end_shops_list"
+      :columns="end_shops_columns"
       @data-view="showShopCard"
-      @data-edit="editShopCard"
-      @data-handle="handleShopCard"
-      @on-sort-change="startShopsSortTables"/>
+      @data-edit="editShopCard2"
+      @data-handle="handleShopCard2"
+      @on-sort-change="endShopsSortTables"/>
     <Page
+      :total="end_shops_page.total"
+      :page-size="end_shops_page.list_rows"
       style="margin-top:10px;"
-      :total="start_shops_page.total"
-      :page-size="start_shops_page.list_rows"
-      @on-change="getStartShopsNewPage"/>
+      @on-change="getEndShopsNewPage"/>
   </div>
 </template>
 
@@ -19,7 +19,7 @@
 import Tables from '_c/tables'
 import { getAllShopList } from '@/api/data'
 export default {
-  name: 'KSLStartShopsTables',
+  name: 'KSLEndShopsTables',
   components: {
     Tables
   },
@@ -33,14 +33,14 @@ export default {
   },
   data () {
     return {
-      //起租中
-      start_shops_columns: [
+      //退租中
+      end_shops_columns: [
         {title: 'ID', key: 'id', width: 80},
         {title: '厨房', key: 'kitchen_name'},
         {title: '商铺ID', key: 'store_id'},
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
-        {title: '建档时间', key: 'create_time',sortable: 'custom'},
+        {title: '申请退租时间', key: 'apply_date',sortable: 'custom'},
         {title: '最后操作人', key: 'employee_name'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
@@ -60,13 +60,19 @@ export default {
             } 
           }
         },
-        {title: '操作状态',
+        { title: '操作状态',
           render: (h, params) => {
-            let confirm_time = params.row.confirm_time*1
-            if( confirm_time > 0 ){
-              return h('span', { style: {color: '#ff9900'}}, '财务已确认')
-            }else{
-              return h('span', { style: {color: '#19be6b'}}, '已建档')
+            let apply_date = params.row.apply_date
+            let settle_date = params.row.settle_date
+            let settle = params.row.settle
+            if(!!apply_date && !settle_date && !settle){
+              return h('span', { style: {color: '#19be6b'}}, '在转')
+            }
+            if(!!apply_date && !!settle_date && !settle){
+              return h('span', { style: {color: '#2d8cf0'}}, '已转')
+            }
+            if(!!apply_date && !!settle_date && !settle){
+              return h('span', { style: {color: '#ff9900'}}, '未退款')
             }
           }
         },
@@ -116,91 +122,71 @@ export default {
           button: [
             // 不带气泡 一层嵌套
             (h, params, vm) => {
-              let confirm_time = params.row.confirm_time*1
-              if( confirm_time > 0 ){
-                return h('Button', {style: {margin: '0'},
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  on: {
-                    'click': () => {
-                      vm.$emit('data-handle', params)
-                    }
-                  }},
-                '店铺起租')
-              }else{
-                return ''
+              // 公摊结束日期
+              let exit_date = params.row.exit_date;
+              // 租金结算日期
+              let settle_date = params.row.settle_date;
+              // 是否已经结算
+              let is_settle = params.row.is_settle;
+
+              // 是否齐全
+              if(!exit_date || !settle_date){
+                return '退款信息不全'
               }
+              return h('Button', {style: {margin: '0'},
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-handle', params)
+                  }
+                }},
+              '退租')
             },
           ]
         }
       ],
-      start_shops_list: [],
-      start_shops_page: {
+      end_shops_list: [],
+      end_shops_page: {
         current_page: 1,
         last_page: '',
         list_rows: 0,
         total: 0
       },
       // 排序字段
-      start_sort_data:{
+      end_sort_data:{
         order:'',
         key:'',
       },
     }
   },
   methods: {
-    // 获取起租中
-    getStartShops( data ){
-      let info = Object.assign({}, this.sreachInfo , this.start_sort_data , data)
-      info.lease_type = 1;
+    // 获取退租中
+    getEndShops( data ){
+      let info = Object.assign({}, this.sreachInfo , this.end_sort_data , data)
+      info.lease_type = 3;
       getAllShopList( info ).then(res => {
         const dbody = res.data
-        this.start_shops_list = dbody.data.list || [];
-        this.start_shops_page = dbody.data.page;
+        this.end_shops_list = dbody.data.list || [];
+        this.end_shops_page = dbody.data.page;
       })
     },
-    getStartShopsNewPage(page){
+    getEndShopsNewPage(page){
       // 获取新页-全部店铺
-      this.getStartShops( { page : page } );
+      this.getEndShops( { page : page } );
     },
     // 表格排序
-    startShopsSortTables(sort_data){
+    endShopsSortTables(sort_data){
       if(sort_data.order == 'normal'){
-        this.start_sort_data.order = null;
-        this.start_sort_data.key = null;
+        this.end_sort_data.order = null;
+        this.end_sort_data.key = null;
       }else{
-        this.start_sort_data.order = sort_data.order;
-        this.start_sort_data.key = sort_data.key;
+        this.end_sort_data.order = sort_data.order;
+        this.end_sort_data.key = sort_data.key;
       }
-      this.getStartShops({page : this.start_shops_page.current_page});
-    },
-    // 起租中编辑
-    editShopCard( params ){
-      let id = params.row.store_id
-      let kitchen_id = params.row.kitchen_id
-      const route = {
-        name: 'kitchenShopEdit',
-        query: {
-          id,
-          kitchen_id
-        }
-      }
-      this.$router.push(route)
-    },
-    // 起租中操作
-    handleShopCard( params ){
-      let id = params.row.store_id
-      let kitchen_id = params.row.kitchen_id
-      const route = {
-        name: 'kitchenShopHandle',
-        query: {
-          id,
-          kitchen_id
-        }
-      }
-      this.$router.push(route)
+      this.getEndShops({page : this.end_shops_page.current_page});
     },
     // 表格查看栏
     showShopCard( params ){
@@ -215,9 +201,35 @@ export default {
       }
       this.$router.push(route)
     },
+    // 退租中编辑
+    editShopCard2(params){
+      let id = params.row.store_id
+      let kitchen_id = params.row.kitchen_id
+      const route = {
+        name: 'kitchenShopEditB',
+        query: {
+          id,
+          kitchen_id
+        }
+      }
+      this.$router.push(route)
+    },
+    // 退租中操作
+    handleShopCard2(params){
+      let id = params.row.store_id
+      let kitchen_id = params.row.kitchen_id
+      const route = {
+        name: 'kitchenShopHandleB',
+        query: {
+          id,
+          kitchen_id
+        }
+      }
+      this.$router.push(route)
+    },
     // init
     initData(){
-      this.getStartShops( {} )
+      this.getEndShops( {} )
     },
   },
   mounted () {

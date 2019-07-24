@@ -289,7 +289,7 @@ export default [
         meta: {
           icon: '_kucun-xianxing',
           hideInMenu: true,
-          title: route => `{{ 厨房详情 }}-${route.query.id}`,
+          title: route => `{{ 厨房详情 }}-${route.query.kitchen_id}`,
           notCache: true,
           access: [203]
         },
@@ -305,8 +305,6 @@ export default [
         },
         component: () => import('@/view/kitchen-data/kitchenDataStoreSale/main.vue')
       },
-
-
       {
         path: '/kitchenDataAssignStore',
         name: 'kitchenDataAssignStore',
@@ -543,56 +541,6 @@ export default [
         },
         component: () => import('@/view/canvass/canvassStoreView/main.vue')
       },
-
-
-      // {
-      //   path: '/canvassShopListNew',
-      //   name: 'canvassShopListNew',
-      //   meta: {
-      //     icon: '_kuaidiyuan',
-      //     title: '带看管理',
-      //     // access: [403]
-      //   },
-      //   component: () => import('@/view/canvass/canvassShopListNew/main.vue')
-      // },
-      // {
-      //   path: '/canvassStoreViewNew',
-      //   name: 'canvassStoreViewNew',
-      //   meta: {
-      //     icon: '_kuaidiyuan',
-      //     title: '带看管理',
-      //     // access: [403]
-      //   },
-      //   component: () => import('@/view/canvass/canvassStoreViewNew/main.vue')
-      // },
-      // {
-      //   path: '/canvassShopPreBuild',
-      //   name: 'canvassShopPreBuild',
-      //   meta: {
-      //     hideInMenu: true,
-      //     notCache: true,
-      //     icon: '_bingtu',
-      //     title: route => `{{ 商户列表 }}-${route.query.customer_id}`,
-      //     // access: [403]
-      //   },
-      //   component: () => import('@/view/canvass/canvassShopPreBuild/main.vue')
-      // },
-      //  {
-      //   path: '/canvassShopPreBuildEdit',
-      //   name: 'canvassShopPreBuildEdit',
-      //   meta: {
-      //     hideInMenu: true,
-      //     notCache: true,
-      //     icon: '_bingtu',
-      //     title: route => `{{ 商户列表 }}-${route.query.id}`,
-      //     // access: [403]
-      //   },
-      //   component: () => import('@/view/canvass/canvassShopPreBuildEdit/main.vue')
-      // },
-
-
-
-
       {
         path: '/canvassStoreViewAnalysis',
         name: 'canvassStoreViewAnalysis',
@@ -633,6 +581,30 @@ export default [
         },
         component: () => import('@/view/canvass/canvassStoreSignAnalysis/main.vue')
       },
+      {
+        path: '/canvassShopPreBuild',
+        name: 'canvassShopPreBuild',
+        meta: {
+          hideInMenu: true,
+          notCache: true,
+          icon: '_bingtu',
+          title: route => `{{ 预建档 }}-${route.query.customer_id}`,
+          access: [408]
+        },
+        component: () => import('@/view/canvass/canvassShopPreBuild/main.vue')
+      },      
+      {
+        path: '/canvassShopPreBuildEdit',
+        name: 'canvassShopPreBuildEdit',
+        meta: {
+          hideInMenu: true,
+          notCache: true,
+          icon: '_bingtu',
+          title: route => `{{ 预建档 }}-${route.query.id}`,
+          access: [409]
+        },
+        component: () => import('@/view/canvass/canvassShopPreBuildEdit/main.vue')
+      },
     ]
   },
   // 财务管理
@@ -656,19 +628,6 @@ export default [
         },
         component: () => import('@/view/finance/financeShopList/main.vue')
       },
-
-      // {
-      //   path: '/financeShopListNew',
-      //   name: 'financeShopListNew',
-      //   meta: {
-      //     icon: '_kucun-xianxing',
-      //     title: '商户列表',
-      //     // access: [501]
-      //   },
-      //   component: () => import('@/view/finance/financeShopListNew/main.vue')
-      // },
-
-
       {
         path: '/financeBuild',
         name: 'financeBuild',
@@ -797,6 +756,18 @@ export default [
           access: [512]
         },
         component: () => import('@/view/finance/financeErrorQuit/main.vue')
+      },
+      {
+        path: '/financeShopPreBuildEdit',
+        name: 'financeShopPreBuildEdit',
+        meta: {
+          hideInMenu: true,
+          notCache: true,
+          icon: '_bingtu',
+          title: route => `{{ 预建档 }}-${route.query.id}`,
+          access: [513]
+        },
+        component: () => import('@/view/finance/financeShopPreBuildEdit/main.vue')
       },
     ]
   },
@@ -971,8 +942,7 @@ export default [
         component: () => import('@/view/permission/permissionSelectConfig/main.vue')
       },
     ]
-  },
-  
+  }, 
   // 401
   {
     path: '/401',
