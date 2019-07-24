@@ -72,13 +72,12 @@
 </template>
 
 <script>
-// import Tables from '_c/tables'
-import { getKitchenStoreList , addKitchenStore  } from '@/api/setting'
-// import { getManageList } from '@/api/data'
+import Tables from '_c/tables'
+import { getKitchenStoreList , addKitchenStore , editKitchenStore , deleKitchenStore  } from '@/api/setting'
 export default {
   name: 'KDSLKitchenStoreList',
   components: {
-    
+    Tables,
   },
   props: {
     kitchen_id:{
@@ -258,6 +257,14 @@ export default {
       }
       return true;
     },
+    // 点击分页
+    getNewKitchenStorePage( page ){
+      let data = { 
+        kitchen_id : this.kitchen_id ,
+        page : page ,
+      }
+      this.getKitchenStoreList( data );
+    },
     // 保存添加档口 - 弹窗
     saveAddModalInfo () {
       if( this.verifyObj( this.addStore ) ){
@@ -278,13 +285,50 @@ export default {
         })
       }
     },
+    // 编辑修改
+    saveEditModalInfo () {
+      if( this.verifyObj( this.editStore ) ){
+        let obj = this.editStore;
+        obj.kitchen_id = this.kitchen_id;
+        obj.id = this.store_id;
+        editKitchenStore( obj ).then(res => {
+          const dbody = res.data
+          if (dbody.code != 0) {
+            this.$Notice.warning({
+              title: dbody.msg
+            })
+            return
+          }
+          this.$Notice.warning({
+            title: '修改成功！'
+          })
+          this.getKitchenStoreList({ kitchen_id : this.kitchen_id});
+        })
+      }
+    },
+    // 删除操作
+    saveDeleModalInfo () {
+      deleKitchenStore({ id: this.store_id }).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: '删除成功！'
+        })
+        this.getKitchenStoreList({ kitchen_id : this.kitchen_id});
+      })
+    },
     // init
     initData(){
-      this.getKitchenList()
+      this.getKitchenStoreList( { kitchen_id : this.kitchen_id })
     },
   },
   created(){
-    this.getManageList();
+    
   },
   mounted () {
     this.initData();

@@ -5,7 +5,7 @@
         <KDSLKitchenBaseForm :kitchen_id = "kitchen_id" />
       </TabPane>
       <TabPane label="档口列表">
-        
+        <KDSLKitchenStoreList :kitchen_id = "kitchen_id" />
       </TabPane>
       <TabPane label="公摊表">
           <Card>
@@ -54,104 +54,22 @@
 <script>
 import Tables from '_c/tables'
 import KDSLKitchenBaseForm from './components/KDSLKitchenBaseForm'
+import KDSLKitchenStoreList from './components/KDSLKitchenStoreList'
 // 权限
 // /api/Kitchen/index,/api/KitchenStore/index,/api/KitchenStore/add,/api/KitchenStore/edit,/api/KitchenStore/delete,/api/KitchenMeter/queryList,/api/KitchenMeter/add,/api/KitchenMeter/delete,/api/KitchenExpend/index
-import { getKitchenList , getKitchenStoreList , addKitchenStore , editKitchenStore , deleKitchenStore , editKitchen , getKitchenMeterList , addKitchenMeter ,deleteKitchenMeter } from '@/api/setting'
+import { getKitchenMeterList , addKitchenMeter ,deleteKitchenMeter } from '@/api/setting'
 import { getKitchenExpendList } from '@/api/finance'
-import { getManageList } from '@/api/data'
 export default {
   name: 'kitchenDataKitchenDetail',
   components: {
     Tables,
-    KDSLKitchenBaseForm
+    KDSLKitchenBaseForm,
+    KDSLKitchenStoreList
   },
   data () {
     return {
       kitchen_id:'',
-      // 基本信息
-      kitchen:{},
-      manageList:[],
-      eidtkitchen:{},
-      // 档口列表
-      kitchenStoreList:[],
-      storeColumns:[
-        {title: '档口号', key: 'store_no'},
-        {title: '档口面积', key: 'area'},
-        {title: '原价入场费', key: 'entrance_fee'},
-        { title: '入场费折扣',
-          render: (h, params) => {
-            let t = params.row.entrance_fee*1;
-            let b = params.row.entrance_sell*1;
-            if(t > 0 && b > 0){
-              let r = (1-((t-b)/t)).toFixed(2);
-              return h('span', r );
-            }else{
-              return h('span', 0 );
-            }
-          }
-        },
-        {title: '实际入场费', key: 'entrance_sell'},
-        {title: '原价租金', key: 'rent_fee'},
-        { title: '租金折扣',
-          render: (h, params) => {
-            let t = params.row.rent_fee*1;
-            let b = params.row.rent_sell*1;
-            if(t > 0 && b > 0){
-              let r = (1-((t-b)/t)).toFixed(2);
-              return h('span', r );
-            }else{
-              return h('span', 0 );
-            }
-          }
-        },
-        {title: '实际租金', key: 'rent_sell'},
-        {
-          title: '操作',
-          key: 'handle',
-          width : 160,
-          button: [
-            (h, params, vm) => {
-              return h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                'click': () => {
-                  vm.$emit('data-edit', params)
-                }
-              }},
-              '修改')
-            },
-            (h, params, vm) => {
-              return h('Button', {
-                style: {margin: '0 0 0 0.5em'},
-                props: {
-                  type: 'warning',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('data-dele', params)
-                  }
-                }},
-              '删除')
-            }
-          ]
-        }
-      ],
-      store_page: {
-        current_page: 1,
-        last_page: '',
-        list_rows: 0,
-        total: 0
-      },
-      showAddModal:false,
-      addStore:{},
-      showEditModal:false,
-      editStore:{},
-      showDeleModal:false,
-      store_id:'',
+
       // 公摊能源
       // 表头
       energy_record_columns:[
@@ -234,234 +152,7 @@ export default {
   },
   methods: {
     // 初始化
-    // 获取厨房信息
-    getKitchen( ){
-      getKitchenList(  ).then(res => {
-        let that = this;
-        const dbody = res.data
-        if (dbody.code != 0) {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-          return
-        }
-        let kitchenList = dbody.data.list || [];
-        kitchenList.forEach( (element, index)=>{
-          if(this.kitchen_id*1 == element.id*1){
-            this.kitchen = element;
-            console.log(element)
-            // that.initBaseInfo( that.kitchen );
-          }
-          return
-        });
-      })
-    },
-    // 获取店内列表
-    getManageList(){
-      getManageList().then(res => {
-        const dbody = res.data
-        this.manageList = dbody.data
-      })
-    },
-    // 初始化数据
-    setBaseInfo( obj ){
-      this.eidtkitchen = Object.assign({position:0},obj);
-      delete this.eidtkitchen.create_time
-      delete this.eidtkitchen.update_time
-      if(!this.eidtkitchen.manage_id){
-        this.$Notice.warning({
-            title: '店长必须选择！'
-          })
-        return false
-      }
-      if( isNaN(this.eidtkitchen.rent_day) || isNaN(this.eidtkitchen.operate_day)){
-        this.$Notice.warning({
-            title: '账单日期输入错误'
-          })
-        return false
-      }
-      if(this.eidtkitchen.rent_day*1 > 28 || this.eidtkitchen.operate_day*1 > 28){
-        this.$Notice.warning({
-            title: '账单日期不能大于28'
-          })
-        return false
-      }
-      return true;
-    },
-    // 第一页
-    editBaseinfo(){
-      if(this.setBaseInfo( this.kitchen )){
-        let data = Object.assign({},this.eidtkitchen);
-        this.manageList.forEach((item)=>{
-          if(item.id == data.manage_id){
-             data.manage_name =  item.fullname
-          }
-        })
-        editKitchen(data).then(res => {
-          const dbody = res.data
-          if (dbody.code != 0) {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
-            return
-          }
-          // 处理成功逻辑
-          this.$Notice.warning({
-            title: "保存成功！"
-          })
-        })
-      }
-    },
-    // 第二页 档口页面
-    // 获取档口列表
-    getKitchenStoreList( obj ){
-      getKitchenStoreList( obj ).then(res => {
-        const dbody = res.data;
-        if (dbody.code != 0) {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-          return
-        }
-        if( !dbody.data.list || dbody.data.list.length <= 0){
-          this.kitchenStoreList = [];
-          return;
-        }
-        this.kitchenStoreList = dbody.data.list
-        this.store_page = dbody.data.page
-      })
-    },
-    // 点击分页
-    getNewKitchenStorePage( page ){
-      let data = { 
-        kitchen_id : this.kitchen_id ,
-        page : page ,
-      }
-      this.getKitchenStoreList( data );
-    },
-    // 添加验证
-    //验证发送对象
-    verifyObj( obj ){
-      if( !obj.store_no ){
-        this.$Notice.warning({
-          title: '请输入档口名！'
-        })
-        return false
-      }
-      if(isNaN(obj.area*1) || obj.area*1 <= 0){
-        this.$Notice.warning({
-          title: '请输入正确面积！'
-        })
-        return false
-      }
-      if(isNaN(obj.entrance_fee*1)){
-        this.$Notice.warning({
-          title: '请输入原价入场费！'
-        })
-        return false
-      }
-      if(isNaN(obj.entrance_sell*1)){
-        this.$Notice.warning({
-          title: '请输入实际入场费！'
-        })
-        return false
-      }
-      if(isNaN(obj.rent_fee*1)){
-        this.$Notice.warning({
-          title: '请输入原价入场费！'
-        })
-        return false
-      }
-      if(isNaN(obj.rent_sell*1)){
-        this.$Notice.warning({
-          title: '请输入实际入场费！'
-        })
-        return false
-      }
-      return true;
-    },
-    // 添加档口弹窗
-    showAddModalFn(){
-      this.addStore = {};
-      this.showAddModal = true;
-    },
-    // 保存添加档口 - 弹窗
-    saveAddModalInfo () {
-      if( this.verifyObj( this.addStore ) ){
-        let obj = this.addStore;
-        obj.kitchen_id = this.kitchen_id;
-        addKitchenStore( obj ).then(res => {
-          const dbody = res.data
-          if (dbody.code != 0) {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
-            return
-          }
-          this.$Notice.warning({
-            title: "添加成功！"
-          })
-          this.getKitchenStoreList({ kitchen_id : this.kitchen_id});
-        })
-      }
-    },
-    // 编辑弹窗
-    // 编辑档口弹窗
-    handleEdit (params) {
-      this.editStore = {};
-      this.store_id = '';
-      this.store_id  =  params.row.id ;
-      this.editStore.store_no = params.row.store_no;
-      this.editStore.area = params.row.area;
-      this.editStore.entrance_fee = params.row.entrance_fee;
-      this.editStore.entrance_sell = params.row.entrance_sell;
-      this.editStore.rent_fee = params.row.rent_fee;
-      this.editStore.rent_sell = params.row.rent_sell;
-      this.showEditModal = true;
-    },
-    // 编辑修改
-    saveEditModalInfo () {
-      if( this.verifyObj( this.editStore ) ){
-        let obj = this.editStore;
-        obj.kitchen_id = this.kitchen_id;
-        obj.id = this.store_id;
-        editKitchenStore( obj ).then(res => {
-          const dbody = res.data
-          if (dbody.code != 0) {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
-            return
-          }
-          this.$Notice.warning({
-            title: '修改成功！'
-          })
-          this.getKitchenStoreList({ kitchen_id : this.kitchen_id});
-        })
-      }
-    },
-    // 删除弹窗
-    handleDele (params) {
-      this.store_id = '';
-      this.store_id = params.row.id;
-      this.showDeleModal = true
-    },
-    // 删除操作
-    saveDeleModalInfo () {
-      deleKitchenStore({ id: this.store_id }).then(res => {
-        const dbody = res.data
-        if (dbody.code != 0) {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-          return
-        }
-        this.$Notice.warning({
-          title: '删除成功！'
-        })
-        this.getKitchenStoreList({ kitchen_id : this.kitchen_id});
-      })
-    },
+
     // 第三页
     // 获取电表水表
     getKitchenMeterList( obj ){
@@ -566,9 +257,7 @@ export default {
   created () {
     this.$nextTick(()=>{
         this.kitchen_id = this.$route.query.kitchen_id;
-        // this.getKitchen();
-        this.getManageList();
-        this.getKitchenStoreList({ kitchen_id : this.kitchen_id});
+
         this.getKitchenExpendList({ kitchen_id : this.kitchen_id});
         this.getKitchenMeterList({ kitchen_id : this.kitchen_id});
     })

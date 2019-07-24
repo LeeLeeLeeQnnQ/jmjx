@@ -152,7 +152,7 @@
             <Row type="flex" justify="start" align="middle" :gutter="20">
               <i-col span="10">
                 <FormItem label="首期应缴款：">
-                  <h3>{{startNeedFee}}</h3>
+                  <h3>{{this.baseinfo.unpaid_fee}}</h3>
                 </FormItem>
               </i-col>
             </Row>
@@ -245,8 +245,6 @@ export default {
       voucherinfo:{},
       // 财务凭证
       voucherinfo_pay:[],
-      // 首期未缴
-      startNeedFee:0.00,
       vStartshowModal:false,
       v_start_tableData:[],
       // 获取起租表格下拉选项
@@ -646,6 +644,7 @@ export default {
       this.baseinfo.rent_start = data.rent_start || '';
       this.baseinfo.sign_date = data.sign_date || '';
       this.baseinfo.customer_id = data.customer_id || '';
+      this.baseinfo.unpaid_fee = data.unpaid_fee || '';
       getManageList().then(res => {
         const dbody = res.data
         let that = this
@@ -688,11 +687,6 @@ export default {
       this.getStartTable( );
       // 起租财务上传凭证
       this.voucherinfo_pay = this.trimNull(data.pay.split(',')) || [];
-    },
-    // 获取首期未缴
-    getStartNeedFee(){
-      let num = ((this.baseinfo.month_rent*2)+this.baseinfo.deposit_fee*1+this.baseinfo.entrance_fee*1+this.baseinfo.zr_fee*1).toFixed(2) || '数据有误'
-      this.startNeedFee = num;
     },
     // 获取起租表格
     getStartTable( ){

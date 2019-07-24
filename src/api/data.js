@@ -25,6 +25,20 @@ export const getAllShopList = ( info ) => {
   })
 }
 
+
+
+
+/// api/kitchen/getStoreNo 厨房档口列表
+export const getKitchenListStoreNo = ( id ) => {
+  const obj = { kitchen_id : id }
+  return axios.request({
+    url: '/api/Kitchen/getStoreNo',
+    params: obj,
+    method: 'get'
+  })
+}
+
+
 /*
   招商签约分析查询
 */

@@ -42,6 +42,7 @@ export default {
         {title: '最后操作人', key: 'employee_name'},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
+        {title: '剩余金额', key: 'surplus_fee'},
         { title: '店铺状态',
           render: (h, params) => {
             let lease_type = params.row.lease_type*1
