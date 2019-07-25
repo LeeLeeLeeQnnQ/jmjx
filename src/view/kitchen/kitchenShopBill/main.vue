@@ -885,12 +885,12 @@ export default {
     goKitchenShopEdit2(){
       let id = this.paymentItem.store_id;
       let kitchen_id = this.paymentItem.kitchen_id;
-      const href = "./kitchenShopEdit2?id="+ id +"&kitchen_id="+ kitchen_id +"&tabValue=2";
+      const href = "./kitchenShopEditB?id="+ id +"&kitchen_id="+ kitchen_id +"&tabValue=2";
       window.open(href, '_blank')
     },
     // 跳转抄表界面
     goKitchenRecord(){
-      const href = "./kitchen_record";
+      const href = "./kitchenStoreRecord";
       window.open(href, '_blank')
     },
     //初始化

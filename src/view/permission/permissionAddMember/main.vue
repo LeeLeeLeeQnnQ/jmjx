@@ -66,7 +66,6 @@
                 <RadioGroup v-model="formItem.data_rule">
                   <Radio label="1">无限制</Radio>
                   <Radio label="2">自己</Radio>
-                  <Radio label="3">所在权限组</Radio>
               </RadioGroup>
             </FormItem>
           </i-col>
@@ -203,7 +202,7 @@ export default {
         })
         return false
       }
-      if (!obj.kitchen_id) {
+      if (!obj.kitchen_id || obj.kitchen_id.length <= 0 ) {
         this.$Notice.warning({
           title: '厨房不能为空！'
         })

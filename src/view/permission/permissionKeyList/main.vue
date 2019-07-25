@@ -43,6 +43,10 @@ export default {
               '编辑')
             },
             (h, params, vm) => {
+              let cant = !!(params.row.id*1 == 8) || !!(params.row.id*1 == 7)
+              if(cant){
+                return
+              }
               return h('Poptip', {
                 props: {
                   confirm: true,
