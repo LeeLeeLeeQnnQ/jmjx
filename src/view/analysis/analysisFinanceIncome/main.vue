@@ -31,7 +31,7 @@
 <script>
 //权限
 // Kitchen/index,KitchenIncome/queryList,KitchenIncome/getIncomeType
-import { getKitchenList  } from '@/api/setting'
+import { getKitchenQueryList  } from '@/api/setting'
 import { getKitchenIncomeQuery , getIncomeType  } from '@/api/finance'
 import Tables from '_c/tables'
 import { ChartColumn } from '_c/charts'
@@ -187,7 +187,7 @@ export default {
     
   },
   created () {
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({
@@ -196,7 +196,7 @@ export default {
         return
       }
       // 初始化函数
-      this.kitchenList = dbody.data.list || [];
+      this.kitchenList = dbody.data || [];
     });
     getIncomeType( ).then(res => {
       const dbody = res.data

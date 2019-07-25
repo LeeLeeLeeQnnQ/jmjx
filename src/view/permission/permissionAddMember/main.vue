@@ -119,7 +119,7 @@
 //权限
 // /api/Kitchen/index,/api/EmployeeGroup/index,/api/Employee/add
 import { getEmployeeGroup, addMember } from '@/api/permission'
-import { getKitchenList , } from '@/api/setting'
+import { getKitchenQueryList } from '@/api/setting'
 import { getKitchenListStoreNo } from '@/api/data'
 export default {
   name: 'permissionAddMember',
@@ -313,9 +313,9 @@ export default {
       let dbody = res.data
       this.permission_group = dbody.data.list
     })
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       let dbody = res.data
-      this.kitchen_list = dbody.data.list
+      this.kitchen_list = dbody.data || [];
     })
     this.$refs.formItem.resetFields()
   }

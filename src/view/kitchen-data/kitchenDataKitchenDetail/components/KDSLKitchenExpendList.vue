@@ -65,6 +65,9 @@ export default {
     },
     // init
     initData(){
+      if(!this.kitchen_id){
+        return
+      }
       this.getKitchenExpendList({ kitchen_id : this.kitchen_id });
     },
   },
@@ -78,7 +81,9 @@ export default {
     
   },
   watch: {
-    
+    kitchen_id (newV, oldV) {
+      this.initData();
+    },
   }
 }
 </script>

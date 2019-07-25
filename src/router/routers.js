@@ -305,17 +305,6 @@ export default [
         },
         component: () => import('@/view/kitchen-data/kitchenDataStoreSale/main.vue')
       },
-      {
-        path: '/kitchenDataAssignStore',
-        name: 'kitchenDataAssignStore',
-        meta: {
-          hideInMenu: true,
-          icon: 'md-flower',
-          notCache: true,
-          title: route => `商户分配: ${route.query.kitchen_id}`,
-        },
-        component: () => import('@/view/kitchen-data/kitchenDataAssignStore/main.vue')
-      },
     ]
   },
   // 商户管理

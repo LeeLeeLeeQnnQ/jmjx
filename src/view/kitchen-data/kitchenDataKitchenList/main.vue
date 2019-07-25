@@ -74,7 +74,7 @@
 // 权限
 // /api/Kitchen/index,/api/Kitchen/add,/api/Kitchen/delete
 import Tables from '_c/tables'
-import { getKitchenList , addKitchen  , deleKitchen } from '@/api/setting'
+import { getKitchenQueryList , addKitchen  , deleKitchen } from '@/api/setting'
 export default {
   name: 'kitchenDataKitchenList',
   components: {
@@ -259,7 +259,7 @@ export default {
           return
         }
         // 处理成功逻辑
-        getKitchenList().then(res => {
+        getKitchenQueryList().then(res => {
           const dbody = res.data
           if (dbody.code != 0) {
             this.$Notice.warning({
@@ -267,7 +267,7 @@ export default {
             })
             return
           }
-          this.kitchenList = dbody.data.list
+          this.kitchenList = dbody.data || []
         })
       })
     },
@@ -282,7 +282,7 @@ export default {
           return
         }
         // 处理成功逻辑
-        getKitchenList().then(res => {
+        getKitchenQueryList().then(res => {
           const dbody = res.data
           if (dbody.code != 0) {
             this.$Notice.warning({
@@ -290,7 +290,7 @@ export default {
             })
             return
           }
-          this.kitchenList = dbody.data.list
+          this.kitchenList = dbody.data || []
         })
       })
     },
@@ -303,7 +303,7 @@ export default {
     }
   },
   mounted () {
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({
@@ -311,7 +311,7 @@ export default {
         })
         return
       }
-      this.kitchenList = dbody.data.list
+      this.kitchenList = dbody.data || [];
     })
   },
   computed: {

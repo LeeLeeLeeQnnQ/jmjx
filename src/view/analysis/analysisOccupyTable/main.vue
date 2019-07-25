@@ -32,7 +32,7 @@
 //权限
 // Kitchen/index,KitchenReside/queryList
 import Tables from '_c/tables'
-import { getKitchenList  } from '@/api/setting'
+import { getKitchenQueryList  } from '@/api/setting'
 import { getKitchenResideQueryList  } from '@/api/data'
 export default {
   name: 'analysisOccupyTable',
@@ -156,7 +156,7 @@ export default {
     
   },
   created () {
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({
@@ -165,7 +165,7 @@ export default {
         return
       }
       // 初始化函数
-      this.kitchenList = dbody.data.list || [];
+      this.kitchenList = dbody.data || [];
     })  
   },
 }

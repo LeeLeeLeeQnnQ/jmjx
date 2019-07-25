@@ -21,7 +21,7 @@
 import Tables from '_c/tables'
 // 权限
 // Kitchen/index,KitchenStore/querylist
-import { getKitchenList , getKitchenStoreQueryList } from '@/api/setting'
+import { getKitchenQueryList , getKitchenStoreQueryList } from '@/api/setting'
 export default {
   name: 'kitchenDataStoreSale',
   components: {
@@ -121,7 +121,7 @@ export default {
     },
   },
   mounted () {
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({
@@ -130,7 +130,7 @@ export default {
         return
       }
       // 初始化函数
-      this.kitchenList = dbody.data.list || [];
+      this.kitchenList = dbody.data || [];
       if(this.kitchenList.length > 0){
         this.sreach_kitchen_id = this.kitchenList[this.kitchenList.length-1].id;
       }

@@ -31,7 +31,7 @@
 <script>
 //权限
 // Kitchen/index,KitchenExpend/queryList,KitchenExpend/getExpendType
-import { getKitchenList  } from '@/api/setting'
+import { getKitchenQueryList  } from '@/api/setting'
 import { getKitchenExpendQuery , getExpendType  } from '@/api/finance'
 import Tables from '_c/tables'
 import { ChartColumn } from '_c/charts'
@@ -188,7 +188,7 @@ export default {
     
   },
   created () {
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({
@@ -197,7 +197,7 @@ export default {
         return
       }
       // 初始化函数
-      this.kitchenList = dbody.data.list || [];
+      this.kitchenList = dbody.data || [];
     });
     getExpendType( ).then(res => {
       const dbody = res.data

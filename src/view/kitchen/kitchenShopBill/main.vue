@@ -479,7 +479,7 @@
 import Tables from '_c/tables'
 // 权限
 // Kitchen/index,StoreBill/queryList,StoreCharge/queryList,StoreBill/edit,StoreCharge/add
-import { getKitchenList } from '@/api/setting'
+import { getKitchenQueryList } from '@/api/setting'
 import { getStoreBillList , getStoreChargeItem , editStoreBillItem , addStoreCharge } from '@/api/kitchen'
 export default {
   name: 'kitchenShopBill',
@@ -908,9 +908,9 @@ export default {
     mMonth = mMonth < 10 ? "0" + mMonth : mMonth;
     this.select_time = mYear +'-'+ mMonth;
     // 获取厨房列表
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
-      this.kitchen = dbody.data.list || [];
+      this.kitchen = dbody.data || [];
       this.select_kitchen = this.kitchen[this.kitchen.length*1-1];
       this.select_kitchen_id = this.select_kitchen.id;
       this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id })

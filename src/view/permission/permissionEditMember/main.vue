@@ -119,7 +119,7 @@
 //权限
 // /api/Kitchen/index,/api/EmployeeGroup/index,/api/Employee/show,/api/Employee/edit
 import { getEmployeeGroup, getMemberDetail, editMember } from '@/api/permission'
-import { getKitchenList } from '@/api/setting'
+import { getKitchenQueryList } from '@/api/setting'
 import { getKitchenListStoreNo } from '@/api/data'
 export default {
   name: 'permissionEditMember',
@@ -350,9 +350,9 @@ export default {
       this.permission_group_ok = true
       this.isOkToGetData()
     })
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       let dbody = res.data
-      this.kitchen_list = dbody.data.list || []
+      this.kitchen_list = dbody.data || []
       this.kitchen_list_ok = true
       this.isOkToGetData()
     })

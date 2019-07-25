@@ -21,7 +21,7 @@
 <script>
 //权限
 // Kitchen/index,Kitchen/getStoreDevice
-import { getKitchenList } from '@/api/setting'
+import { getKitchenQueryList } from '@/api/setting'
 import { getKitchenStoreEmployeeList  } from '@/api/data'
 import Tables from '_c/tables'
 export default {
@@ -104,7 +104,7 @@ export default {
     
   },
   created () {
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({
@@ -113,7 +113,7 @@ export default {
         return
       }
       // 初始化函数
-      this.kitchenList = dbody.data.list || [];
+      this.kitchenList = dbody.data || [];
     })  
   },
 }

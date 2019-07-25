@@ -324,6 +324,9 @@ export default {
     },
     // init
     initData(){
+      if(!this.kitchen_id){
+        return
+      }
       this.getKitchenStoreList( { kitchen_id : this.kitchen_id })
     },
   },
@@ -337,7 +340,9 @@ export default {
     
   },
   watch: {
-    
+    kitchen_id (newV, oldV) {
+      this.initData();
+    },
   }
 }
 </script>
