@@ -540,6 +540,8 @@ export default {
         { title: '总未缴款',
           render: (h, params) => {
             
+            let is_deposit = params.row.is_deposit;
+
             let operate_fee = params.row.operate_fee;
             let operate_overdue_fee = params.row.operate_overdue_fee;
             let operate_exempt_fee = params.row.operate_exempt_fee;
@@ -554,6 +556,9 @@ export default {
             let pay_fee = params.row.pay_fee || 0;
 
             let unpaiy = (fee1*1 + fee2*1 + store_account*1 - pay_fee*1).toFixed(2);
+            if(is_deposit*1 == 1){
+              return h('span', { style: {color: '#67ba23'}}, '押金已抵扣')
+            }
             if(unpaiy*1 > 1000){
               return h('span', { style: {color: '#ff9900'}}, unpaiy)
             }else if( unpaiy*1 > 0){

@@ -377,6 +377,8 @@ export default {
         { title: '总未缴款',
           render: (h, params) => {
             
+            let is_deposit = params.row.is_deposit;
+
             let operate_fee = params.row.operate_fee;
             let operate_overdue_fee = params.row.operate_overdue_fee;
             let operate_exempt_fee = params.row.operate_exempt_fee;
@@ -391,6 +393,9 @@ export default {
             let pay_fee = params.row.pay_fee || 0;
 
             let unpaiy = (fee1*1 + fee2*1 + store_account*1 - pay_fee*1).toFixed(2);
+            if(is_deposit*1 == 1){
+              return h('span', { style: {color: '#67ba23'}}, '押金已抵扣')
+            }
             if(unpaiy*1 > 1000){
               return h('span', { style: {color: '#ff9900'}}, unpaiy)
             }else if( unpaiy*1 > 0){
@@ -674,14 +679,15 @@ export default {
     //   this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page :page })
     // },
     // 显示弹窗
-    showAddStorePay(params){
+    showAddStorePay( params ){
       this.uploadLetter = [];
       this.storeBill = {}
       this.storeBill.id = params.row.id;
       this.storeBill.store_id = params.row.store_id;
       this.storeBill.month = params.row.month;
       this.storeBill.store_name = params.row.store_name;
-      this.storeBill.store_account = params.row.store_account;
+      let is_deposit = params.row.is_deposit;
+      this.storeBill.store_account = (is_deposit*1 == 1) ? params.row.store_account : '押金已抵扣';
       this.storeBill.money = '';
       this.storeBill.remark = '';
       this.showAddStorePayModal = true;

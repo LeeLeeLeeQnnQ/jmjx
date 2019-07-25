@@ -43,6 +43,16 @@
         <Divider />
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
+            <FormItem label="超级权限" prop="is_super">
+                <RadioGroup v-model="formItem.is_super">
+                  <Radio label="1">开启</Radio>
+                  <Radio label="0">关闭</Radio>
+              </RadioGroup>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
             <FormItem label="权限组" prop="group_id">
                 <Select v-model="formItem.group_id">
                   <Option v-for="item in permission_group" :value="item.id" :key="item.id">{{ item.group_name }}</Option>
@@ -128,7 +138,8 @@ export default {
         remark: '',
         data_rule:'1',
         store_no:[],
-        remark:''
+        remark:'',
+        is_super:'0',
       },
       obtain_store:"1",
       password: '',

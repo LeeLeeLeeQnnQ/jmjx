@@ -35,13 +35,6 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
-            <FormItem label="负责店长" prop="manage_id">
-                <Select v-model="formItem.manage_id" @on-change="selectmanageName">
-                  <Option v-for="item in manageList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
-                </Select>
-            </FormItem>
-          </i-col>
-          <i-col span="10" offset="2">
             <FormItem label="招商经理" prop="manage_lease_id">
                 <Select v-model="formItem.manage_lease_id" @on-change="selectmanageLease">
                   <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
@@ -236,9 +229,6 @@ export default {
         ],
         shopkeeper_phone: [
           { required: true, message: '店铺联系人手机号不能为空', trigger: 'blur' }
-        ],
-        manage_id: [
-          { required: true, message: '店长不能为空', trigger: 'change' }
         ],
         manage_lease_id: [
           { required: true, message: '招商经理不能为空', trigger: 'change' }
@@ -486,12 +476,6 @@ export default {
         })
         return false
       }
-      if (!obj.manage_id || !obj.manage_name) {
-        this.$Notice.warning({
-          title: '请选择店长！'
-        })
-        return false
-      }
       if (!obj.manage_lease_id || !obj.manage_lease) {
         this.$Notice.warning({
           title: '请选择招商经理！'
@@ -638,6 +622,7 @@ export default {
       let that = this
       this.kitchenList.forEach(function (item) {
         if (item.id == id) {
+          that.formItem.manage_name = item.manage_name
           that.formItem.kitchen_name = item.kitchen_name
         }
       })
@@ -645,16 +630,6 @@ export default {
       getStoreNoList( obj ).then(res => {
         const dbody = res.data
         this.shopList = dbody.data
-      })
-    },
-    // 依据店长ID获取店长姓名
-    selectmanageName () {
-      let key = this.formItem.manage_id
-      let that = this
-      this.manageList.forEach(function (item) {
-        if (item.id == key) {
-          that.formItem.manage_name = item.fullname
-        }
       })
     },
     // 依据招商ID获取店长姓名
