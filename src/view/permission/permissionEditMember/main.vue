@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Card title="修改人员" shadow>
-      <Form ref="formItem" :model="formItem" :label-width="80"  :rules="ruleValidate">
+    <Card title="编辑人员" shadow>
+      <Form ref="formItem" :model="formItem" :label-width="120"  :rules="ruleValidate">
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
             <FormItem label="用户名" prop="username">
@@ -22,24 +22,25 @@
                 <RadioGroup v-model="formItem.gender">
                   <Radio label="1">男</Radio>
                   <Radio label="2">女</Radio>
-                </RadioGroup>
+              </RadioGroup>
             </FormItem>
           </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
-            <FormItem label="密码">
-                <Input v-model="formItem.password" placeholder="输入密码"></Input>
+            <FormItem label="输入密码" prop="password1">
+                <Input v-model="formItem.password1" placeholder="输入密码"></Input>
             </FormItem>
           </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
-            <FormItem label="确认密码">
-                <Input v-model="formItem.confirm_password" placeholder="输入密码"></Input>
+            <FormItem label="确认密码" prop="password2">
+                <Input v-model="formItem.password2" placeholder="输入密码"></Input>
             </FormItem>
           </i-col>
         </Row>
+        <Divider />
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
             <FormItem label="权限组" prop="group_id">
@@ -49,38 +50,48 @@
             </FormItem>
           </i-col>
         </Row>
-        <Divider />
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="数据获取权限" prop="data_rule">
+                <RadioGroup v-model="formItem.data_rule">
+                  <Radio label="1">无限制</Radio>
+                  <Radio label="2">自己</Radio>
+                  <Radio label="3">所在权限组</Radio>
+              </RadioGroup>
+            </FormItem>
+          </i-col>
+        </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
             <FormItem label="所属厨房" prop="kitchen_id">
-                <Select v-model="formItem.kitchen_id" multiple>
-                  <Option v-for="item in kitchen_list" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
+                <Select v-model="formItem.kitchen_id" multiple @on-change="obtainStoreChange">
+                  <Option v-for="item in kitchen_list"  :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
                 </Select>
             </FormItem>
           </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
-            <FormItem label="档口数据权限" prop="obtain_store">
-                <RadioGroup v-model="formItem.obtain_store">
-                  <Radio label="1">获取所在厨房全部档口</Radio>
-                  <Radio label="2">获取所在厨房部分档口</Radio>
+            <FormItem label="档口数据权限">
+                <RadioGroup v-model="obtain_store" @on-change="obtainStoreChange">
+                  <Radio label="1" >获取所在厨房全部档口</Radio>
+                  <Radio label="2" :disabled= obtain_select_disabled >获取所在厨房部分档口</Radio>
               </RadioGroup>
             </FormItem>
           </i-col>
         </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20" v-if="(formItem.obtain_store == 2) && (formItem.kitchen_id.length > 0)">
+        <Row type="flex" justify="start" align="middle" :gutter="20" v-if="(obtain_store == 2) && (formItem.kitchen_id.length > 0)">
           <i-col span="20">
             <FormItem label="权限档口">
-              <CheckboxGroup v-model="formItem.store">
-                <Checkbox label="苹果" disabled></Checkbox>
+              <CheckboxGroup v-model="formItem.store_no" @on-change="checkStoreNo">
+                <Checkbox v-for="item in store_List"  :label="item.id">{{item.store_no}}「 {{item.kitchen_name}} 」</Checkbox>
               </CheckboxGroup>
             </FormItem>
           </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="22">
-            <FormItem label="备注">
+            <FormItem label="备注" prop="textarea">
               <Input v-model="formItem.remark" type="textarea" :autosize="{minRows: 5,maxRows: 5}" placeholder="请输入意见"></Input>
             </FormItem>
           </i-col>
@@ -100,11 +111,11 @@
 // /api/Kitchen/index,/api/EmployeeGroup/index,/api/Employee/show,/api/Employee/edit
 import { getEmployeeGroup, getMemberDetail, editMember } from '@/api/permission'
 import { getKitchenList } from '@/api/setting'
+import { getKitchenListStoreNo } from '@/api/data'
 export default {
   name: 'permissionEditMember',
   data () {
     return {
-      member_id: '',
       // 表单验证
       formItem: {
         username: '',
@@ -115,15 +126,26 @@ export default {
         password1: '',
         password2: '',
         remark: '',
-        obtain_data:'',
-        obtain_store:'',
-        store:[]
+        data_rule:'1',
+        store_no:[],
+        remark:''
       },
+      obtain_store:"1",
       password: '',
       ruleValidate: {
         username: [
           { required: true, message: '用户名不能为空', trigger: 'blur' },
           { type: 'string', max: 50, message: '用户名不能超过50个字', trigger: 'blur' }
+        ],
+        password1: [
+          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { type: 'string', max: 16, message: '标题不能超过16个字', trigger: 'blur' },
+          { type: 'string', min: 6, message: '标题不能少于6个字', trigger: 'blur' }
+        ],
+        password2: [
+          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { type: 'string', max: 16, message: '标题不能超过16个字', trigger: 'blur' },
+          { type: 'string', min: 6, message: '标题不能少于6个字', trigger: 'blur' }
         ],
         fullname: [
           { required: true, message: '姓名不能为空', trigger: 'blur' },
@@ -132,10 +154,7 @@ export default {
         gender: [
           { required: true}
         ],
-        obtain_data: [
-          { required: true}
-        ],
-        obtain_store: [
+        data_rule: [
           { required: true}
         ],
         group_id: [
@@ -147,8 +166,9 @@ export default {
       },
       permission_group: [],
       kitchen_list: [],
-      kitchen_list_ok: false,
-      permission_group_ok: false
+      store_List:[],
+      kitchen_list_ok:false,
+      permission_group_ok:false,
     }
   },
   methods: {
@@ -168,16 +188,6 @@ export default {
         })
         return false
       }
-      if (!!obj.password || !!obj.confirm_password) {
-        if ((obj.password != obj.confirm_password) || (obj.password.length != obj.confirm_password.length)) {
-          this.$Notice.warning({
-            title: '两次密码输入不一致！'
-          })
-          return false
-        } else {
-          this.password = obj.password
-        }
-      }
       if (!obj.group_id) {
         this.$Notice.warning({
           title: '姓名不能为空！'
@@ -190,6 +200,29 @@ export default {
         })
         return false
       }
+      if (!!obj.password1 || !!obj.password2) {
+        if ((obj.password1 != obj.password2) || (obj.password1.length != obj.password2.length)) {
+          this.$Notice.warning({
+            title: '两次密码输入不一致！'
+          })
+          return false
+        } else {
+          this.password = obj.password1
+        }
+      }else{
+        this.password = '';
+      }
+      if(this.obtain_store == "1"){
+        obj.store_no = '';
+      }
+      if(this.obtain_store == "2"){
+        if(obj.store_no.length <= 0){
+          this.$Notice.warning({
+            title: '请选择权限档口！'
+          })
+          return false
+        }
+      }
       return true
     },
     // 提交
@@ -198,7 +231,13 @@ export default {
       obj.id = this.member_id
       let that = this
       if (this.submitValidateField(obj)) {
-        obj.password = this.password
+        if(!!this.password){
+          obj.password = this.password
+        }else{
+          delete obj.password
+        }
+        delete obj.create_time
+        delete obj.update_time
         editMember(obj).then(res => {
           const dbody = res.data
           if (dbody.code == 0) {
@@ -229,22 +268,68 @@ export default {
           }
           this.kitchen_list_ok = false
           this.permission_group_ok = false
-          let arr = dbody.data.kitchen_id.split(',')
-          let arr2 = []
-          arr.forEach(function (item) {
-            arr2.push(item * 1)
-          })
-          dbody.data.kitchen_id = arr2
-          this.formItem.username = dbody.data.username
-          this.formItem.fullname = dbody.data.fullname
-          this.formItem.gender = dbody.data.gender + ''
-          this.formItem.group_id = dbody.data.group_id
-          this.formItem.kitchen_id = dbody.data.kitchen_id
+          let obj = Object.assign({},dbody.data)
+          obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item*1) : [];
+          obj.store_no = !!dbody.data.store_no ? dbody.data.store_no.split(',').map((item)=>item*1) : [];
+          obj.gender = !!dbody.data.gender ? dbody.data.gender+'' : '';
+          obj.data_rule = !!dbody.data.data_rule ? dbody.data.data_rule+'' : '';
+          if(obj.store_no.length > 0 && obj.kitchen_id.length > 0){
+            this.obtain_store = "2"
+          }
+          this.formItem = obj
         })
       }
-    }
+    },
+    // 请求档口
+
+    getKitchenListStoreNo(kitchenIdArr){
+      getKitchenListStoreNo(kitchenIdArr).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+        }
+        let dataArr = dbody.data || [];
+        let store_List = [];
+        dataArr.forEach((i)=>{
+          let kitchen_name = i.kitchen_name;
+          let store_no = i.store_no || [];
+          store_no.forEach((j)=>{
+            j.kitchen_name = kitchen_name;
+            store_List.push(j)
+          })
+        })
+        this.store_List = store_List;
+      })
+    },
+    obtainStoreChange(){
+      if(this.obtain_store == "1"){
+        return
+      }
+      if(this.obtain_store == "2"){
+        this.getKitchenListStoreNo(this.formItem.kitchen_id)
+      }
+    },
+    // 
+    checkStoreNo(){
+      if(this.formItem.store_no.length > 50){
+         this.$Notice.warning({
+          title: '档口数据不能超过50！'
+        })
+        this.formItem.store_no.pop()
+        return
+      }
+    },
   },
   computed: {
+      obtain_select_disabled() {
+        if(!!this.formItem.kitchen_id && this.formItem.kitchen_id.length > 0){
+          return false
+        }else{
+          return true
+        } 
+      }
   },
   mounted: function () {
     this.member_id = this.$route.query.id
