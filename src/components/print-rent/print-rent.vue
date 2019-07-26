@@ -162,12 +162,14 @@ export default {
       if(cut_fee == rent_fee){
         info.rent_fee = ''
         info.rent_end_date = ''
+        this.total = (cut_fee*1 + info.rent_overdue_fee*1 - info.rent_exempt_fee*1).toFixed(2);
+      }else{
+        info.rent_fee = (rent_fee - cut_fee ).toFixed(2)
+        this.total = (rent_fee*1 + info.rent_overdue_fee*1 - info.rent_exempt_fee*1).toFixed(2);
       }
-
       this.lastday = this.getCurrentMonthLast(date);
       this.start_date = this.getStartDate(info);
       this.currentdate = this.getCurentTime();
-      this.total = (info.rent_fee*1 + info.rent_overdue_fee*1 - info.rent_exempt_fee*1).toFixed(2);
     },
   },
   created () {
