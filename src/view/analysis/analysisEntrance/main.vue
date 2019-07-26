@@ -94,7 +94,7 @@ export default {
             }
           }
         },
-        { title: '上线周期(天)',
+        { title: '起租周期(天)',
           render: (h, params) => {
             let start_days = params.row.start_days;
             if(start_days*1 <= 0){

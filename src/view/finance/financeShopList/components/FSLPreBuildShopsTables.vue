@@ -39,6 +39,7 @@ export default {
         {title: '商铺', key: 'store_no',sortable: 'custom'},
         {title: '商铺名', key: 'store_name'},
         {title: '提交人', key: 'employee_name'},
+        {title: '创建时间', key: 'create_time',width:150},
         {title: '招商人', key: 'manage_lease', width: 100,sortable: 'custom'},
         {title: '店长', key: 'manage_name'},
         { title: '店铺状态',
