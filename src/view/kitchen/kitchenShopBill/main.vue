@@ -573,6 +573,10 @@ export default {
           key: 'handle',
           button: [
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Button', {
                 props: {
                   type: 'info',
@@ -593,6 +597,10 @@ export default {
           width :90,
           button: [
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Poptip', {
                 style: {
                   margin:'5px 0 ',
@@ -617,6 +625,10 @@ export default {
               ])
             },
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Poptip', {
                 style: {
                   margin:'5px 0 ',

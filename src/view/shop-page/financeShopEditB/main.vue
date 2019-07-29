@@ -414,11 +414,11 @@ export default {
           render: (h, params) => {
             let money = params.row.money;
             if(params.row.rent_type*1 == 1){
-              let str =  '+' + money
-              return h('strong', { style: {color: 'green'}} , str )
-            }else{
               let str =  '-' + money
-              return h('strong',  { style: {color: 'red'}}  , str )
+              return h('strong', { style: {color: 'red'}} , str )
+            }else{
+              let str =  '+' + money
+              return h('strong',  { style: {color: 'green'}}  , str )
             }
           }
         },
@@ -1011,16 +1011,15 @@ export default {
                 ii.title = "退款(含押金)"
                 ii.money =  Math.abs(data["rent_fee"]).toFixed(2)
                 ii.rent_type = data["rent_fee"]*1 < 0 ? 1 : 2 
-                ii.remark = '【总缴房租：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"].toFixed(2)+'】'+"\t"+'【房租减免：'+data["rent_exempt_fee"]+'】'+"\t"+'【押金：'+data["deposit_fee"]+'】'+"\t"+'【应收账款：'+data["bill_fee"]+'】'
+                ii.remark = '【总缴款：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"].toFixed(2)+'】'+"\t"+'【房租滞纳金费：'+data["rent_overdue_fee"]+'】'+"\t"+'【应缴运营费：'+data["operate_fee"]+'】'+"\t"+'【运营滞纳金费：'+data["operate_overdue_fee"]+'】'
                 this.end_tableData.unshift(ii)
               }else{
                 ii.title = "【注意】应收账款账单未出！退款可能不准确"
                 ii.money =  Math.abs(data["rent_fee"]).toFixed(2)
                 ii.rent_type = data["rent_fee"]*1 < 0 ? 1 : 2 
-                ii.remark = '【注意】应收账款账单未出！退款可能不准确'+'【总缴房租：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"].toFixed(2)+'】'+"\t"+'【房租减免：'+data["rent_exempt_fee"]+'】'+"\t"+'【押金：'+data["deposit_fee"]+'】'+"\t"+'【应收账款：'+data["bill_fee"]+'】'
+                ii.remark = '【注意】应收账款账单未出！退款可能不准确'+'【总缴款：'+data["pay_rent_fee"]+'】'+"\t"+'【应缴房租：'+data["payable_rent_fee"].toFixed(2)+'】'+"\t"+'【房租滞纳金费：'+data["rent_overdue_fee"]+'】'+"\t"+'【应缴运营费：'+data["operate_fee"]+'】'+"\t"+'【运营滞纳金费：'+data["operate_overdue_fee"]+'】'
                 this.end_tableData.unshift(ii)
               }
-
           }
         };
       })

@@ -411,6 +411,10 @@ export default {
           width :90,
           button: [
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Button', {
                 props: {
                   type: 'info',
@@ -431,6 +435,10 @@ export default {
           width :90,
           button: [
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Button', {
                 style: {
                   margin:'5px 0 ',
@@ -447,6 +455,10 @@ export default {
               '经营费用')
             },
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Button', {
                 style: {
                   margin:'5px 0 ',
@@ -470,6 +482,10 @@ export default {
           width :90,
           button: [
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Button', {
                 style: {
                   margin:'5px 0 ',
@@ -486,6 +502,10 @@ export default {
               '缴费列表')
             },
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Poptip', {
                 style: {
                   margin:'5px 0 ',
@@ -517,6 +537,10 @@ export default {
           width :90,
           button: [
             (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
               return h('Poptip', {
                 props: {
                   confirm: true,
