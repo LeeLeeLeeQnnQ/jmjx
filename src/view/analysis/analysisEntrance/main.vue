@@ -155,7 +155,7 @@ export default {
               size: 'small',
               placement: 'top',
           },
-          style: {position: 'absolute',height:'40px',top:'0',lineHeight:'40px'},
+          style: {position: 'absolute',height:'40px',top:'0',lineHeight:'40px',cursor:'pointer'},
       }, [
           h('span', {
               domProps: {
@@ -194,7 +194,7 @@ export default {
         })
         return
       }
-      this.init({});
+      this.init({page:"1"});
     },
   },
   computed: {

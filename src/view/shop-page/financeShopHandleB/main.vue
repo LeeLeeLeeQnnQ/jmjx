@@ -311,14 +311,14 @@ export default {
       }
       let obj = { store_id : this.store_id };
       obj.archive = this.archive.join(",");
-      let arr = Object.assign(this.end_tableData);
-      let arr2 = [];
-      arr.forEach(function(i,j){
-        if(!i.isHidden){
-          arr2.push(i)
-        }
-      })
-      obj.rent = arr2;
+      // let arr = Object.assign(this.end_tableData);
+      // let arr2 = [];
+      // arr.forEach(function(i,j){
+      //   if(!i.isHidden){
+      //     arr2.push(i)
+      //   }
+      // })
+      obj.rent = Object.assign(this.end_tableData);
       setEndShopEdit(obj).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
