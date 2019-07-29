@@ -52,9 +52,13 @@
 <script>
 import TablesEdit from './edit.vue'
 import handleBtns from './handle-btns'
+import Icons from '_c/icons'
 import './index.less'
 export default {
   name: 'Tables',
+  components: {
+    Icons,
+  },
   props: {
     value: {
       type: Array,

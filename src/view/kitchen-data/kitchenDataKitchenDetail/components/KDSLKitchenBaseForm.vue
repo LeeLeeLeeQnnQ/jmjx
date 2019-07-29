@@ -77,19 +77,14 @@
           </FormItem>
         </i-col>
       </Row>
+      <Divider />
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="10">
-          <FormItem label="银行帐号" >
-            <Input v-model="kitchen.card_no" placeholder="例如：6217 9910 0000 6021 260" style="width: 200px"></Input>
-          </FormItem>
-        </i-col>
-        <i-col span="10" offset="2">
-          <FormItem label="公司名称" >
-            <Input v-model="kitchen.company" placeholder="例如：北京金同餐饮管理有限公司" style="width: 200px"></Input>
+          <FormItem label="开业时间" >
+            <DatePicker type="date" placeholder="选择开业时间" @on-change="getStartDatePicker" :value="kitchen.start_date" format="yyyy-MM-dd" style="width: 200px"></DatePicker>
           </FormItem>
         </i-col>
       </Row>
-      <Divider />
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="10">
           <FormItem label="租金账单日" >
@@ -137,6 +132,9 @@ export default {
     }
   },
   methods: {
+    getStartDatePicker (date) {
+      this.kitchen.start_date = date
+    },
     // 获取店内列表
     getManageList(){
       getManageList().then(res => {
@@ -170,6 +168,12 @@ export default {
       if(!this.eidtkitchen.manage_id){
         this.$Notice.warning({
             title: '店长必须选择！'
+          })
+        return false
+      }
+      if(!this.eidtkitchen.start_date){
+        this.$Notice.warning({
+            title: '开业时间必须选择！'
           })
         return false
       }
