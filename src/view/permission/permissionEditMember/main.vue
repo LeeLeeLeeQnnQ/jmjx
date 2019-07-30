@@ -279,8 +279,8 @@ export default {
           this.kitchen_list_ok = false
           this.permission_group_ok = false
           let obj = Object.assign({},dbody.data)
-          obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item*1) : [];
-          obj.store_no = !!dbody.data.store_no ? dbody.data.store_no.split(',').map((item)=>item*1) : [];
+          obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item) : [];
+          obj.store_no = !!dbody.data.store_no ? dbody.data.store_no.split(',').map((item)=>item) : [];
           obj.gender = !!dbody.data.gender ? dbody.data.gender+'' : '';
           obj.data_rule = !!dbody.data.data_rule ? dbody.data.data_rule+'' : '';
           if(obj.store_no.length > 0 && obj.kitchen_id.length > 0){
