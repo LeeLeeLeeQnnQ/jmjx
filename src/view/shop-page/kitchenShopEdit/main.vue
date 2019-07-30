@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import Tables from '_c/tables'
 // 权限
 // /api/StoreLease/show,/api/StoreLease/edit,/api/StoreEmployee/index,/api/StoreEmployee/add,/api/StoreEmployee/edit,/api/StoreEmployee/delete,/api/StoreDevice/show
 import { getShopDetail } from '@/api/data'
@@ -34,7 +33,6 @@ import KSEDeviceInfo from './components/KSEDeviceInfo'
 export default {
   name: 'kitchenShopEdit',
   components: {
-    Tables,
     KSEBaseInfo,
     KSEStartInfo,
     KSEMemberInfo,
