@@ -12,7 +12,6 @@
           @data-view-store="handleViewStore" 
           @data-view-detail="handleViewDetail" 
           @data-edit-base="handleEditBase"
-          @data-assign-store="handleAssignStore"
           @data-dele="handleDele"
       />
     </Card>
@@ -83,28 +82,14 @@ export default {
   data () {
     return {
       columns: [
-        {title: '厨房ID', key: 'id', width: 80},
+        {title: '厨房ID', key: 'id'},
         {title: '厨房名称', key: 'kitchen_name'},
         { title: '档口数量', key: 'store_total'},
-        {title: '店长', key: 'manage_name', width: 80},
-        { title: '总房租(实价)',
-          render: (h, params) => {
-            let a = (params.row.rent_total*1/10000).toFixed(2)+'万';
-            return h('span', a)
-          }
-        },
-        { title: '在产生租金',
-          render: (h, params) => {
-            let a = (params.row.produce_total*1/10000).toFixed(2)+'万';
-            return h('span', a)
-          }
-        },
-        { title: '应支出月房租',
-          render: (h, params) => {
-            let a = (params.row.kitchen_rent*1/10000).toFixed(2)+'万';
-            return h('span', a)
-          }
-        },
+        { title: '租赁数量', key: 'use_total'},
+        { title: '转租数量', key: 'wait_total'},
+        { title: '起租数量', key: 'start_total'},
+        { title: '空闲数量', key: 'free_total'},
+        {title: '店长', key: 'manage_name'},
         {
           title: '查看',
           key: 'handle',
@@ -130,7 +115,6 @@ export default {
         {
           title: '编辑',
           key: 'handle',
-          width:150,
           button: [
             (h, params, vm) => {
               return h('Button', {
@@ -145,22 +129,6 @@ export default {
                 }},
               '编辑')
             },
-            // (h, params, vm) => {
-            //   return h('Button', {
-            //     props: {
-            //       type: 'primary',
-            //       size: 'small'
-            //     },
-            //     style:{
-            //       marginLeft:'5px'
-            //     },
-            //     on: {
-            //       'click': () => {
-            //         vm.$emit('data-assign-store', params)
-            //       }
-            //     }},
-            //   '档口分配')
-            // },
           ]
         },
         {
@@ -198,16 +166,6 @@ export default {
       let kitchen_id = params.row.id
       const route = {
         name: 'kitchenDataKitchenDetail',
-        query: {
-          kitchen_id
-        }
-      }
-      this.$router.push(route)
-    },
-    handleAssignStore(params){
-      let kitchen_id = params.row.id
-      const route = {
-        name: 'kitchenDataAssignStore',
         query: {
           kitchen_id
         }
