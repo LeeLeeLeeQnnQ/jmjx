@@ -17,7 +17,7 @@
 <script>
 // 权限
 // /api/Index/getEmployeeList,/api/Index/getEmployeeList,/api/StoreLease/show,/api/Index/getKitchenList,/api/Index/getStoreNo,/api/StoreLease/edit, ,Clue/existCustomer
-import { getManageList , getLeasingList , getShopDetail , getKitchenList , getStoreNoList , setStartShopEdit , getWorkCategoryList ,isExistCustome } from '@/api/data'
+import { getShopDetail } from '@/api/data'
 import FSEBaseInfo from './components/FSEBaseInfo'
 import FSEVoucherinfo from './components/FSEVoucherinfo'
 export default {
@@ -43,7 +43,7 @@ export default {
           title: dbody.msg
         })
         setTimeout(()=> {
-          that.$router.go(-1)
+          this.$router.go(-1)
         }, 1000)
         return
       }

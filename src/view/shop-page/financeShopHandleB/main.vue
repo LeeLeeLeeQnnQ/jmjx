@@ -311,28 +311,18 @@ export default {
       }
       let obj = { store_id : this.store_id };
       obj.archive = this.archive.join(",");
-      // let arr = Object.assign(this.end_tableData);
-      // let arr2 = [];
-      // arr.forEach(function(i,j){
-      //   if(!i.isHidden){
-      //     arr2.push(i)
+      obj.rent = Object.assign(this.end_tableData);
+      // setEndShopEdit(obj).then(res => {
+      //   const dbody = res.data
+      //   if (dbody.code == 0) {
+      //     this.fileStoreInfo();
+      //   } else {
+      //     this.$Notice.warning({
+      //       title: dbody.msg
+      //     })
       //   }
       // })
-      obj.rent = Object.assign(this.end_tableData);
-      setEndShopEdit(obj).then(res => {
-        const dbody = res.data
-        if (dbody.code == 0) {
-          this.fileStoreInfo();
-        } else {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-        }
-      })
-    },
-    fileStoreInfo () {
-      let that = this
-      setFileStore(this.store_id).then(res => {
+      setFileStore(obj).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
           this.$Notice.warning({
@@ -346,6 +336,22 @@ export default {
         }
       })
     },
+    // fileStoreInfo () {
+    //   let that = this
+    //   setFileStore(this.store_id).then(res => {
+    //     const dbody = res.data
+    //     if (dbody.code == 0) {
+    //       this.$Notice.warning({
+    //         title: '归档完成！'
+    //       })
+    //       this.$router.go(-1)
+    //     } else {
+    //       this.$Notice.warning({
+    //         title: dbody.msg
+    //       })
+    //     }
+    //   })
+    // },
     // 删除表格信息
     removeItem (index) {
       this.end_tableData.splice(index, 1)

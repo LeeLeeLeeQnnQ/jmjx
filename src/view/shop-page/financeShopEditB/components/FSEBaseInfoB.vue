@@ -137,8 +137,7 @@ export default {
       // 厨房列表
       kitchenList:[],
       // 商户列表
-      shopList:[],
-      
+      shopList:[],    
     }
   },
   methods: {

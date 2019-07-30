@@ -62,13 +62,7 @@ export default {
         { title: '进场周期(天)',
           render: (h, params) => {
             let entrance_days = params.row.entrance_days;
-            if(entrance_days*1 <= 0){
-              return h('span', { style: {color: 'red'}}, entrance_days)
-            }else if(entrance_days*1 <= 7){
-              return h('span', { style: {color: 'green'}}, entrance_days)
-            }else{
-              return h('span', { style: {color: 'orange'}}, entrance_days)
-            }
+            return h('span', entrance_days)
           },
           renderHeader:  (h, params) => { 
             return this.renderHeader(h, params)
@@ -77,13 +71,7 @@ export default {
         { title: '接驳周期(天)',
           render: (h, params) => {
             let connect_days = params.row.connect_days;
-            if(connect_days*1 <= 0){
-              return h('span', { style: {color: 'red'}}, connect_days)
-            }else if(connect_days*1 <= 7){
-              return h('span', { style: {color: 'green'}}, connect_days)
-            }else{
-              return h('span', { style: {color: 'orange'}}, connect_days)
-            }
+            return h('span', connect_days)
           },
           renderHeader:  (h, params) => { 
             return this.renderHeader(h, params)
@@ -92,13 +80,7 @@ export default {
         { title: '上线周期(天)',
           render: (h, params) => {
             let online_days = params.row.online_days;
-            if(online_days*1 <= 0){
-              return h('span', { style: {color: 'red'}}, online_days)
-            }else if(online_days*1 <= 7){
-              return h('span', { style: {color: 'green'}}, online_days)
-            }else{
-              return h('span', { style: {color: 'orange'}}, online_days)
-            }
+            return h('span', online_days)
           },
           renderHeader:  (h, params) => { 
             return this.renderHeader(h, params)
@@ -107,13 +89,7 @@ export default {
         { title: '起租周期(天)',
           render: (h, params) => {
             let start_days = params.row.start_days;
-            if(start_days*1 <= 0){
-              return h('span', { style: {color: 'red'}}, start_days)
-            }else if(start_days*1 <= 7){
-              return h('span', { style: {color: 'green'}}, start_days)
-            }else{
-              return h('span', { style: {color: 'orange'}}, start_days)
-            }
+            return h('span', { style: {color: 'orange'}}, start_days)
           },
           renderHeader:  (h, params) => { 
             return this.renderHeader(h, params)

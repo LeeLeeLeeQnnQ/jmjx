@@ -253,8 +253,7 @@ export const confirmShopStart = ( id ) => {
 /*
   finance-store-handle2 - 财务归档
 */
-export const setFileStore = (id) => {
-  const data = { store_id: id }
+export const setFileStore = (data) => {
   return axios.request({
     url: '/api/StoreLease/archive',
     data,
