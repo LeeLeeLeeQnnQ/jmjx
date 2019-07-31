@@ -405,6 +405,7 @@ export default {
       let that = this
       info.pay = info.pay.join(',')
       info.contract = info.contract.join(',')
+      info.ready_id  = info.id
 
       delete info.create_time 
       delete info.update_time 
