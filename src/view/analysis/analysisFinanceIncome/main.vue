@@ -32,7 +32,7 @@
 //权限
 // Kitchen/index,KitchenIncome/queryList,KitchenIncome/getIncomeType
 import { getKitchenQueryList  } from '@/api/setting'
-import { getKitchenIncomeQuery , getIncomeType  } from '@/api/finance'
+import { getKitchenIncomeQuery , getIncomeType } from '@/api/finance'
 import Tables from '_c/tables'
 import { ChartColumn } from '_c/charts'
 export default {

@@ -15,6 +15,7 @@ export default {
   analysisFinance:'财务分析',
   analysisFinanceIncome:'收入分析',
   analysisFinanceExpenditure:'支出分析',
+  analysisFinanceAccounts:'收支分析',
   analysisKitchen:'运营分析',
   analysisKitchenEquipment:'商户设备分析',
   analysisKitchenMember:'商户人员分析',

@@ -59,6 +59,19 @@ export const getKitchenIncomeQuery = ( obj ) => {
   })
 }
 
+
+
+// kitchen/getKitchenAccounts
+export const getKitchenAccounts = ( obj ) => {
+  return axios.request({
+    url: '/api/Kitchen/getKitchenAccounts',
+    params: obj,
+    method: 'get'
+  })
+}
+
+
+
 /*
   新建一家店铺
 */

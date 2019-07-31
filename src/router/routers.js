@@ -194,25 +194,35 @@ export default [
         component: parentView,
         children: [
           {
-            path: '/analysisFinanceIncome',
-            name: 'analysisFinanceIncome',
+            path: '/analysisFinanceAccounts',
+            name: 'analysisFinanceAccounts',
             meta: {
-              icon: '_daikuan-xianxing',
-              title: 'analysisFinanceIncome',
-              access: [841]
+              icon: '_tuikuan',
+              title: 'analysisFinanceAccounts',
+              access: [843]
             },
-            component: () => import('@/view/analysis/analysisFinanceIncome/main.vue')
+            component: () => import('@/view/analysis/analysisFinanceAccounts/main.vue')
           },
-          {
-            path: '/analysisFinanceExpenditure',
-            name: 'analysisFinanceExpenditure',
-            meta: {
-              icon: '_huankuan-xianxing',
-              title: 'analysisFinanceExpenditure',
-              access: [842]
-            },
-            component: () => import('@/view/analysis/analysisFinanceExpenditure/main.vue')
-          },
+          // {
+          //   path: '/analysisFinanceIncome',
+          //   name: 'analysisFinanceIncome',
+          //   meta: {
+          //     icon: '_daikuan-xianxing',
+          //     title: 'analysisFinanceIncome',
+          //     access: [841]
+          //   },
+          //   component: () => import('@/view/analysis/analysisFinanceIncome/main.vue')
+          // },
+          // {
+          //   path: '/analysisFinanceExpenditure',
+          //   name: 'analysisFinanceExpenditure',
+          //   meta: {
+          //     icon: '_huankuan-xianxing',
+          //     title: 'analysisFinanceExpenditure',
+          //     access: [842]
+          //   },
+          //   component: () => import('@/view/analysis/analysisFinanceExpenditure/main.vue')
+          // },
         ]
       },
       {
