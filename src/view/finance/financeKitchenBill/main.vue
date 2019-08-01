@@ -1,207 +1,19 @@
 <template>
   <div>
-    <!-- 展示模版 -->
-    <Modal title="账单信息" v-model="viewModal" scrollable>
-      <Form :label-width="90">
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="店铺名称" class="cellTit">
-                <span>{{viewItem.store_name}}</span>
-            </FormItem>
-            <FormItem label="档口编号" class="cellTit">
-                <span>{{viewItem.store_no}}</span>
-            </FormItem>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="账单月份" class="cellTit">
-                <span>{{viewItem.month}}</span>
-            </FormItem>
-            <FormItem label="厨房名称" class="cellTit">
-                <span>{{viewItem.kitchen_name}}</span>
-            </FormItem>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="公摊天数" class="cellTit">
-                <span>{{viewItem.day_number}}</span>
-            </FormItem>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="本月公摊开始日期" class="cellTit">
-                <span>{{viewItem.share_start_date}}</span>
-            </FormItem>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="本月公摊结束日期" class="cellTit">
-                <span>{{viewItem.share_end_date}}</span>
-            </FormItem>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-            <FormItem label="收费基数" class="cellTit">
-                <span>{{viewItem.base_number}}</span>
-            </FormItem>
-        </Row>
-        <Divider></Divider>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="12" offset="8">
-            <h3>费用列表</h3>
-          </i-col>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="12">
-            <FormItem label="垃圾及隔油池" class="cellTit">
-                <span>{{viewItem.garbage_fee}}</span>
-            </FormItem>
-            <FormItem label="烟道清洗" class="cellTit">
-                <span>{{viewItem.flue_fee}}</span>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="消杀" class="cellTit">
-                <span>{{viewItem.kill_fee}}</span>
-            </FormItem>
-            <FormItem label="网络使用费" class="cellTit">
-                <span>{{viewItem.network_fee}}</span>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="12">
-            <FormItem label="库房费" class="cellTit">
-                <span>{{viewItem.storage_fee}}</span>
-            </FormItem>
-            <FormItem label="工程增项" class="cellTit">
-                <span>{{viewItem.project_fee}}</span>
-            </FormItem>
-            <FormItem label="罚款" class="cellTit">
-                <span>{{viewItem.fine_fee}}</span>
-            </FormItem>
-            <FormItem label="物业管理费" class="cellTit">
-                <span>{{viewItem.manage_fee}}</span>
-            </FormItem>
-          </i-col>
-          <i-col span="12">
-            <FormItem label="卫生费" class="cellTit">
-                <span>{{viewItem.health_fee}}</span>
-            </FormItem>
-            <FormItem label="一次性费用" class="cellTit">
-                <span>{{viewItem.one_fee}}</span>
-            </FormItem>
-            <FormItem label="代收税费" class="cellTit">
-                <span>{{viewItem.taxes_fee}}</span>
-            </FormItem>
-            <FormItem label="滞纳金" class="cellTit">
-                <span>{{viewItem.overdue_fee}}</span>
-            </FormItem>
-            <FormItem label="代运营费" class="cellTit">
-                <span>{{viewItem.operating_fee}}</span>
-            </FormItem>
-            <FormItem label="其他费用" class="cellTit">
-                <span>{{viewItem.other_fee}}</span>
-            </FormItem>
-            <FormItem label="经营费用减免" class="cellTit">
-                <span>{{viewItem.operate_exempt_fee}}</span>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Card shadow>
-          <p slot="title">
-              <Icon type="ios-flash-outline" /></Icon>
-              电费部分
-          </p>
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="12">
-              <FormItem label="公摊电费" class="cellTit">
-                  <span>{{viewItem.energy_share_fee}}</span>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="店铺电费" class="cellTit">
-                  <span>{{viewItem.energy_fee}}</span>
-              </FormItem>
-            </i-col>
-          </Row>
-        </Card>
-        <Card shadow style="margin-top: 4px;">
-          <p slot="title">
-              <Icon type="ios-water-outline" /></Icon>
-              水费部分
-          </p>
-          <Row type="flex" justify="start" align="middle" :gutter="20">
-            <i-col span="12">
-              <FormItem label="公摊水费" class="cellTit">
-                  <span>{{viewItem.water_share_fee}}</span>
-              </FormItem>
-            </i-col>
-            <i-col span="12">
-              <FormItem label="店铺水费" class="cellTit">
-                  <span>{{viewItem.water_fee}}</span>
-              </FormItem>
-            </i-col>
-          </Row>
-        </Card>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="4">
-            <FormItem label="总计：">
-                <h3>{{viewItem.total}}</h3>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Divider></Divider>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="12" offset="8">
-            <h3>留言</h3>
-          </i-col>
-          <FormItem label="留言" class="cellTit">
-              <span>{{viewItem.remark}}</span>
-          </FormItem>
-        </Row>
-      </Form>
-    </Modal>
-    <Modal v-model="showEditStoreRentBillModal" title="编辑房租" @on-ok="editStoreRentBill" :mask-closable="false">
-      <Form :model="storeRentBill" :label-width="80">
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="22">
-            <FormItem>
-              <span>{{storeRentBill.month}} / {{storeRentBill.store_name}}</span>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="10">
-            <FormItem label="房租">
-              <Input v-model="storeRentBill.rent_fee" style="width: 200px" ></Input>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="10">
-            <FormItem label="滞纳金">
-              <Input v-model="storeRentBill.rent_overdue_fee" style="width: 200px" ></Input>
-            </FormItem>
-          </i-col>
-        </Row>
-        <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="10">
-            <FormItem label="房租减免">
-              <Input v-model="storeRentBill.rent_exempt_fee" style="width: 200px" ></Input>
-            </FormItem>
-          </i-col>
-        </Row>
-      </Form>
-    </Modal>
-    <Modal title="预览图" v-model="visible">
-        <img :src="imgUrl" v-if="visible" style="width: 100%">
-    </Modal>
-    <!-- 预览凭证 -->
-    <Modal title="凭证预览" v-model="showStoreBudgetList">
-      <div class="img-upload-list" v-for="item in storeBudgetList">
-        <div>
-          <img :src="item">
-          <div class="img-upload-list-cover">
-              <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
-          </div>
-        </div>
-      </div>
-    </Modal>
+    <!-- 经营费用展示 -->
+    <FSBInfoModal :info ="viewItem"   />
+    <!-- 编辑房租 -->
+    <FSBEditRentBill :info ="storeRentBill"  :initTable = "initData"/>
+    <!-- 编辑经营费用 -->
+    <FSBEditRunBill :info ="paymentItem"  :initTable = "initData"/>
+    <!-- 打印能源 -->
+    <FSBPrintEnergy ref="printEnergy"/>
+    <!-- 打印房租 -->
+    <FSBPrintRent ref="printRent"/>
+    <!-- 添加缴费 -->
+    <FSBAddStorePay :info ="storeBill"  :initTable = "initData"/>
+    <!-- 预览缴费 -->
+    <FSBStoreBudget :info ="budget_list"  :initTable = "initData"/>
     <!-- 头部搜索 按钮 -->
     <Card shadow style="margin-top: 5px">
       <h3 slot="extra" >
@@ -222,96 +34,35 @@
       </Row>
     </Card>
     <Card shadow>
-      <Modal v-model="showAddStorePayModal" title="编辑商户账单" @on-ok="addStorePay" :mask-closable="false">
-        <Form :model="storeBill" :label-width="120">
-          <Card shadow>
-            <p slot="title">
-                <Icon type="logo-usd" />
-                {{storeBill.month}} {{storeBill.store_name}}  总未缴款 : {{storeBill.store_account}} 
-            </p>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="10">
-                <FormItem label="本次缴纳金额">
-                  <Input v-model="storeBill.money" style="width: 200px"></Input>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="20">
-                <FormItem label="本次缴纳凭证">
-                  <div class="img-upload-list" v-for="item in uploadLetter">
-                    <div>
-                      <img :src="item">
-                      <div class="img-upload-list-cover">
-                          <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
-                          <Icon type="ios-trash-outline" @click.native="handleRemove(item,'uploadLetter')"></Icon>
-                      </div>
-                    </div>
-                  </div>
-                  <Upload
-                      ref="uploadLetter"
-                      :show-upload-list="false"
-                      :on-success="uploadLetterSuccess"
-                      :format="['jpg','jpeg','png']"
-                      :max-size="4200"
-                      :on-format-error="handleFormatError"
-                      :on-exceeded-size="handleMaxSize"
-                      :before-upload="handleBeforeUpload"
-                      multiple
-                      type="drag"
-                      action="/api/Index/upload"
-                      style="display: inline-block;width:60px;">
-                      <div style="width: 60px;height:60px;line-height: 60px;">
-                          <Icon type="ios-camera" size="20"></Icon>
-                      </div>
-                    </Upload>
-                </FormItem>
-              </i-col>
-            </Row>
-            <Row type="flex" justify="start" align="middle" :gutter="20">
-              <i-col span="20">
-                <FormItem label="备注">
-                  <Input v-model="storeBill.remark" type="textarea" :rows="3" placeholder="备注"/>
-                </FormItem>
-              </i-col>
-            </Row>
-          </Card>
-        </Form>
-      </Modal>
-      <Modal v-model="showEditStoreBudgetModal" title="本月上缴" :mask-closable="false" width="80%">
-        <tables :columns="budget_columns" v-model="budget_list" @data-delete="deleteStoreBudget" @voucher-view="showStoreBudgetVoucher"></tables>
-      </Modal>
       <tables 
         :columns="bill_columns"
         v-model="bill_list"
         @data-view-energy="viewEnergyBill"
-        @data-edit-rent="editRentBill"
+        @data-edit-rent="showEditStoreRentBill"
+        @data-edit-run="showEditStoreRunBill"
         @data-add="showAddStorePay"
         @data-print-energy="printEnergyBill"
         @data-print-rent="printRentBill"
         @data-view-list="showEditStoreBudget" ></tables>
-<!--       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/> -->
-    </Card>
-    <!-- 打印部分 -->
-    <!-- <div> -->
-    <div style="display: none;">
-      <PrintEnergy id="printEnergy" :print_info="print_energy_info"></PrintEnergy>
-    </div>
-    <div style="display: none;">
-      <PrintRent id="printRent" :print_info="print_rent_info"></PrintRent>
-    </div>
+    </Card>    
   </div>
 </template>
 
 <script>
 import Tables from '_c/tables'
-import printJS from 'print-js'
-import PrintEnergy from '_c/print-energy'
-import PrintRent from '_c/print-rent'
+import FSBInfoModal from './components/FSBInfoModal'
+import FSBEditRentBill from './components/FSBEditRentBill'
+import FSBEditRunBill from './components/FSBEditRunBill'
+import FSBPrintEnergy from './components/FSBPrintEnergy'
+import FSBPrintRent from './components/FSBPrintRent'
+import FSBAddStorePay from './components/FSBAddStorePay'
+import FSBStoreBudget from './components/FSBStoreBudget'
+
 // 权限
 // Index/getKitchenList,StoreBill/queryList,StoreCharge/queryList,StoreBill/queryPayList,StoreBill/addStoreBillPay,StoreBill/deleteStoreBillPay
-import { getKitchenList  } from '@/api/data'
+// import { getKitchenList  } from '@/api/data'
 import { getShopDetail } from '@/api/data'
+import { getKitchenQueryList } from '@/api/setting'
 import { getStoreBillList , getStoreChargeItem , editStoreBillItem } from '@/api/kitchen'
 import { getStoreBillPayList , addStoreBillPay   , deleteStoreBillPay } from '@/api/finance'
 export default {
@@ -319,23 +70,32 @@ export default {
   components: {
     Tables,
     printJS,
-    PrintEnergy,
-    PrintRent
+    FSBInfoModal,
+    FSBEditRentBill,
+    FSBEditRunBill,
+    FSBPrintEnergy,
+    FSBPrintRent,
+    FSBAddStorePay,
+    FSBStoreBudget
   },
   data () {
     return {
-      // 搜索
+      // 基本数据
+      showInfo:{},
+      // 查看能源账单
+      viewItem:{},
+      // 编辑商户账单
+      storeRentBill:{},
+      // 编辑经营费用
+      paymentItem:{},
+      // 厨房下拉
       kitchen:[],
-      select_time:'',
+      // 选中厨房信息
       select_kitchen:[],
+      // 搜索
+      select_time:'',
       select_kitchen_id:'',
       keyword:'',
-      // page: {
-      //   current_page: 1,
-      //   last_page: '',
-      //   list_rows: 0,
-      //   total: 0
-      // },
       // 表格
       bill_columns:[
         {title: '厨房', key: 'kitchen_name'},
@@ -375,33 +135,18 @@ export default {
           }
         },
         { title: '总未缴款',
-          render: (h, params) => {
-            
+          render: (h, params) => {         
             let is_deposit = params.row.is_deposit;
-
-            let operate_fee = params.row.operate_fee;
-            let operate_overdue_fee = params.row.operate_overdue_fee;
-            let operate_exempt_fee = params.row.operate_exempt_fee;
-            let fee1 = (operate_fee*1 + operate_overdue_fee*1 - operate_exempt_fee*1).toFixed(2);
-
-            let rent_fee = params.row.rent_fee;
-            let rent_overdue_fee = params.row.rent_overdue_fee;
-            let rent_exempt_fee = params.row.rent_exempt_fee;
-            let fee2 = (rent_fee*1 + rent_overdue_fee*1  - rent_exempt_fee*1).toFixed(2);
-
-            let store_account = params.row.store_account || 0;
-            let pay_fee = params.row.pay_fee || 0;
-
-            let unpaiy = (fee1*1 + fee2*1 + store_account*1 - pay_fee*1).toFixed(2);
+            let unpaid_fee = params.row.unpaid_fee;
             if(is_deposit*1 == 1){
               return h('span', { style: {color: '#67ba23'}}, '押金已抵扣')
             }
-            if(unpaiy*1 > 1000){
-              return h('span', { style: {color: '#ff9900'}}, unpaiy)
-            }else if( unpaiy*1 > 0){
-              return h('span', { style: {color: '#2d8cf0'}}, unpaiy)
+            if(unpaid_fee*1 > 1000){
+              return h('span', { style: {color: '#ff9900'}}, unpaid_fee)
+            }else if( unpaid_fee*1 > 0){
+              return h('span', { style: {color: '#2d8cf0'}}, unpaid_fee)
             }else{
-              return h('span', { style: {color: '#19be6b'}}, unpaiy)
+              return h('span', { style: {color: '#19be6b'}}, unpaid_fee)
             }
           }
         },
@@ -512,6 +257,34 @@ export default {
                 },
                 props: {
                   confirm: true,
+                  title: '编辑经营费用！'
+                },
+                on: {
+                  'on-ok': () => {
+                    vm.$emit('data-edit-run', params)
+                  }
+                }
+              }, [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {marginLeft: '0px'}
+                }, '经营费用')
+              ])
+            },
+            (h, params, vm) => {
+              let is_deposit = params.row.is_deposit;
+              if(is_deposit*1 == 1){
+                return 
+              }
+              return h('Poptip', {
+                style: {
+                  margin:'5px 0 ',
+                },
+                props: {
+                  confirm: true,
                   title: '编辑租金！'
                 },
                 on: {
@@ -569,340 +342,12 @@ export default {
       count_days:0,
       // 编辑商户账单
       storeBill:{},
-      showAddStorePayModal:false,
-      // 图片
-      imgUrl: '',
-      visible: false,
-      // 上传
-      uploadLetter:[],
-      // 收支表格
-      budget_columns:[
-        {title: '金额', key: 'money'},
-        {title: '操作时间', key: 'create_time'},
-        {title: '操作人', key: 'employee_name'},
-        {title: '备注', key: 'remark'},
-        {
-          title: '查看凭证',
-          key: 'handle',
-          button: [
-            (h, params, vm) => {
-              return h('Button', {
-                style: {},
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('voucher-view', params)
-                  }
-                }},
-              '查看凭证')
-            }
-          ]
-        },
-        {
-          title: '操作',
-          key: 'handle',
-          button: [
-            (h, params, vm) => {
-              return h('Button', {
-                style: {},
-                props: {
-                  type: 'error',
-                  size: 'small'
-                },
-                on: {
-                  'click': () => {
-                    vm.$emit('data-delete', params)
-                  }
-                }},
-              '删除')
-            }
-          ]
-        },
-      ],
-      budget_list:[],
-      // 展示收支
-      showEditStoreBudgetModal:false,
-      // 凭证
-      showStoreBudgetList:false,
-      storeBudgetList:[],
-      // 查看能源账单
-      viewModal:false,
-      viewItem:{},
-      // 查看房租
-      showEditStoreRentBillModal:false,
-      storeRentBill:{},
-      // 打印经营费用数据
-      print_energy_info:{},
-      print_energy_str:"@page{size:A4;margin:0}@media print{*{font-size:9pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.page{box-sizing:border-box;padding:22px;padding-top:20px}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:.9em}.page_head_left,.page_head_right{display:inline-block;width:50%;float:left}.table_box table{width:100%;border-spacing:0;border-collapse:collapse;border:1px solid gray;margin-top:5px}.table_box table th{border:1px solid gray;padding:3px}.table_box table td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr td{border:0;border-top:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .total_tr .total_td{border-left:1px solid gray;padding:3px;box-sizing:border-box}.table_box table .last_tr{border-top:1px solid gray}.page_footer{padding:5px;line-height:.9em}.page_footer .zhanghao{overflow:hidden;margin-bottom:10px}.page_footer .zhanghao>div{display:inline-block;float:left}.page_footer .zhanghao .line_box{float:right;margin-right:100px;text-align:center}.page_footer .zhanghao .line_box .line{width:240px;height:14px;border-bottom:1px solid #000;margin-bottom:5px}.page_footer .contect p{margin-top:8px;width:50%;display:inline-block}",
-      print_rent_info:{},
-      print_rent_str:"@page{size:A4;margin:0}@media print{*{font-size:10pt;font-family:'宋体'}.page{margin:0;border:initial;border-radius:initial;width:initial;min-height:initial;box-shadow:initial;background:initial;page-break-after:always}}.ti2{text-indent:2em}.page{box-sizing:border-box;padding: 70px 110px 50px;}.page h4{text-align:center;margin-bottom:5px;font-size:22px}.page_head{width:100%;overflow:hidden;line-height:12pt}.page_main .page_main_item{text-indent:2em;display:flex;justify-content:flex-start;align-items:center;height:2.5em}.page_main .page_main_item span{width:170px}.page_main .page_main_item i{font-style:normal;font-weight:400}.page_main .page_main_item p{border-bottom:1px solid #000;text-align:center;text-indent:0;padding-bottom:2px;width:300px;height:1.25em;}.page_footer{padding:5px;line-height:.9em}.page_footer_top{text-indent:2em;line-height:12pt;margin:2em 0}.page_footer_main{line-height:15pt;margin:2em 0}.page_footer_bottom{line-height:15pt;text-align:right}"
+      // 缴费列表
+      budget_list:{},
     }
   },
   methods: {
-    // 图片预览
-    handleView (imgUrl) {
-      this.imgUrl = imgUrl
-      this.visible = true
-    },
-    // 删除图片
-    handleRemove (file, name) {
-      const fileList = this.$refs[name].fileList
-      this.$refs[name].fileList.splice(fileList.indexOf(file), 1)
-      this[name].splice(fileList.indexOf(file), 1)
-    },
-    // 错误提示
-    handleFormatError (file) {
-      this.$Notice.warning({
-        title: '文件格式错误',
-        desc: '文件 ' + file.name + ' 格式错误, 请上传jpg／jpeg／png格式.'
-      })
-    },
-    // 超大提示
-    handleMaxSize (file) {
-      this.$Notice.warning({
-        title: '超过最大限制',
-        desc: '文件  ' + file.name + ' 过大, 不能超过 2M.'
-      })
-    },
-    // 发送触发
-    handleBeforeUpload (file) {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = (event) => {
-      }
-    },
-    // 退场其他
-    uploadLetterSuccess (res, file) {
-      if (res.code == 0) {
-        this.uploadLetter.push(res.data)
-      }else{
-        this.$Notice.warning({
-          title: res.msg
-        })
-      }
-    },
-    // 搜索
-    // 选择厨房
-    selectKitchen(){
-      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword})
-    },
-    //选择时间
-    selectDate(date){
-      this.select_time  = date;
-      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
-    },
-    //选择时间
-    changeKeyword( ){
-      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
-    },
-    // 选择新页面
-    // getNewPage(page){
-    //   this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword , page :page })
-    // },
-    // 显示弹窗
-    showAddStorePay( params ){
-      this.uploadLetter = [];
-      this.storeBill = {}
-      this.storeBill.id = params.row.id;
-      this.storeBill.store_id = params.row.store_id;
-      this.storeBill.month = params.row.month;
-      this.storeBill.store_name = params.row.store_name;
-      let is_deposit = params.row.is_deposit;
-      this.storeBill.store_account = (is_deposit*1 == 1) ? params.row.store_account : '押金已抵扣';
-      this.storeBill.money = '';
-      this.storeBill.remark = '';
-      this.showAddStorePayModal = true;
-    },
-    // 编辑商户账单
-    addStorePay(){
-      // 验证操作
-      if(isNaN(this.storeBill.money*1)){
-        this.$Notice.warning({
-          title: '上缴数字有误！'
-        })
-        return
-      }
-      if(this.uploadLetter.length <= 0){
-        this.$Notice.warning({
-          title: '凭证不能为空！'
-        })
-        return
-      }
-      let data = {};
-      data.bill_id = this.storeBill.id;
-      data.store_id = this.storeBill.store_id;
-      data.money = this.storeBill.money*1;
-      data.images = this.uploadLetter.join(",");
-      data.remark = this.storeBill.remark;
-      // 提交修改
-      addStoreBillPay( data ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        this.$Notice.warning({
-          title: "添加成功！",
-        })
-        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
-      })
-    },
-    // 展示收支列表
-    showEditStoreBudget(params){
-      let id = params.row.id;
-      getStoreBillPayList( { bill_id : id } ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        this.budget_list = dbody.data;
-        this.showEditStoreBudgetModal = true;
-      })
-    },
-    // 展示凭证
-    showStoreBudgetVoucher(params){
-      let voucher = !!params.row.images ? params.row.images.split(',') : [];
-      this.storeBudgetList = [];
-      this.storeBudgetList = voucher;
-      this.showStoreBudgetList = true;
-    },
-    // 删除一条收支
-    deleteStoreBudget(params){
-      let id = params.row.id;
-      let bill_id = params.row.bill_id;
-      deleteStoreBillPay( { id : id } ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        this.$Notice.warning({
-          title: "删除成功！"
-        })
-        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
-        getStoreBillPayList( { bill_id : bill_id } ).then(res => {
-          const dbody = res.data
-          if(dbody.code != 0){
-            this.$Notice.warning({
-              title: dbody.msg,
-            })
-            return
-          }
-          this.budget_list = dbody.data;
-        })
-      });
-    },
-    // 查看能源账单
-    viewEnergyBill(params){
-      this.viewItem = {};
-      this.viewItem = params.row;
-      this.viewItem.water_value = this.viewItem.water_start - this.viewItem.water_end;
-      this.viewItem.energy_value = this.viewItem.water_value - this.viewItem.energy_end;
-      this.viewItem.total = this.getPayItemTotal(this.viewItem);
-      this.viewModal = true;
-    },
-    // 查看房租
-    editRentBill(params){
-      this.storeRentBill = {}
-      this.storeRentBill.id = params.row.id;
-      this.storeRentBill.rent_fee = params.row.rent_fee;
-      this.storeRentBill.rent_overdue_fee = params.row.rent_overdue_fee;
-      this.storeRentBill.rent_exempt_fee = params.row.rent_exempt_fee;
-      this.storeRentBill.month = params.row.month;
-      this.storeRentBill.store_name = params.row.store_name;
-      this.showEditStoreRentBillModal = true;
-    },
-    // 编辑商户月租金
-    editStoreRentBill(){
-      if(isNaN(this.storeRentBill.rent_fee*1)){
-        this.$Notice.warning({
-          title: '房租非数字！'
-        })
-        return
-      }
-      if(isNaN(this.storeRentBill.rent_overdue_fee*1)){
-        this.$Notice.warning({
-          title: '房租滞纳金非法！'
-        })
-        return
-      }
-      editStoreBillItem( this.storeRentBill ).then(res => {
-        const dbody = res.data
-        if(dbody.code != 0){
-          this.$Notice.warning({
-            title: dbody.msg,
-          })
-          return
-        }
-        this.$Notice.warning({
-          title: "修改成功！",
-        })
-        this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
-      });
-    },
-    // 打印能源账单
-    printEnergyBill(params){
-      const kitchenInfo = this.kitchen.filter(item => {
-        return (item.id  == params.row.kitchen_id)
-      });
-      this.print_energy_info = {};
-      this.print_energy_info = Object.assign({},params.row,kitchenInfo[0]);
-      this.print_energy_info.total_fee = this.print_energy_info.operate_fee*1+this.print_energy_info.operate_overdue_fee*1 - this.print_energy_info.operate_exempt_fee*1;
-      let that = this;
-      setTimeout(function(argument) {
-        printJS({
-          printable: 'printEnergy',
-          documentTitle: '橘猫精选',
-          type: 'html',
-          targetStyle: ['*'],
-          maxWidth: 1200,
-          gridStyle:'border: 1px solid lightgray; margin-bottom: -1px;',
-          style: that.print_energy_str,
-        })
-      },500)
-    },
-    // 打印租金账单
-    printRentBill(params){
-      getShopDetail({id: params.row.store_id, lease_type: 1}).then(res => {
-        const dbody = res.data
-        if (dbody.code != 0) {
-          this.$Notice.warning({
-            title: "数据获取失败！"
-          })
-          return
-        }
-        const kitchenInfo = this.kitchen.filter(item => {
-          return (item.id  == params.row.kitchen_id)
-        });
-        this.print_rent_info = {};
-        this.print_rent_info =  Object.assign({},params.row,kitchenInfo[0]);
-        this.print_rent_info.shopkeeper = res.data.data.shopkeeper;
-        let that = this;
-        setTimeout(function(argument) {
-          printJS({
-            printable: 'printRent',
-            documentTitle: '橘猫精选',
-            type: 'html',
-            targetStyle: ['*'],
-            maxWidth: 1200,
-            gridStyle:'border: 1px solid lightgray; margin-bottom: -1px;',
-            style: that.print_rent_str,
-          })
-        },500)
-      })
-      
-    },
-    // 计算合计
+    // 通用
     getPayItemTotal( info ){
       let total = 0;
       total = info.garbage_fee*1 + total;
@@ -918,11 +363,119 @@ export default {
       total = info.fine_fee*1 + total;
       total = info.one_fee*1 + total;
       total = info.other_fee*1 + total;
+      total = info.operating_fee*1 + total;
       total = info.project_fee*1 + total;
       total = info.taxes_fee*1 + total;
       total = info.operate_overdue_fee*1 + total;
       total = total - info.operate_exempt_fee*1;
       return total.toFixed(2);
+    },
+    // 查看能源账单
+    viewEnergyBill(params){
+      let viewItem = {};
+      viewItem = params.row;
+      viewItem.water_value = viewItem.water_start - viewItem.water_end;
+      viewItem.energy_value = viewItem.water_value - viewItem.energy_end;
+      viewItem.total = this.getPayItemTotal(viewItem);
+      this.viewItem = viewItem
+    },
+    // 显示弹窗
+    showEditStoreRentBill(params){
+      let storeRentBill = {}
+      storeRentBill.id = params.row.id;
+      storeRentBill.rent_fee = params.row.rent_fee;
+      storeRentBill.rent_overdue_fee = params.row.rent_overdue_fee;
+      storeRentBill.rent_exempt_fee = params.row.rent_exempt_fee;
+      storeRentBill.month = params.row.month;
+      storeRentBill.store_name = params.row.store_name;
+      storeRentBill.sreach = { month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword };
+      this.storeRentBill = storeRentBill
+    },
+    // 显示弹窗
+    showEditStoreRunBill(params){
+      let paymentItem = Object.assign({}, params.row);
+      paymentItem.total = this.getPayItemTotal(paymentItem);
+      paymentItem.showInfo = this.showInfo;
+      paymentItem.sreach = { month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword };
+      this.paymentItem = paymentItem
+    },
+    // 打印能源账单
+    printEnergyBill(params){
+      const kitchenInfo = this.kitchen.filter(item => {
+        return (item.id  == params.row.kitchen_id)
+      });
+      let print_energy_info = Object.assign({},params.row,kitchenInfo[0]);
+      print_energy_info.total_fee = print_energy_info.operate_fee*1+print_energy_info.operate_overdue_fee*1 - print_energy_info.operate_exempt_fee*1;
+      this.$refs.printEnergy.print(print_energy_info , printJS);
+    },
+    // 打印租金账单
+    printRentBill(params){
+      getShopDetail({id: params.row.store_id, lease_type: 1}).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: "数据获取失败！"
+          })
+          return
+        }
+        const kitchenInfo = this.kitchen.filter(item => {
+          return (item.id  == params.row.kitchen_id)
+        });
+        let print_rent_info = {};
+        print_rent_info =  Object.assign({},params.row,kitchenInfo[0]);
+        print_rent_info.shopkeeper = res.data.data.shopkeeper;
+        this.$refs.printRent.print(print_rent_info , printJS);
+      })
+    },
+    // 显示弹窗
+    showAddStorePay( params ){
+      let storeBill = {}
+      storeBill.id = params.row.id;
+      storeBill.store_id = params.row.store_id;
+      storeBill.month = params.row.month;
+      storeBill.store_name = params.row.store_name;
+      storeBill.money = '';
+      storeBill.remark = '';
+      storeBill.sreach = { month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword };
+      this.storeBill = storeBill
+    },
+    // 展示收支列表
+    showEditStoreBudget(params){
+      let id = params.row.id;
+      getStoreBillPayList( { bill_id : id } ).then(res => {
+        const dbody = res.data
+        if(dbody.code != 0){
+          this.$Notice.warning({
+            title: dbody.msg,
+          })
+          return
+        }
+        let budget_list = {}
+        budget_list.list = dbody.data || [];
+        budget_list.sreach = { month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword };
+        this.budget_list  = budget_list;
+        console.log(this.budget_list)
+      })
+    },
+    // 搜索
+    // 选择厨房
+    selectKitchen(){
+      let select_kitchen = this.kitchen.filter((item,index,arr)=>{
+        if(item.id == this.select_kitchen_id){
+          return item
+        }
+      })
+      this.select_kitchen = select_kitchen[0]
+      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword})
+    },
+    //选择时间
+    selectDate(date){
+      this.select_time  = date;
+      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
+    },
+    //选择时间
+    changeKeyword( ){
+      this.initData({ month : this.select_time , kitchen_id:this.select_kitchen_id , keyword:this.keyword })
     },
     // 获取账单列表
     getStoreBillList(data){
@@ -939,8 +492,32 @@ export default {
         this.count_days = dbody.data.days;
       });
     },
+    // 初始化基础
+    initBaseData ( info ){
+      this.showInfo = {};
+      // 垃圾及隔油池
+      this.showInfo.garbage_fee = info.garbage_fee;
+      // 烟道清洗
+      this.showInfo.flue_fee = info.flue_fee;
+      // 消杀
+      this.showInfo.kill_fee = info.kill_fee;
+      // 网络使用费
+      this.showInfo.network_fee = info.network_fee;
+      // 水费基数
+      this.showInfo.water_fee = info.water_fee;
+      // 电费基数
+      this.showInfo.energy_fee = info.energy_fee;
+      // 库房费
+      this.showInfo.storage_fee = info.storage_fee;
+      // 卫生费
+      this.showInfo.health_fee = info.health_fee;
+      // 活跃档口数量
+      this.showInfo.store_count  = info.store_count;
+    },
     //初始化
     initData( info ){
+      // 基本属性
+      this.initBaseData( this.select_kitchen );
       // 获取已经生成列表的商户
       this.getStoreBillList( info );
     },
@@ -954,7 +531,7 @@ export default {
     mMonth = mMonth < 10 ? "0" + mMonth : mMonth;
     this.select_time = mYear +'-'+ mMonth;
     // 获取厨房列表
-    getKitchenList().then(res => {
+    getKitchenQueryList().then(res => {
       const dbody = res.data
       this.kitchen = dbody.data || []
       this.select_kitchen = this.kitchen[this.kitchen.length*1-1];
