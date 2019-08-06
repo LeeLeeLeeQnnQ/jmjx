@@ -205,6 +205,11 @@ export default {
       //厨房  商户名 档口号
       this.initLeaseinfo(this.data);
     },
+    // 图片预览
+    handleView (imgUrl) {
+      this.imgUrl = imgUrl
+      this.visible = true
+    },
     //租期租约卡片
     initLeaseinfo( data ){
       this.leaseinfo.settle_date = data.settle_date;
