@@ -335,7 +335,7 @@ export default {
     },
     fileStoreInfo () {
       let that = this
-      setFileStore(this.store_id).then(res => {
+      setFileStore({store_id:this.store_id}).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
           this.$Notice.warning({
