@@ -318,6 +318,7 @@ export default {
       obj.rent = Object.assign(this.end_tableData);
       setFileStore(obj).then(res => {
         const dbody = res.data
+        this.fileStoreModal = false;
         if (dbody.code == 0) {
           this.$Notice.warning({
             title: '归档完成！'
