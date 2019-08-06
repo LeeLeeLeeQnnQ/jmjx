@@ -305,6 +305,7 @@ export default {
       }
     },
     // 租期租约提交
+    // 租期租约提交
     leaseinfoSubmit(){
       if(this.archive.length <= 0){
         this.$Notice.warning({
@@ -312,30 +313,10 @@ export default {
         })
         return;
       }
-      if(!this.settle_date){
-        this.$Notice.warning({
-          title: '选择租金结算日期！'
-        })
-        return;
-      }
-      let obj = { store_id : this.store_id , settle_date : this.settle_date };
+      let obj = { store_id : this.store_id };
       obj.archive = this.archive.join(",");
-      let arr = Object.assign(this.end_tableData);
-      obj.rent = arr;
-      setEndShopEdit(obj).then(res => {
-        const dbody = res.data
-        if (dbody.code == 0) {
-          this.fileStoreInfo();
-        } else {
-          this.$Notice.warning({
-            title: dbody.msg
-          })
-        }
-      })
-    },
-    fileStoreInfo () {
-      let that = this
-      setFileStore({store_id:this.store_id}).then(res => {
+      obj.rent = Object.assign(this.end_tableData);
+      setFileStore(obj).then(res => {
         const dbody = res.data
         if (dbody.code == 0) {
           this.$Notice.warning({
