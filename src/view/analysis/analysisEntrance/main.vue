@@ -56,7 +56,7 @@ export default {
           width: 80
         },
         {
-          title: '建档日期',
+          title: '建档(开业)日期',
           key: 'create_date'
         },
         { title: '进场周期(天)',
