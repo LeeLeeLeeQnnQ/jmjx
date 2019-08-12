@@ -62,5 +62,7 @@ export default {
   permissionKeyList:'权限列表',
   permissionAddKey:'添加权限组',
   permissionSelectConfig:'下拉配置',
+  permissionCityList:'城市列表',
+  permissionBrandList:'品牌列表',
  
 }

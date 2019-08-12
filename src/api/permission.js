@@ -20,6 +20,165 @@ export const getEmployeeGroup = ( data ) => {
   })
 }
 
+
+
+/*
+  获取城市列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const getAllCityList = ( data ) => {
+  return axios.request({
+    url: '/api/City/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+/*
+  获取城市列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const getBrandList = ( data ) => {
+  return axios.request({
+    url: '/api/index/getBrandList',
+    params: data,
+    method: 'get'
+  })
+}
+
+/*
+  获取城市列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const getCityList = ( data ) => {
+  return axios.request({
+    url: '/api/index/getCityList',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+// addNewCity
+
+/*
+  获取权限租列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const addNewCity = ( data ) => {
+  return axios.request({
+    url: '/api/City/add',
+    data,
+    method: 'post'
+  })
+}
+
+
+// addNewCity
+
+/*
+  获取权限租列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const editCity = ( data ) => {
+  return axios.request({
+    url: '/api/City/edit',
+    data,
+    method: 'post'
+  })
+}
+
+
+
+
+/*
+  获取城市列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const getAllBrandList = ( data ) => {
+  return axios.request({
+    url: '/api/Brand/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+
+// addNewCity
+
+/*
+  获取权限租列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const addNewBrand = ( data ) => {
+  return axios.request({
+    url: '/api/Brand/add',
+    data,
+    method: 'post'
+  })
+}
+
+
+// addNewCity
+
+/*
+  获取权限租列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const editBrand = ( data ) => {
+  return axios.request({
+    url: '/api/Brand/edit',
+    data,
+    method: 'post'
+  })
+}
+
+
+
+
+
 /*
   增加一个人员
 */

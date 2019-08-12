@@ -11,22 +11,39 @@
     <Layout>
       <Header class="header-con">
         <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-          <user :message-unread-count="unreadCount" :user-name="userName"/>
-          <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
-          <div class="posLeft">
+          <div class="posLeft" >
             <a href="#" type="text" @click.prevent="goBack">返回上一页</a>
           </div>
+          <Dropdown class="posLeft  main-dropdown" style="margin-left: 120px;width: 100px;">
+              <a href="javascript:void(0)">
+                  <span>城市变更</span>
+                  <Icon :size="18" type="md-arrow-dropdown"></Icon>
+              </a>
+              <DropdownMenu slot="list">
+                  <DropdownItem>驴打滚</DropdownItem>
+                  <DropdownItem>炸酱面</DropdownItem>
+              </DropdownMenu>
+          </Dropdown>
+          <Dropdown class="posLeft  main-dropdown" style="margin-left: 225px;width: 100px;">
+              <a href="javascript:void(0)">
+                  <span>品牌变更</span>
+                  <Icon :size="18" type="md-arrow-dropdown"></Icon>
+              </a>
+              <DropdownMenu slot="list">
+                  <DropdownItem>驴打滚</DropdownItem>
+                  <DropdownItem>炸酱面</DropdownItem>
+              </DropdownMenu>
+          </Dropdown>
+
+          <user :message-unread-count="unreadCount" :user-name="userName"/>
+          <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+          
         </header-bar>
       </Header>
       <Content class="main-content-con">
         <Layout class="main-layout-con">
-         <!--  <div class="tag-nav-wrapper">
-            <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
-          </div> -->
           <Content class="content-wrapper">
             <keep-alive :exclude="exCludeList">
-            <!-- <keep-alive exclude="kitchenDataShopDetail"> -->
-            <!-- <keep-alive > -->
               <router-view/>
             </keep-alive>
             <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
@@ -203,6 +220,35 @@ export default {
 .left-sider{
   .ivu-layout-sider-children{
     background-color: #001529;
+  }
+}
+.main{
+  &-dropdown{
+    cursor: pointer;
+    display: inline-block;
+    height: 64px;
+    vertical-align: middle;
+    line-height: 64px;
+    .ivu-dropdown-rel{
+      height: 100%;
+    }
+    span{
+      max-width: 70%;
+      height: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    a{
+      color: #515A6e;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    :hover a{
+      color: #515A6e;
+    }
   }
 }
 </style>

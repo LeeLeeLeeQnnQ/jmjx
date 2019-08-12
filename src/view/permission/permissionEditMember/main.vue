@@ -72,6 +72,24 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
+            <FormItem label="所属城市" prop="city_id">
+                <Select v-model="formItem.city_id" multiple @on-change="obtainStoreChange">
+                  <Option v-for="item in city_list"  :value="item.id" :key="item.id">{{ item.city_name }}</Option>
+                </Select>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="所属品牌" prop="brand_id">
+                <Select v-model="formItem.brand_id" multiple @on-change="obtainStoreChange">
+                  <Option v-for="item in brand_list"  :value="item.id" :key="item.id">{{ item.brand_name }}</Option>
+                </Select>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
             <FormItem label="所属厨房" prop="kitchen_id">
                 <Select v-model="formItem.kitchen_id" multiple @on-change="obtainStoreChange">
                   <Option v-for="item in kitchen_list"  :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
@@ -119,6 +137,7 @@
 //权限
 // /api/Kitchen/index,/api/EmployeeGroup/index,/api/Employee/show,/api/Employee/edit
 import { getEmployeeGroup, getMemberDetail, editMember } from '@/api/permission'
+import { getBrandList, getCityList } from '@/api/permission'
 import { getKitchenQueryList } from '@/api/setting'
 import { getKitchenListStoreNo } from '@/api/data'
 export default {
@@ -131,7 +150,9 @@ export default {
         fullname: '',
         gender: '',
         group_id: '',
+        city_id: [],
         kitchen_id: [],
+        brand_id: [],
         password1: '',
         password2: '',
         remark: '',
@@ -170,15 +191,21 @@ export default {
         group_id: [
           { required: true}
         ],
+        city_id: [
+          { required: true}
+        ],
+        brand_id:[
+          { required: true}
+        ],
         kitchen_id: [
           { required: true}
         ]
       },
       permission_group: [],
       kitchen_list: [],
+      city_list:[],
+      brand_list:[],
       store_List:[],
-      kitchen_list_ok:false,
-      permission_group_ok:false,
     }
   },
   methods: {
@@ -267,31 +294,35 @@ export default {
     },
     // isOkToGetData
     isOkToGetData () {
-      if (this.kitchen_list_ok && this.permission_group_ok) {
-        getMemberDetail(this.member_id).then(res => {
-          const dbody = res.data
-          if (dbody.code != 0) {
-            this.$Notice.warning({
-              title: dbody.msg
-            })
-            return
-          }
-          this.kitchen_list_ok = false
-          this.permission_group_ok = false
-          let obj = Object.assign({},dbody.data)
-          obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item) : [];
-          obj.store_no = !!dbody.data.store_no ? dbody.data.store_no.split(',').map((item)=>item) : [];
-          obj.gender = !!dbody.data.gender ? dbody.data.gender+'' : '';
-          obj.data_rule = !!dbody.data.data_rule ? dbody.data.data_rule+'' : '';
-          if(obj.store_no.length > 0 && obj.kitchen_id.length > 0){
-            this.obtain_store = "2"
-          }
-          this.formItem = obj
-        })
-      }
+      getMemberDetail(this.member_id).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.kitchen_list_ok = false
+        this.permission_group_ok = false
+        let obj = Object.assign({},dbody.data)
+        obj.city_id = !!dbody.data.city_id ? dbody.data.city_id.split(',').map((item)=>item*1) : [];
+        obj.brand_id = !!dbody.data.brand_id ? dbody.data.brand_id.split(',').map((item)=>item*1) : [];
+
+
+        // 在这里获取厨房
+        obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item*1) : [];
+
+
+        obj.store_no = !!dbody.data.store_no ? dbody.data.store_no.split(',').map((item)=>item) : [];
+        obj.gender = !!dbody.data.gender ? dbody.data.gender+'' : '';
+        obj.data_rule = !!dbody.data.data_rule ? dbody.data.data_rule+'' : '';
+        if(obj.store_no.length > 0 && obj.kitchen_id.length > 0){
+          this.obtain_store = "2"
+        }
+        this.formItem = obj
+      })
     },
     // 请求档口
-
     getKitchenListStoreNo(kitchenIdArr){
       getKitchenListStoreNo(kitchenIdArr).then(res => {
         const dbody = res.data
@@ -347,14 +378,18 @@ export default {
     getEmployeeGroup().then(res => {
       const dbody = res.data
       this.permission_group = dbody.data.list || []
-      this.permission_group_ok = true
-      this.isOkToGetData()
+    })
+    getBrandList().then(res => {
+      const dbody = res.data
+      this.brand_list = dbody.data || []
+    })
+    getCityList().then(res => {
+      const dbody = res.data
+      this.city_list = dbody.data || []
     })
     getKitchenQueryList().then(res => {
       let dbody = res.data
       this.kitchen_list = dbody.data || []
-      this.kitchen_list_ok = true
-      this.isOkToGetData()
     })
     this.isOkToGetData()
   }

@@ -1,17 +1,6 @@
 <template>
   <div>
-    <Card shadow>
-      <Row :gutter="20">
-        <i-col :xs="12" :md="12" :lg="12">
-          <Select v-model="sreach.kitchen_id" multiple placeholder="请选择厨房">
-            <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
-          </Select>
-        </i-col>
-        <i-col :xs="3" :md="3" :lg="3">
-          <Button type="primary" shape="circle" long @click="sreachSubmit">搜索</Button>
-        </i-col>
-      </Row>
-    </Card>
+    <SreachBox :option="sreach_option" :getSreachInfo="sreachSubmit"></SreachBox>
     <Card shadow style="margin-top: 8px;">
       <tables ref="tables" v-model="memberTableData" :columns="memberColumns" />
     </Card>
@@ -21,18 +10,23 @@
 <script>
 //权限
 // Kitchen/index,Kitchen/getStoreDevice
+import  SreachBox  from '_c/sreach-box'
 import { getKitchenQueryList } from '@/api/setting'
 import { getKitchenStoreEmployeeList  } from '@/api/data'
 import Tables from '_c/tables'
 export default {
   name: 'analysisKitchenMember',
   components: {
-    Tables
+    Tables,
+    SreachBox
   },
   data () {
     return {
-      // 固体数据
-      kitchenList:[],
+      // 搜索设置
+      sreach_option:{
+        picker_kitchen:true,
+        kitchen_multiple:true,
+      },
       // 搜索条件
       sreach:{
         kitchen_id:[],
@@ -90,13 +84,8 @@ export default {
       })
     },
     // 搜索
-    sreachSubmit(){
-      if(this.sreach.kitchen_id.length <= 0){
-        this.$Notice.warning({
-          title: '厨房必须选择！'
-        })
-        return
-      }
+    sreachSubmit(sreachInfo){
+      this.sreach = sreachInfo
       this.initData({})
     },
   },
@@ -104,17 +93,7 @@ export default {
     
   },
   created () {
-    getKitchenQueryList().then(res => {
-      const dbody = res.data
-      if (dbody.code != 0) {
-        this.$Notice.warning({
-          title: dbody.msg
-        })
-        return
-      }
-      // 初始化函数
-      this.kitchenList = dbody.data || [];
-    })  
+  
   },
 }
 </script>

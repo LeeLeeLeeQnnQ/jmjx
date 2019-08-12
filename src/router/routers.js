@@ -940,6 +940,26 @@ export default [
         },
         component: () => import('@/view/permission/permissionSelectConfig/main.vue')
       },
+      {
+        path: '/permissionCityList',
+        name: 'permissionCityList',
+        meta: {
+          icon: '_weizhi',
+          title: '城市列表',
+          // access: [608],
+        },
+        component: () => import('@/view/permission/permissionCityList/main.vue')
+      },
+      {
+        path: '/permissionBrandList',
+        name: 'permissionBrandList',
+        meta: {
+          icon: '_tijikongjian',
+          title: '品牌列表',
+          // access: [609],
+        },
+        component: () => import('@/view/permission/permissionBrandList/main.vue')
+      },
     ]
   }, 
   // 401

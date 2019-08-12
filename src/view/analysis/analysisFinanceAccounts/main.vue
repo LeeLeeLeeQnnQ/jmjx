@@ -1,20 +1,6 @@
 <template>
   <div>
-    <Card shadow>
-      <Row :gutter="20">
-        <i-col :xs="12" :md="12" :lg="12">
-          <Select v-model="sreach.kitchen_id" multiple placeholder="请选择厨房">
-            <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
-          </Select>
-        </i-col>
-        <i-col :xs="6" :md="6" :lg="6">
-          <DatePicker  @on-change="selectDate"  type="month"  placeholder="选择时间" style="width: 200px"></DatePicker>
-        </i-col>
-        <i-col :xs="3" :md="3" :lg="3">
-          <Button type="primary" shape="circle" long @click="sreachSubmit">搜索</Button>
-        </i-col>
-      </Row>
-    </Card>
+    <SreachBox :option="sreach_option" :getSreachInfo="sreachSubmit"></SreachBox>
     <Row :gutter="20" style="margin-top: 15px;" v-for="item in column_data">
       <i-col :md="24" :lg="24" style="margin-bottom: 20px;">
         <Card>
@@ -42,25 +28,28 @@
 <script>
 //权限
 // Kitchen/index,KitchenIncome/queryList,KitchenIncome/getIncomeType,KitchenExpend/getExpendType
-import { getKitchenQueryList  } from '@/api/setting'
+import  SreachBox  from '_c/sreach-box'
 import { getKitchenAccounts , getIncomeType , getExpendType } from '@/api/finance'
 import Tables from '_c/tables'
 import { ChartColumn } from '_c/charts'
 export default {
   name: 'analysisFinanceAccounts',
   components: {
-    ChartColumn
+    ChartColumn,
+    SreachBox
   },
   data () {
     return {
-      // 固体数据
-      kitchenList:[],
+      // 搜索设置
+      sreach_option:{
+        picker_kitchen:true,
+        kitchen_multiple:true,
+        picker_month:true,
+      },
       // 搜索条件
       sreach:{
         kitchen_id:'',
-        start_time:'',
-        end_time:'',
-        category_id:'1',
+        month:'',
       },
       expendList:[],
       // init 数据
@@ -272,19 +261,8 @@ export default {
       this.sreach.month= date;
     },
     // 搜索
-    sreachSubmit(){
-      if(this.sreach.kitchen_id.length <= 0){
-        this.$Notice.warning({
-          title: '厨房必须选择！'
-        })
-        return
-      }
-      if(!this.sreach.month){
-        this.$Notice.warning({
-          title: '时间必须选择！'
-        })
-        return
-      }
+    sreachSubmit(sreachInfo){
+      this.sreach = sreachInfo;
       this.init({});
     },
   },
@@ -292,17 +270,6 @@ export default {
     
   },
   created () {
-    getKitchenQueryList().then(res => {
-      const dbody = res.data
-      if (dbody.code != 0) {
-        this.$Notice.warning({
-          title: dbody.msg
-        })
-        return
-      }
-      // 初始化函数
-      this.kitchenList = dbody.data || [];
-    });
     getIncomeType( ).then(res => {
       const dbody = res.data
       if(dbody.code != 0){
