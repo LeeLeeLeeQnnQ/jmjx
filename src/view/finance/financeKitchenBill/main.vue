@@ -62,7 +62,7 @@ import FSBStoreBudget from './components/FSBStoreBudget'
 // Index/getKitchenList,StoreBill/queryList,StoreCharge/queryList,StoreBill/queryPayList,StoreBill/addStoreBillPay,StoreBill/deleteStoreBillPay
 // import { getKitchenList  } from '@/api/data'
 import { getShopDetail } from '@/api/data'
-import { getKitchenQueryList } from '@/api/setting'
+import { getKitchenList } from '@/api/data'
 import { getStoreBillList , getStoreChargeItem , editStoreBillItem } from '@/api/kitchen'
 import { getStoreBillPayList , addStoreBillPay   , deleteStoreBillPay } from '@/api/finance'
 export default {
@@ -531,7 +531,7 @@ export default {
     mMonth = mMonth < 10 ? "0" + mMonth : mMonth;
     this.select_time = mYear +'-'+ mMonth;
     // 获取厨房列表
-    getKitchenQueryList().then(res => {
+    getKitchenList().then(res => {
       const dbody = res.data
       this.kitchen = dbody.data || []
       this.select_kitchen = this.kitchen[this.kitchen.length*1-1];

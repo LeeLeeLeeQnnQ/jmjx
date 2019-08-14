@@ -5,11 +5,24 @@ import { forEach, hasOneOf, objEqual } from '@/libs/tools'
 const { title, cookieExpires, useI18n } = config
 
 export const TOKEN_KEY = 'token'
+export const CITY_KEY = 'city'
+export const BRAND_KEY = 'brand'
 
 export const setToken = (token) => {
   window.localStorage.setItem('gdjumaotoken', token)
   Cookies.set(TOKEN_KEY, token, {expires: cookieExpires || 1})
 }
+
+export const setCity = (city) => {
+  window.localStorage.setItem('gdjumaocity', city)
+  Cookies.set(CITY_KEY, city, {expires: cookieExpires || 1})
+}
+
+export const setBrand = (brand) => {
+  Cookies.set(BRAND_KEY, brand, {expires: cookieExpires || 1})
+  window.localStorage.setItem('gdjumaobrand', brand)
+}
+
 export const setUsername = (username) => {
   window.localStorage.setItem('gdjumaousername', username)
 }
@@ -21,11 +34,31 @@ export const getToken = () => {
     return token
   } else { return false }
 }
+
 export const getUsername = () => {
   const username = window.localStorage.getItem('gdjumaousername')
   if (!!username) {return username}
   else { return false }
 }
+
+export const getCity = () => {
+  const city = window.localStorage.getItem('gdjumaocity')
+  if (!!city) {
+    Cookies.set(CITY_KEY, city, {expires: cookieExpires || 1})
+    return city
+  }
+  else { return  }
+}
+
+export const getBrand = () => {
+  const brand = window.localStorage.getItem('gdjumaobrand')
+  if (!!brand) {
+    Cookies.set(BRAND_KEY, brand, {expires: cookieExpires || 1})
+    return brand
+  }
+  else { return  }
+}
+
 
 export const getAccess = () => {
   const access = window.localStorage.getItem('gdjumaoaccess')

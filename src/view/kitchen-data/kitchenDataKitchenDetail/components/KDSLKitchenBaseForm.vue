@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { getKitchenQueryList , editKitchen  } from '@/api/setting'
+import { getKitchenShow , editKitchen  } from '@/api/setting'
 import { getManageList } from '@/api/data'
 export default {
   name: 'KDSLKitchenBaseForm',
@@ -142,8 +142,8 @@ export default {
         this.manageList = dbody.data
       })
     },
-    getKitchenQueryList( ){
-      getKitchenQueryList(  ).then(res => {
+    getKitchenShow( data ){
+      getKitchenShow( data ).then(res => {
         let that = this;
         const dbody = res.data
         if (dbody.code != 0) {
@@ -152,13 +152,7 @@ export default {
           })
           return
         }
-        let kitchenList = dbody.data || [];
-        kitchenList.forEach( (element)=>{
-          if(this.kitchen_id*1 == element.id*1){
-            this.kitchen = element;
-          }
-          return
-        });
+        this.kitchen = dbody.data;
       })
     },
     setBaseInfo( obj ){
@@ -219,7 +213,10 @@ export default {
     },
     // init
     initData(){
-      this.getKitchenQueryList()
+      if(!this.kitchen_id){
+        return
+      }
+      this.getKitchenShow({id:this.kitchen_id})
     },
   },
   created(){
@@ -232,7 +229,9 @@ export default {
     
   },
   watch: {
-    
+    kitchen_id (newV, oldV) {
+      this.initData();
+    },
   }
 }
 </script>

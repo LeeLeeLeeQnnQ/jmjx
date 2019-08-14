@@ -73,7 +73,7 @@
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
             <FormItem label="所属城市" prop="city_id">
-                <Select v-model="formItem.city_id" multiple @on-change="obtainStoreChange">
+                <Select v-model="formItem.city_id" multiple @on-change="obtainKitchenChange">
                   <Option v-for="item in city_list"  :value="item.id" :key="item.id">{{ item.city_name }}</Option>
                 </Select>
             </FormItem>
@@ -82,7 +82,7 @@
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
             <FormItem label="所属品牌" prop="brand_id">
-                <Select v-model="formItem.brand_id" multiple @on-change="obtainStoreChange">
+                <Select v-model="formItem.brand_id" multiple @on-change="obtainKitchenChange">
                   <Option v-for="item in brand_list"  :value="item.id" :key="item.id">{{ item.brand_name }}</Option>
                 </Select>
             </FormItem>
@@ -137,7 +137,7 @@
 //权限
 // /api/Kitchen/index,/api/EmployeeGroup/index,/api/Employee/show,/api/Employee/edit
 import { getEmployeeGroup, getMemberDetail, editMember } from '@/api/permission'
-import { getBrandList, getCityList } from '@/api/permission'
+import { getAllCityQueryList, getAllBrandQueryList } from '@/api/permission'
 import { getKitchenQueryList } from '@/api/setting'
 import { getKitchenListStoreNo } from '@/api/data'
 export default {
@@ -231,6 +231,18 @@ export default {
         })
         return false
       }
+      if (!obj.city_id || obj.city_id.length <= 0 ) {
+        this.$Notice.warning({
+          title: '城市不能为空！'
+        })
+        return false
+      }
+      if (!obj.brand_id || obj.brand_id.length <= 0 ) {
+        this.$Notice.warning({
+          title: '品牌不能为空！'
+        })
+        return false
+      }
       if (!obj.kitchen_id || obj.kitchen_id.length <= 0 ) {
         this.$Notice.warning({
           title: '厨房不能为空！'
@@ -275,6 +287,10 @@ export default {
         }
         delete obj.create_time
         delete obj.update_time
+        obj.kitchen_id.sort(function (a, b) { return a * 1 - b * 1 })
+        obj.brand_id.sort(function (a, b) { return a * 1 - b * 1 })
+        obj.city_id.sort(function (a, b) { return a * 1 - b * 1 })
+
         editMember(obj).then(res => {
           const dbody = res.data
           if (dbody.code == 0) {
@@ -307,12 +323,9 @@ export default {
         let obj = Object.assign({},dbody.data)
         obj.city_id = !!dbody.data.city_id ? dbody.data.city_id.split(',').map((item)=>item*1) : [];
         obj.brand_id = !!dbody.data.brand_id ? dbody.data.brand_id.split(',').map((item)=>item*1) : [];
-
-
+        this.getKitchenQueryList({city_id:obj.city_id,brand_id:obj.brand_id})
         // 在这里获取厨房
         obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item*1) : [];
-
-
         obj.store_no = !!dbody.data.store_no ? dbody.data.store_no.split(',').map((item)=>item) : [];
         obj.gender = !!dbody.data.gender ? dbody.data.gender+'' : '';
         obj.data_rule = !!dbody.data.data_rule ? dbody.data.data_rule+'' : '';
@@ -362,6 +375,29 @@ export default {
         return
       }
     },
+    getKitchenQueryList(data){
+      if(!data.brand_id || data.brand_id.length <= 0){
+        return
+      }
+      if(!data.city_id || data.city_id.length <= 0){
+        return
+      }
+      let info = {
+        city_id:data.city_id.join(','),
+        brand_id:data.brand_id.join(','),
+      }
+      getKitchenQueryList(info).then(res => {
+        let dbody = res.data
+        this.kitchen_list = dbody.data || []
+      })
+    },
+    obtainKitchenChange(){
+      let data = {
+        city_id:this.formItem.city_id,
+        brand_id:this.formItem.brand_id,
+      }
+      this.getKitchenQueryList(data);
+    },
   },
   computed: {
       obtain_select_disabled() {
@@ -379,17 +415,13 @@ export default {
       const dbody = res.data
       this.permission_group = dbody.data.list || []
     })
-    getBrandList().then(res => {
+    getAllBrandQueryList().then(res => {
       const dbody = res.data
       this.brand_list = dbody.data || []
     })
-    getCityList().then(res => {
+    getAllCityQueryList().then(res => {
       const dbody = res.data
       this.city_list = dbody.data || []
-    })
-    getKitchenQueryList().then(res => {
-      let dbody = res.data
-      this.kitchen_list = dbody.data || []
     })
     this.isOkToGetData()
   }

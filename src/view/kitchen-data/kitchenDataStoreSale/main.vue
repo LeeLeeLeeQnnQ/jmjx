@@ -21,7 +21,8 @@
 import Tables from '_c/tables'
 // 权限
 // Kitchen/index,KitchenStore/querylist
-import { getKitchenQueryList , getKitchenStoreQueryList } from '@/api/setting'
+import { getKitchenStoreQueryList } from '@/api/setting'
+import { getKitchenList } from '@/api/data'
 export default {
   name: 'kitchenDataStoreSale',
   components: {
@@ -121,7 +122,7 @@ export default {
     },
   },
   mounted () {
-    getKitchenQueryList().then(res => {
+    getKitchenList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({

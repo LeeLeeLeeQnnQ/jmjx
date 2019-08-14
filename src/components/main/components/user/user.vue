@@ -1,14 +1,9 @@
 <template>
   <div class="user-avator-dropdown">
     <Dropdown @on-click="handleClick">
-      <!-- <Badge :dot="!!messageUnreadCount">
-        <Avatar :src="userAvator"/>
-      </Badge> -->
-      <!-- <Avatar :src="userAvator"/> -->
       <span>{{userName}}</span>
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
-        <!-- <DropdownItem name="message">修改区域与品牌</DropdownItem> -->
         <DropdownItem name="setting">修改设置</DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
@@ -22,18 +17,10 @@ import { mapActions } from 'vuex'
 export default {
   name: 'User',
   props: {
-    userAvator: {
-      type: String,
-      default: ''
-    },
     userName: {
       type: String,
       default: ''
     },
-    messageUnreadCount: {
-      type: Number,
-      default: 0
-    }
   },
   methods: {
     ...mapActions([
@@ -44,11 +31,6 @@ export default {
         this.$router.push({
           name: 'login'
         })
-      })
-    },
-    message () {
-      this.$router.push({
-        name: 'message_page'
       })
     },
     setting () {

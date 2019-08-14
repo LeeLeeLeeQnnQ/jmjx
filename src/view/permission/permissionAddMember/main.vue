@@ -72,6 +72,24 @@
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10">
+            <FormItem label="所属城市" prop="city_id">
+                <Select v-model="formItem.city_id" multiple @on-change="obtainKitchenChange">
+                  <Option v-for="item in city_list"  :value="item.id" :key="item.id">{{ item.city_name }}</Option>
+                </Select>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
+            <FormItem label="所属品牌" prop="brand_id">
+                <Select v-model="formItem.brand_id" multiple @on-change="obtainKitchenChange">
+                  <Option v-for="item in brand_list"  :value="item.id" :key="item.id">{{ item.brand_name }}</Option>
+                </Select>
+            </FormItem>
+          </i-col>
+        </Row>
+        <Row type="flex" justify="start" align="middle" :gutter="20">
+          <i-col span="10">
             <FormItem label="所属厨房" prop="kitchen_id">
                 <Select v-model="formItem.kitchen_id" multiple @on-change="obtainStoreChange">
                   <Option v-for="item in kitchen_list"  :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
@@ -119,6 +137,7 @@
 //权限
 // /api/Kitchen/index,/api/EmployeeGroup/index,/api/Employee/add
 import { getEmployeeGroup, addMember } from '@/api/permission'
+import { getAllCityQueryList, getAllBrandQueryList } from '@/api/permission'
 import { getKitchenQueryList } from '@/api/setting'
 import { getKitchenListStoreNo } from '@/api/data'
 export default {
@@ -139,6 +158,8 @@ export default {
         store_no:[],
         remark:'',
         is_super:'0',
+        brand_id:'',
+        city_id:'',
       },
       obtain_store:"1",
       password: '',
@@ -172,11 +193,19 @@ export default {
         ],
         kitchen_id: [
           { required: true}
-        ]
+        ],
+        brand_id: [
+          { required: true}
+        ],
+        city_id: [
+          { required: true}
+        ],
       },
       permission_group: [],
       kitchen_list: [],
       store_List:[],
+      brand_list:[],
+      city_list:[],
     }
   },
   methods: {
@@ -238,7 +267,9 @@ export default {
     // 提交
     handleSubmit () {
       let obj = this.formItem
-      this.formItem.kitchen_id = this.formItem.kitchen_id.sort(function (a, b) { return a * 1 - b * 1 })
+      obj.kitchen_id.sort(function (a, b) { return a * 1 - b * 1 })
+      obj.brand_id.sort(function (a, b) { return a * 1 - b * 1 })
+      obj.city_id.sort(function (a, b) { return a * 1 - b * 1 })
       let that = this
       if (this.submitValidateField(obj)) {
         obj.password = this.password
@@ -298,6 +329,29 @@ export default {
         return
       }
     },
+    getKitchenQueryList(data){
+      if(!data.brand_id || data.brand_id.length <= 0){
+        return
+      }
+      if(!data.city_id || data.city_id.length <= 0){
+        return
+      }
+      let info = {
+        city_id:data.city_id.join(','),
+        brand_id:data.brand_id.join(','),
+      }
+      getKitchenQueryList(info).then(res => {
+        let dbody = res.data
+        this.kitchen_list = dbody.data || []
+      })
+    },
+    obtainKitchenChange(){
+      let data = {
+        city_id:this.formItem.city_id,
+        brand_id:this.formItem.brand_id,
+      }
+      this.getKitchenQueryList(data);
+    },
   },
   computed: {
       obtain_select_disabled() {
@@ -316,6 +370,14 @@ export default {
     getKitchenQueryList().then(res => {
       let dbody = res.data
       this.kitchen_list = dbody.data || [];
+    })
+    getAllBrandQueryList().then(res => {
+      const dbody = res.data
+      this.brand_list = dbody.data || []
+    })
+    getAllCityQueryList().then(res => {
+      const dbody = res.data
+      this.city_list = dbody.data || []
     })
     this.$refs.formItem.resetFields()
   }

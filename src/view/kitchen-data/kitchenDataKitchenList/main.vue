@@ -73,7 +73,8 @@
 // 权限
 // /api/Kitchen/index,/api/Kitchen/add,/api/Kitchen/delete
 import Tables from '_c/tables'
-import { getKitchenQueryList , addKitchen  , deleKitchen } from '@/api/setting'
+import { addKitchen  , deleKitchen  } from '@/api/setting'
+import { getKitchenList } from '@/api/data'
 export default {
   name: 'kitchenDataKitchenList',
   components: {
@@ -217,7 +218,7 @@ export default {
           return
         }
         // 处理成功逻辑
-        getKitchenQueryList().then(res => {
+        getKitchenList().then(res => {
           const dbody = res.data
           if (dbody.code != 0) {
             this.$Notice.warning({
@@ -240,7 +241,7 @@ export default {
           return
         }
         // 处理成功逻辑
-        getKitchenQueryList().then(res => {
+        getKitchenList().then(res => {
           const dbody = res.data
           if (dbody.code != 0) {
             this.$Notice.warning({
@@ -261,7 +262,7 @@ export default {
     }
   },
   mounted () {
-    getKitchenQueryList().then(res => {
+    getKitchenList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({

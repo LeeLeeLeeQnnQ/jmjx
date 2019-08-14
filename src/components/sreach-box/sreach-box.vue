@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { getKitchenQueryList } from '@/api/setting'
+import { getKitchenList } from '@/api/data'
 export default {
   name: 'SreachBox',
   props: {
@@ -69,7 +69,7 @@ export default {
     },
   },
   created () {
-    getKitchenQueryList().then(res => {
+    getKitchenList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({

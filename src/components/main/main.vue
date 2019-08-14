@@ -14,28 +14,34 @@
           <div class="posLeft" >
             <a href="#" type="text" @click.prevent="goBack">返回上一页</a>
           </div>
-          <Dropdown class="posLeft  main-dropdown" style="margin-left: 120px;width: 100px;">
+          <Dropdown
+            @on-click="handleClickCity"
+            class="posLeft  main-dropdown"
+            style="margin-left: 120px;width: 100px;"
+            >
               <a href="javascript:void(0)">
-                  <span>城市变更</span>
+                  <span>{{currentCity}}</span>
                   <Icon :size="18" type="md-arrow-dropdown"></Icon>
               </a>
               <DropdownMenu slot="list">
-                  <DropdownItem>驴打滚</DropdownItem>
-                  <DropdownItem>炸酱面</DropdownItem>
+                  <DropdownItem v-for="item in cityList" :name="item.id">{{item.city_name}}</DropdownItem>
               </DropdownMenu>
           </Dropdown>
-          <Dropdown class="posLeft  main-dropdown" style="margin-left: 225px;width: 100px;">
+          <Dropdown
+            @on-click="handleClickBrand"
+            class="posLeft  main-dropdown"
+            style="margin-left: 225px;width: 100px;"
+            >
               <a href="javascript:void(0)">
-                  <span>品牌变更</span>
+                  <span>{{currentBrand}}</span>
                   <Icon :size="18" type="md-arrow-dropdown"></Icon>
               </a>
               <DropdownMenu slot="list">
-                  <DropdownItem>驴打滚</DropdownItem>
-                  <DropdownItem>炸酱面</DropdownItem>
+                  <DropdownItem v-for="item in brandList" :name="item.id">{{item.brand_name}}</DropdownItem>
               </DropdownMenu>
           </Dropdown>
 
-          <user :message-unread-count="unreadCount" :user-name="userName"/>
+          <user :user-name="userName"/>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
           
         </header-bar>
@@ -43,7 +49,7 @@
       <Content class="main-content-con">
         <Layout class="main-layout-con">
           <Content class="content-wrapper">
-            <keep-alive :exclude="exCludeList">
+            <keep-alive :exclude="exCludeList" v-if="isRouterAlive">
               <router-view/>
             </keep-alive>
             <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
@@ -54,14 +60,15 @@
   </Layout>
 </template>
 <script>
+import { getBrandList, getCityList } from '@/api/permission'
+
 import SideMenu from './components/side-menu'
 import HeaderBar from './components/header-bar'
-// import TagsNav from './components/tags-nav'
 import User from './components/user'
 import ABackTop from './components/a-back-top'
 import Fullscreen from './components/fullscreen'
 import { mapMutations, mapActions, mapGetters } from 'vuex'
-import { getNewTagList, getNextRoute, routeEqual, getUsername } from '@/libs/util'
+import { getUsername , getCity , getBrand , setCity , setBrand } from '@/libs/util'
 import routers from '@/router/routers'
 import minLogo from '@/assets/images/logo-min.jpg'
 import maxLogo from '@/assets/images/logo.jpg'
@@ -71,7 +78,6 @@ export default {
   components: {
     SideMenu,
     HeaderBar,
-    // TagsNav,
     Fullscreen,
     User,
     ABackTop
@@ -82,21 +88,14 @@ export default {
       minLogo,
       maxLogo,
       isFullscreen: false,
+      brandList:[],
+      cityList:[],
+      currentCity:'',
+      currentBrand:'',
+      isRouterAlive:true,
     }
   },
   computed: {
-    ...mapGetters([
-      'errorCount'
-    ]),
-    tagNavList () {
-      return this.$store.state.app.tagNavList
-    },
-    tagRouter () {
-      return this.$store.state.app.tagRouter
-    },
-    userAvator () {
-      return this.$store.state.user.avatorImgPath
-    },
     userName () {
       return getUsername()
     },
@@ -111,23 +110,10 @@ export default {
     local () {
       return this.$store.state.app.local
     },
-    hasReadErrorPage () {
-      return this.$store.state.app.hasReadErrorPage
-    },
-    unreadCount () {
-      return this.$store.state.user.unreadCount
-    },
-    notCacheName () {
-      return (this.$route.meta && this.$route.meta.notCache) ? this.$route.name : ''
-    }
   },
   methods: {
     ...mapMutations([
-      'setBreadCrumb',
-      'setTagNavList',
-      'addTag',
       'setLocal',
-      'setHomeRoute',
     ]),
     ...mapActions([
       'handleLogin'
@@ -163,56 +149,74 @@ export default {
     handleCollapsedChange (state) {
       this.collapsed = state
     },
-    handleCloseTag (res, type, route) {
-      if (type === 'all') {
-        this.turnToPage(this.$config.homeName)
-      } else if (routeEqual(this.$route, route)) {
-        if (type !== 'others') {
-          const nextRoute = getNextRoute(this.tagNavList, route)
-          this.$router.push(nextRoute)
-        }
-      }
-      this.setTagNavList(res)
-    },
-    handleClick (item) {
-      this.turnToPage(item)
-    },
      // 返回上一页
     goBack(){
       this.$router.go(-1);
-    }
+    },
+    // 城市列表
+    getBrandList(){
+      getBrandList().then(res => {
+        const dbody = res.data
+        this.brandList = dbody.data || [];
+        this.currentBrand = this.setCurrentBrand()
+      })
+    },
+    getCityList(){
+      getCityList().then(res => {
+        const dbody = res.data
+        this.cityList = dbody.data || [];
+        this.currentCity = this.setCurrentCity()
+      })
+    },
+    handleClickCity(name){
+      setCity(name)
+      this.currentCity = this.setCurrentCity();
+      this.reload();
+    },
+    handleClickBrand(name){
+      setBrand(name)
+      this.currentBrand = this.setCurrentBrand();
+      this.reload();
+    },
+    setCurrentCity(){
+      let id = getCity();
+      let name = ''
+      this.cityList.forEach((item)=>{
+        if(item.id*1 == id*1){
+          name = item.city_name;
+        }
+      })
+      return name
+    },
+    setCurrentBrand(){
+      let id = getBrand();
+      let name = ''
+      this.brandList.forEach((item)=>{
+        if(item.id*1 == id*1){
+          name = item.brand_name;
+        }
+      })
+      return name
+    },
+    reload () {
+       this.isRouterAlive = false
+       this.$nextTick(() => (this.isRouterAlive = true))
+     }
   },
   watch: {
-    // '$route' (newRoute) {
-    //   const { name, query, params, meta } = newRoute
-    //   this.addTag({
-    //     route: { name, query, params, meta },
-    //     type: 'push'
-    //   })
-    //   this.setBreadCrumb(newRoute)
-    //   this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
-    //   this.$refs.sideMenu.updateOpenName(newRoute.name)
-    // }
+
+  },
+  mounted(){
+    
+    
   },
   created () {
     /**
      * @description 初始化设置面包屑导航和标签导航
      */
-    // this.setTagNavList()
-    // console.log(this.tagNavList)
-    // this.setHomeRoute(routers)
-    // this.addTag({
-    //   route: this.$store.state.app.homeRoute
-    // })
-    // this.setBreadCrumb(this.$route)
-    // // 设置初始语言
     this.setLocal(this.$i18n.locale)
-    // 如果当前打开页面不在标签栏中，跳到homeName页
-    // if (!this.tagNavList.find(item => item.name === this.$route.name)) {
-    //   this.$router.push({
-    //     name: this.$config.homeName
-    //   })
-    // }
+    this.getBrandList()
+    this.getCityList()
   }
 }
 </script>

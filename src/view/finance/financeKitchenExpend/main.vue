@@ -27,7 +27,7 @@
 import Tables from '_c/tables'
 //权限
 // /api/Kitchen/index,/api/KitchenExpend/index,/api/KitchenExpend/delete
-import { getKitchenQueryList } from '@/api/setting'
+import { getKitchenList } from '@/api/data'
 import { getKitchenExpendList , deleteKitchenExpend } from '@/api/finance'
 export default {
   name: 'financeKitchenExpend',
@@ -222,7 +222,7 @@ export default {
   },
   mounted () {
     // 获取厨房列表
-    getKitchenQueryList().then(res => {
+    getKitchenList().then(res => {
       const dbody = res.data
       if (dbody.code != 0) {
         this.$Notice.warning({

@@ -135,6 +135,30 @@ export const getAllBrandList = ( data ) => {
 }
 
 
+/*
+  获取城市列表
+*/
+/*
+  no-data
+*/
+/*
+  
+*/
+export const getAllCityQueryList = ( data ) => {
+  return axios.request({
+    url: '/api/City/getCityList',
+    params: data,
+    method: 'get'
+  })
+}
+export const getAllBrandQueryList = ( data ) => {
+  return axios.request({
+    url: '/api/Brand/getBrandList',
+    params: data,
+    method: 'get'
+  })
+}
+
 
 // addNewCity
 

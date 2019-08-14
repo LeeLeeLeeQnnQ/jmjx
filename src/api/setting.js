@@ -25,6 +25,7 @@ export const getKitchenList = () => {
   })
 }
 
+
 /*
   获取厨房列表 
   没有权限控制 获取全部厨房列表
@@ -43,10 +44,28 @@ export const getKitchenList = () => {
   create_member -- list
   edit_Member -- list
 */
-export const getKitchenQueryList = () => {
+
+
+// getKitchenQueryList
+export const getKitchenQueryList = (data) => {
   return axios.request({
     url: '/api/Kitchen/queryList',
-    method: 'get'
+    data,
+    method: 'post'
+  })
+}
+
+
+
+
+
+
+
+export const getKitchenShow = (data) => {
+  return axios.request({
+    url: '/api/Kitchen/show',
+    data,
+    method: 'post'
   })
 }
 /*
