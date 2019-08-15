@@ -36,7 +36,15 @@
         <Row type="flex" justify="start" align="middle" :gutter="20">
           <i-col span="10" >
             <FormItem label="招商经理" prop="manage_lease_id">
-                <Select v-model="formItem.manage_lease_id" @on-change="selectmanageLease">
+                 <Select
+                  v-model="formItem.manage_lease_id"
+                  filterable
+                  remote
+                  clearable
+                  :remote-method="remoteLeaseMethod"
+                  :loading="remoteLoading"
+                  @on-change="selectmanageLease"
+                  >
                   <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
                 </Select>
             </FormItem>
@@ -248,6 +256,7 @@ export default {
       },
       // 招商经理列表
       leasingList: [],
+      remoteLoading:false,
       // leasingList:[],
       // 厨房列表
       kitchenList: [],
@@ -265,6 +274,26 @@ export default {
     }
   },
   methods: {
+    remoteLeaseMethod (query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          getLeasingList({keyword:query}).then(res => {
+            const dbody = res.data
+            this.remoteLoading = false;
+            if (dbody.code != 0) {
+              this.$Notice.warning({
+                title: dbody.msg
+              })
+              return
+            }
+            this.leasingList = dbody.data || [];
+          }).catch(err =>{
+            this.remoteLoading = false;
+          })
+        } else {
+          this.leasingList = [];
+        }
+    },
     // 设置签约时间
     setSignDate(date){
       this.formItem.sign_date = date;
@@ -529,10 +558,18 @@ export default {
           }, 1000)
           return
         }
-        this.formItem = dbody.data;
-        this.uploadList = !! dbody.data.pay ? dbody.data.pay.split(',') : [];
-        this.contract = !! dbody.data.contract ? dbody.data.contract.split(',') : [];
-        this.selectKitchen();
+        let obj = {
+          id:dbody.data.manage_lease_id,
+          fullname:dbody.data.manage_lease,
+        }
+        this.leasingList = [];
+        this.leasingList.push(obj);
+        this.$nextTick(() => {
+          this.formItem = dbody.data;
+          this.uploadList = !! dbody.data.pay ? dbody.data.pay.split(',') : [];
+          this.contract = !! dbody.data.contract ? dbody.data.contract.split(',') : [];
+          this.selectKitchen();
+        })
       })
       this.$refs.formItem.resetFields()
     }
@@ -542,10 +579,6 @@ export default {
     getKitchenList().then(res => {
       const dbody = res.data
       this.kitchenList = dbody.data
-    })
-    getLeasingList().then(res => {
-      const dbody = res.data
-      this.leasingList = dbody.data
     })
     getWorkCategoryList( "7" ).then(res => {
       const dbody = res.data

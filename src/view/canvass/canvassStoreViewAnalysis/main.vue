@@ -9,10 +9,18 @@
             </FormItem>
           </i-col>
           <i-col :md="6" :lg="6">
-            <FormItem label="招商经理">
-              <Select v-model="sreachInfo.employee_id" clearable style="width: 200px">
-                <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
-              </Select>
+            <FormItem label="招商经理" prop="manage_lease_id">
+                 <Select
+                  v-model="sreachInfo.employee_id"
+                  filterable
+                  remote
+                  clearable
+                  :remote-method="remoteLeaseMethod"
+                  :loading="remoteLoading"
+                  style="width: 200px"
+                  >
+                  <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
+                </Select>
             </FormItem>
           </i-col>
           <i-col :md="6" :lg="6">
@@ -193,6 +201,7 @@ export default {
       kitchenList:[],
       // 产品经理列表
       leasingList:[],
+      remoteLoading:false,
       // 未成交因素 
       considers_list:["已成交","费用高","区域门店保护","客户开店计划尚未成熟","项目施工开业较晚","商圈流量较低","没有堂食","商圈竞争激烈","资质证件未办齐","其他因素务必备注说明"],
       category_list:["快餐","米粉","面馆","粥店","麻辣烫麻辣拌","麻辣香锅","汉堡炸鸡","黄焖鸡","炒饭","烤肉拌饭","凉皮","锅贴","饮品","甜点蛋糕","其他"],
@@ -218,9 +227,28 @@ export default {
     }
   },
   methods: {
+    remoteLeaseMethod (query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          getLeasingList({keyword:query}).then(res => {
+            const dbody = res.data
+            this.remoteLoading = false;
+            if (dbody.code != 0) {
+              this.$Notice.warning({
+                title: dbody.msg
+              })
+              return
+            }
+            this.leasingList = dbody.data || [];
+          }).catch(err =>{
+            this.remoteLoading = false;
+          })
+        } else {
+          this.leasingList = [];
+        }
+    },
     // 初始化数据
     initData( ){
-      this.getLeasingList();
       this.getKitchenList();
     },
     // 
@@ -389,13 +417,6 @@ export default {
     selectDate(date){
       this.sreachInfo.start_time = date[0]
       this.sreachInfo.end_time = date[1]
-    },
-    // 获取招商经理
-    getLeasingList(){
-      getLeasingList().then(res => {
-        const dbody = res.data
-        this.leasingList = dbody.data
-      })
     },
     // 获取厨房
     getKitchenList(){

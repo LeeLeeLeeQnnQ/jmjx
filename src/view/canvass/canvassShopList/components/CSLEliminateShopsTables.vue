@@ -41,7 +41,7 @@ export default {
         {title: '商铺名', key: 'store_name'},
         {title: '归档时间',
           render: (h, params) => {
-            let archive_time = params.row.archive_time*1
+            let archive_time = params.row.archive_time*1000
             return h('span', this.getdate(archive_time))
           },sortable: 'custom'
         },
@@ -150,8 +150,8 @@ export default {
     },
 
     // 时间转换
-    getdate() {
-        var now = new Date(),
+    getdate(t) {
+        var now = new Date(t),
             y = now.getFullYear(),
             m = ("0" + (now.getMonth() + 1)).slice(-2),
             d = ("0" + now.getDate()).slice(-2);

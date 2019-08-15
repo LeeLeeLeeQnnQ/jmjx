@@ -6,7 +6,17 @@
           <DatePicker type="daterange" placeholder="选择时间段" style="min-width: 200px" @on-change="selectDate"></DatePicker>
         </i-col>
         <i-col>
-          <Select v-model="sreach_info.manage_lease_id" @on-change="selectManageLeaseId" clearable style="width: 200px" placeholder="选择招商人员">
+          <Select
+            v-model="sreach_info.manage_lease_id"
+            filterable
+            remote
+            :remote-method="remoteLeaseMethod"
+            :loading="remoteLoading"
+            clearable
+            @on-change="selectManageLeaseId"
+            placeholder="选择招商经理"
+            style="width: 200px"
+            >
             <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
           </Select>
         </i-col>
@@ -53,7 +63,8 @@ export default {
         customer_source:'',
       },
       // 招商列表
-      leasingList:'',
+      leasingList:[],
+      remoteLoading:false,
       // 表格
       sign_analysis_columns: [
         {title: '厨房', key: 'kitchen_name'},
@@ -103,6 +114,26 @@ export default {
     }
   },
   methods: {
+    remoteLeaseMethod (query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          getLeasingList({keyword:query}).then(res => {
+            const dbody = res.data
+            this.remoteLoading = false;
+            if (dbody.code != 0) {
+              this.$Notice.warning({
+                title: dbody.msg
+              })
+              return
+            }
+            this.leasingList = dbody.data || [];
+          }).catch(err =>{
+            this.remoteLoading = false;
+          })
+        } else {
+          this.leasingList = [];
+        }
+    },
     // 选择时间
     selectDate(date){
       this.sreach_info.start_time = date[0]
@@ -110,13 +141,6 @@ export default {
       let info = Object.assign({}, this.sreach_info);
       info.page = this.page.current_page;
       this.initData(info)
-    },
-    // 获取招商经理
-    getLeasingList(){
-      getLeasingList().then(res => {
-        const dbody = res.data
-        this.leasingList = dbody.data
-      })
     },
     // 选择招商经理
     selectManageLeaseId(){
@@ -161,7 +185,6 @@ export default {
     },
     //初始化
     init(){
-      this.getLeasingList();
       this.initData();
     },
   },

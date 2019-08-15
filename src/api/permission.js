@@ -51,7 +51,7 @@ export const getAllCityList = ( data ) => {
 */
 export const getBrandList = ( data ) => {
   return axios.request({
-    url: '/api/index/getBrandList',
+    url: '/api/Index/getBrandList',
     params: data,
     method: 'get'
   })
@@ -68,7 +68,7 @@ export const getBrandList = ( data ) => {
 */
 export const getCityList = ( data ) => {
   return axios.request({
-    url: '/api/index/getCityList',
+    url: '/api/Index/getCityList',
     params: data,
     method: 'get'
   })

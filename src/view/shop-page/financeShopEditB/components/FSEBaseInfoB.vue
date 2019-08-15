@@ -33,16 +33,24 @@
         </i-col>
       </Row>
       <Row type="flex" justify="start" align="middle" :gutter="20">
-        <i-col span="10">
+<!--         <i-col span="10">
           <FormItem label="负责店长" prop="manage_id">
               <Select v-model="baseinfo.manage_id" @on-change="selectmanageName">
                 <Option v-for="item in manageList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
               </Select>
           </FormItem>
-        </i-col>
-        <i-col span="10" offset="2">
+        </i-col> -->
+        <i-col span="10">
           <FormItem label="招商经理" prop="manage_lease_id">
-              <Select v-model="baseinfo.manage_lease_id" @on-change="selectmanageLease">
+               <Select
+                v-model="baseinfo.manage_lease_id"
+                filterable
+                remote
+                clearable
+                :remote-method="remoteLeaseMethod"
+                :loading="remoteLoading"
+                @on-change="selectmanageLease"
+                >
                 <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
               </Select>
           </FormItem>
@@ -131,9 +139,10 @@ export default {
       // 基本资料
       baseinfo:{},
       // 店长列表
-      manageList: [],
+      // manageList: [],
       // 招商列表
       leasingList:[],
+      remoteLoading:false,
       // 厨房列表
       kitchenList:[],
       // 商户列表
@@ -141,23 +150,55 @@ export default {
     }
   },
   methods: {
+    remoteLeaseMethod (query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          getLeasingList({keyword:query}).then(res => {
+            const dbody = res.data
+            this.remoteLoading = false;
+            if (dbody.code != 0) {
+              this.$Notice.warning({
+                title: dbody.msg
+              })
+              return
+            }
+            this.leasingList = dbody.data || [];
+          }).catch(err =>{
+            this.remoteLoading = false;
+          })
+        } else {
+          this.leasingList = [];
+        }
+    },
     initData(){
-      this.baseinfo = Object.assign({},this.data)
+      let data = Object.assign({},this.data)
+      if(!data.id){
+        return
+      }
+      let obj = {
+        id:data.manage_lease_id,
+        fullname:data.manage_lease,
+      }
+      this.leasingList = [];
+      this.leasingList.push(obj);
+      this.$nextTick(() => {
+        this.baseinfo = Object.assign({},this.data)
+      })
     },
     // 设置签约时间
     setSignDate(date){
       this.baseinfo.sign_date = date;
     },
     // 依据店长ID获取店长姓名
-    selectmanageName () {
-      let key = this.baseinfo.manage_id
-      let that = this
-      this.manageList.forEach(function (item) {
-        if (item.id == key) {
-          that.baseinfo.manage_name = item.fullname
-        }
-      })
-    },
+    // selectmanageName () {
+    //   let key = this.baseinfo.manage_id
+    //   let that = this
+    //   this.manageList.forEach(function (item) {
+    //     if (item.id == key) {
+    //       that.baseinfo.manage_name = item.fullname
+    //     }
+    //   })
+    // },
     // 依据招商ID获取店长姓名
     selectmanageLease () {
       let key = this.baseinfo.manage_lease_id
@@ -319,20 +360,20 @@ export default {
       }
       return true
     },
-    getManageList(){
-      getManageList().then(res => {
-        const dbody = res.data
-        let that = this
-        this.manageList = dbody.data || []
-      })
-    },
-    getLeasingList(){
-      getLeasingList().then(res => {
-        const dbody = res.data
-        let that = this
-        this.leasingList = dbody.data || []
-      })
-    },
+    // getManageList(){
+    //   getManageList().then(res => {
+    //     const dbody = res.data
+    //     let that = this
+    //     this.manageList = dbody.data || []
+    //   })
+    // },
+    // getLeasingList(){
+    //   getLeasingList().then(res => {
+    //     const dbody = res.data
+    //     let that = this
+    //     this.leasingList = dbody.data || []
+    //   })
+    // },
     getKitchenList(){
       getKitchenList().then(res => {
         let that = this
@@ -352,8 +393,8 @@ export default {
   },
   created () {
     this.initData();
-    this.getManageList();
-    this.getLeasingList();
+    // this.getManageList();
+    // this.getLeasingList();
     this.getKitchenList();
   },
   beforeDestroy () {

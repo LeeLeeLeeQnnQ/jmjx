@@ -15,7 +15,16 @@
           </Select>
         </i-col>
         <i-col>
-          <Select v-model="employee_id" clearable style="width: 200px" placeholder="选择招商人员">
+          <Select
+            v-model="employee_id"
+            filterable
+            remote
+            :remote-method="remoteLeaseMethod"
+            :loading="remoteLoading"
+            clearable
+            placeholder="选择招商经理"
+            style="width: 200px"
+            >
             <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
           </Select>
         </i-col>
@@ -94,7 +103,17 @@
           <Row type="flex" justify="start" align="middle" :gutter="20">
             <i-col span="10">
               <FormItem label="招商经理">
-                <Select v-model="addModal.employee_id" @on-change="selectAddManageLease" style="width: 200px">
+                <Select
+                  v-model="addModal.employee_id"
+                  filterable
+                  remote
+                  :remote-method="remoteLeaseMethod"
+                  :loading="remoteLoading"
+                  clearable
+                  placeholder="选择招商经理"
+                  @on-change="selectAddManageLease"
+                  style="width: 200px"
+                  >
                   <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
                 </Select>
               </FormItem>
@@ -191,16 +210,23 @@
           <Row type="flex" justify="start" align="middle" :gutter="20">
             <i-col span="10" v-if="hasEmployee">
               <FormItem label="招商经理">
-                <Select v-model="addModal.employee_id"  @on-change="selectAddManageLease" style="width: 200px">
+                <Select
+                  v-model="addModal.employee_id"
+                  filterable
+                  remote
+                  :remote-method="remoteLeaseMethod"
+                  :loading="remoteLoading"
+                  clearable
+                  style="width: 200px"
+                  @on-change="selectAddManageLease"
+                  >
                   <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="10" v-else>
               <FormItem label="招商经理">
-                <Select v-model="addModal.employee_id" disabled @on-change="selectAddManageLease" style="width: 200px">
-                  <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
-                </Select>
+                <Input v-model="addModal.fullname" disabled style="width: 200px"></Input>
               </FormItem>
             </i-col>
             <i-col span="10" offset="2">
@@ -295,16 +321,23 @@
           <Row type="flex" justify="start" align="middle" :gutter="20">
             <i-col span="10" v-if="hasEmployee">
               <FormItem label="招商经理">
-                <Select v-model="editModal.employee_id"  @on-change="selectAddManageLease" style="width: 200px">
+                <Select
+                  v-model="editModal.employee_id"
+                  filterable
+                  remote
+                  :remote-method="remoteLeaseMethod"
+                  :loading="remoteLoading"
+                  clearable
+                  style="width: 200px"
+                  @on-change="selectEditManageLease"
+                  >
                   <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
                 </Select>
               </FormItem>
             </i-col>
             <i-col span="10" v-else>
               <FormItem label="招商经理">
-                <Select v-model="editModal.employee_id" disabled @on-change="selectAddManageLease" style="width: 200px">
-                  <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
-                </Select>
+                <Input v-model="editModal.fullname" disabled style="width: 200px"></Input>
               </FormItem>
             </i-col>
             <i-col span="10" offset="2">
@@ -390,7 +423,7 @@
 import Tables from '_c/tables'
 //权限
 // Index/getKitchenList,Index/getEmployeeList,Clue/index,Clue/queryCustomer,Clue/add,Clue/edit,Clue/export,Clue/delete
-import { getKitchenList , getLeasingList} from '@/api/data'
+import { getKitchenList , getLeasingList , showEmployee } from '@/api/data'
 import { getClueList , queryCustomer , addNewClue , editOldClue , deleteClue } from '@/api/canvass'
 export default {
   name: 'canvassStoreView',
@@ -509,6 +542,7 @@ export default {
       // 增加一条
       // 厨房列表
       leasingList:[],
+      remoteLoading:false,
       kitchenList:[],
       showNewAddModal:false,
       showOldAddModal:false,
@@ -527,6 +561,26 @@ export default {
     }
   },
   methods: {
+    remoteLeaseMethod (query) {
+        if (query !== '') {
+          this.remoteLoading = true;
+          getLeasingList({keyword:query}).then(res => {
+            const dbody = res.data
+            this.remoteLoading = false;
+            if (dbody.code != 0) {
+              this.$Notice.warning({
+                title: dbody.msg
+              })
+              return
+            }
+            this.leasingList = dbody.data || [];
+          }).catch(err =>{
+            this.remoteLoading = false;
+          })
+        } else {
+          this.leasingList = [];
+        }
+    },
     // 搜索
     sreachPhone(){
       if(!!this.userPhone && !this.checkPhone( this.userPhone ) ){
@@ -733,28 +787,34 @@ export default {
           this.addModal = dbody.data;
           this.addModal.total_count = dbody.data.total_count*1 + 1;
           let employee_id = this.addModal.employee_id;
-          this.hasEmployee = this.isHasEmployee(employee_id);
-          this.showOldAddModal = true;
+          this.isHasEmployee(employee_id,'showOldAddModal','addModal');
         }
       })
     },
-    isHasEmployee(id){
-      let boo = true;
-      this.leasingList.forEach((item)=>{
-        if(item.id == id){
-          boo = false
+    isHasEmployee(id,key,item){
+      showEmployee( {id:id} ).then(res => {
+        const dbody = res.data
+        let info = dbody.data || {}
+        if(info.status != 0){
+          this.hasEmployee = false;
+          this[item].employee_id = id;
+          this[item].fullname = info.fullname;
+        }else{
+          this[item].employee_id = '';
+          this.hasEmployee = true;
         }
+        setTimeout(()=>{
+          this[key] = true;
+        },200)
       })
-      return boo;
     },
     // 编辑显示弹窗
     handleEdit(params){
-      let data = params.row;
+      let data = Object.assign({},params.row);
       this.editModal = {};
       this.editModal = data;
       let employee_id = this.editModal.employee_id;
-      this.hasEmployee = this.isHasEmployee(employee_id);
-      this.showEditModal = true;
+      this.isHasEmployee(employee_id,'showEditModal','editModal');
     },
     // 删除一条带看
     handleDele( params ){
@@ -838,19 +898,21 @@ export default {
         this.kitchenList = dbody.data || [];
       })
     },
-    // 获取招商经理
-    getLeasingList(){
-      getLeasingList().then(res => {
-        const dbody = res.data
-        this.leasingList = dbody.data
-      })
-    },
+
     // 依据招商ID获取店长姓名
     selectAddManageLease (  ) {
       let that = this;
       this.leasingList.forEach( function(element, index) {
         if(element.id*1 == that.addModal.employee_id*1){
           that.addModal.employee_name = element.fullname
+        }
+      });
+    },
+    selectEditManageLease (  ) {
+      let that = this;
+      this.leasingList.forEach( function(element, index) {
+        if(element.id*1 == that.editModal.employee_id*1){
+          that.editModal.employee_name = element.fullname
         }
       });
     },
@@ -901,7 +963,6 @@ export default {
   },
   created () {
     this.getKitchenList();
-    this.getLeasingList();
     this.initData();
   }
 }

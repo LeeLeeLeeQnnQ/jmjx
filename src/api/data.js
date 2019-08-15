@@ -378,10 +378,28 @@ export const getStoreNoList = ( obj ) => {
   finance-store-edit --  获取招商经理
   finance-store-edit2
 */
-export const getLeasingList = () => {
-  const data = { group_id: '8' }
+// export const getLeasingList = () => {
+//   const data = { group_id: '8' }
+//   return axios.request({
+//     url: '/api/Index/getEmployeeList',
+//     data,
+//     method: 'post'
+//   })
+// }
+
+export const getLeasingList = (data) => {
   return axios.request({
-    url: '/api/Index/getEmployeeList',
+    url: '/api/Index/getSalesList',
+    data,
+    method: 'post'
+  })
+}
+
+
+
+export const showEmployee = (data) => {
+  return axios.request({
+    url: '/api/Employee/show',
     data,
     method: 'post'
   })

@@ -321,17 +321,18 @@ export default {
         this.kitchen_list_ok = false
         this.permission_group_ok = false
         let obj = Object.assign({},dbody.data)
-        obj.city_id = !!dbody.data.city_id ? dbody.data.city_id.split(',').map((item)=>item*1) : [];
-        obj.brand_id = !!dbody.data.brand_id ? dbody.data.brand_id.split(',').map((item)=>item*1) : [];
+        obj.city_id = !!dbody.data.city_id ? dbody.data.city_id.split(',').map((item)=>item) : [];
+        obj.brand_id = !!dbody.data.brand_id ? dbody.data.brand_id.split(',').map((item)=>item) : [];
         this.getKitchenQueryList({city_id:obj.city_id,brand_id:obj.brand_id})
         // 在这里获取厨房
-        obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item*1) : [];
+        obj.kitchen_id = !!dbody.data.kitchen_id ? dbody.data.kitchen_id.split(',').map((item)=>item) : [];
         obj.store_no = !!dbody.data.store_no ? dbody.data.store_no.split(',').map((item)=>item) : [];
         obj.gender = !!dbody.data.gender ? dbody.data.gender+'' : '';
         obj.data_rule = !!dbody.data.data_rule ? dbody.data.data_rule+'' : '';
         if(obj.store_no.length > 0 && obj.kitchen_id.length > 0){
           this.obtain_store = "2"
         }
+        obj.is_super = obj.is_super+'';
         this.formItem = obj
       })
     },
