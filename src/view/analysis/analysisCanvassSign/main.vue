@@ -9,18 +9,18 @@
             </FormItem>
           </i-col>
           <i-col :md="6" :lg="6">
-            <FormItem label="招商经理" prop="manage_lease_id">
-                 <Select
-                  v-model="sreachInfo.manage_lease_id"
-                  filterable
-                  remote
-                  :remote-method="remoteLeaseMethod"
-                  :loading="remoteLoading"
-                  clearable
-                  style="width: 200px"
-                  >
-                  <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
-                </Select>
+            <FormItem label="招商经理">
+               <Select
+                v-model="sreachInfo.manage_lease_id"
+                filterable
+                remote
+                :remote-method="remoteLeaseMethod"
+                :loading="remoteLoading"
+                clearable
+                style="width: 200px"
+                >
+                <Option v-for="item in leasingList" :value="item.id" :key="item.id">{{ item.fullname }}</Option>
+              </Select>
             </FormItem>
           </i-col>
           <i-col :md="6" :lg="6">

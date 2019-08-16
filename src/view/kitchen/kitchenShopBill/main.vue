@@ -45,7 +45,7 @@ import KSBEditRentBill from './components/KSBEditRentBill'
 import KSBEditRunBill from './components/KSBEditRunBill'
 // 权限
 // Kitchen/index,StoreBill/queryList,StoreCharge/queryList,StoreBill/edit,StoreCharge/add
-import { getKitchenQueryList } from '@/api/setting'
+import { getKitchenList } from '@/api/data'
 import { getStoreBillList , getStoreChargeItem , editStoreBillItem , addStoreCharge } from '@/api/kitchen'
 export default {
   name: 'kitchenShopBill',
@@ -342,7 +342,7 @@ export default {
     mMonth = mMonth < 10 ? "0" + mMonth : mMonth;
     this.select_time = mYear +'-'+ mMonth;
     // 获取厨房列表
-    getKitchenQueryList().then(res => {
+    getKitchenList().then(res => {
       const dbody = res.data
       this.kitchen = dbody.data || [];
       this.select_kitchen = this.kitchen[this.kitchen.length*1-1];
