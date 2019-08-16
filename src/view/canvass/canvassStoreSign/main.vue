@@ -179,8 +179,8 @@ export default {
           })
           return
         }
-        this.sign_analysis_list = res.data.data.list || [];
-        this.page = res.data.data.page
+        this.sign_analysis_list = !!dbody.data ? dbody.data.list : [];
+        this.page = !!dbody.data ? dbody.data.page : this.page;
       })
     },
     //初始化

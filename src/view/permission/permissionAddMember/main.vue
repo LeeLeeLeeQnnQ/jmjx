@@ -89,7 +89,7 @@
           </i-col>
         </Row>
         <Row type="flex" justify="start" align="middle" :gutter="20">
-          <i-col span="10">
+          <i-col span="22">
             <FormItem label="所属厨房" prop="kitchen_id">
                 <Select v-model="formItem.kitchen_id" multiple @on-change="obtainStoreChange">
                   <Option v-for="item in kitchen_list"  :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
