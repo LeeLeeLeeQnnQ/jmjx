@@ -359,14 +359,10 @@ export const editEmployeeGroup = (data) => {
 /*
   member_list - 获取人员列表
 */
-export const getMemberList = (page) => {
-  let obj = {}
-  if(!!page){
-    obj.page = page;
-  }
+export const getMemberList = (data) => {
   return axios.request({
     url: '/api/Employee/index',
-    params: obj,
+    params: data,
     method: 'get'
   })
 }

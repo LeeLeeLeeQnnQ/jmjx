@@ -13,20 +13,21 @@ import Tables from '_c/tables'
 // /api/Employee/index,/api/Employee/delete
 import { getMemberList, deleMember } from '@/api/permission'
 export default {
-  name: 'permissionMemberList',
+  name: 'permissionKitchenMemberList',
   components: {
     Tables
   },
   data () {
     return {
       sreach:{
-
+        group_id:'7'
       },
       columns: [
         {title: 'ID', key: 'id', width: 80 },
         {title: '用户名', key: 'username'},
         {title: '姓名', key: 'fullname'},
         {title: '权限组', key: 'group_name'},
+        {title: '厨房', key: 'kitchen_name', width: 200},
         { title: '性别',
           render: (h, params) => {
             let status = params.row.gender*1
@@ -47,7 +48,6 @@ export default {
           },
           width: 150
         },
-        {title: '登录次数', key: 'logins',width : 150},
         {title: '备注', key: 'remark'},
         {
           title: '操作',

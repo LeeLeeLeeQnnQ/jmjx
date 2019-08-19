@@ -946,7 +946,7 @@ export default [
         meta: {
           icon: '_weizhi',
           title: '城市列表',
-          // access: [608],
+          access: [608],
         },
         component: () => import('@/view/permission/permissionCityList/main.vue')
       },
@@ -956,9 +956,19 @@ export default [
         meta: {
           icon: '_tijikongjian',
           title: '品牌列表',
-          // access: [609],
+          access: [609],
         },
         component: () => import('@/view/permission/permissionBrandList/main.vue')
+      },
+      {
+        path: '/permissionKitchenMemberList',
+        name: 'permissionKitchenMemberList',
+        meta: {
+          icon: '_jiaosequnti',
+          title: '人员列表',
+          access: [610]
+        },
+        component: () => import('@/view/permission/permissionKitchenMemberList/main.vue')
       },
     ]
   }, 

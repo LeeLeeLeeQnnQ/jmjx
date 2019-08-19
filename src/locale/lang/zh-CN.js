@@ -64,5 +64,5 @@ export default {
   permissionSelectConfig:'下拉配置',
   permissionCityList:'城市列表',
   permissionBrandList:'品牌列表',
- 
+  permissionKitchenMemberList:'营运人员权限',
 }
