@@ -249,19 +249,18 @@ export default {
         })
         return false
       }
-      if (obj.password1.length <= 5 || obj.password2.length <= 5) {
-        this.$Notice.warning({
-          title: '密码不能少于6位！'
-        })
-        return false
-      }
       if (!!obj.password1 || !!obj.password2) {
         if ((obj.password1 != obj.password2) || (obj.password1.length != obj.password2.length)) {
           this.$Notice.warning({
             title: '两次密码输入不一致！'
           })
           return false
-        } else {
+        }else if (obj.password1.length <= 5 || obj.password2.length <= 5) {
+          this.$Notice.warning({
+            title: '密码不能少于6位！'
+          })
+          return false
+        }{
           this.password = obj.password1
         }
       }else{

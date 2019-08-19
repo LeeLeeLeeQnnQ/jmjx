@@ -254,7 +254,12 @@ export default {
           title: '两次密码输入不一致！'
         })
         return false
-      } else {
+      }else if (obj.password1.length <= 5 || obj.password2.length <= 5) {
+        this.$Notice.warning({
+          title: '密码不能少于6位！'
+        })
+        return false
+      }{
         this.password = obj.password1
       }
       if(this.obtain_store == "1"){
