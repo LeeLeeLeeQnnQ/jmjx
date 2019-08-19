@@ -33,7 +33,7 @@
 <script>
 import Tables from '_c/tables'
 // 权限
-// 
+// Brand/index,Brand/add,Brand/edit
 import { getAllBrandList , addNewBrand , editBrand } from '@/api/permission'
 export default {
   name: 'permissionBrandList',

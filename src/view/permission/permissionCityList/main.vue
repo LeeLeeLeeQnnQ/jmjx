@@ -33,7 +33,7 @@
 <script>
 import Tables from '_c/tables'
 // 权限
-// 
+// City/index,City/add,City/edit
 import { getAllCityList , addNewCity , editCity } from '@/api/permission'
 export default {
   name: 'permissionCityList',
