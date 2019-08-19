@@ -288,6 +288,7 @@ export default {
       if (this.submitValidateField(obj)) {
         if(!!this.password){
           obj.password = this.password
+          obj.confirm_password = this.password
         }else{
           delete obj.password
         }
