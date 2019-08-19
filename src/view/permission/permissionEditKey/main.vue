@@ -134,13 +134,13 @@ export default {
     recursiveArr (arr, pid) {
       let that = this
       arr.forEach(function (item) {
-        // 判断是否有权限
-        if (that.ishasRule(item.id)) { item.checked = true }
         // 拼接权限
         item.parentStr = pid + '' ? (pid + ',' + item.parent_id) : item.parent_id + ''
         if (item.children.length > 0) {
           that.recursiveArr(item.children, item.parentStr)
-        } 
+        }else{
+          if (that.ishasRule(item.id)) { item.checked = true }
+        }
       })
     },
     // 获取权限数组
