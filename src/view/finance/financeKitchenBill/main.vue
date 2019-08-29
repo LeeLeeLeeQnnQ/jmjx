@@ -405,6 +405,8 @@ export default {
         return (item.id  == params.row.kitchen_id)
       });
       let print_energy_info = Object.assign({},kitchenInfo[0],params.row);
+      print_energy_info.water_fee = kitchenInfo[0].water_fee
+      print_energy_info.energy_fee = kitchenInfo[0].energy_fee
       print_energy_info.water_computer_fee = params.row.water_fee
       print_energy_info.energy_computer_fee = params.row.energy_fee
       print_energy_info.total_fee = print_energy_info.operate_fee*1+print_energy_info.operate_overdue_fee*1 - print_energy_info.operate_exempt_fee*1+print_energy_info.fine_fee*1;
