@@ -29,16 +29,16 @@
                 <td>{{ print_info.energy_start}}</td>
                 <td>{{ print_info.energy_end}}</td>
                 <td>{{ print_info.energy_value}}</td>
-                <td>1.45</td>
                 <td>{{ print_info.energy_fee}}</td>
+                <td>{{ print_info.energy_computer_fee}}</td>
               </tr>
               <tr align="left">
                 <td>水费</td>
                 <td>{{ print_info.water_start}}</td>
                 <td>{{ print_info.water_end}}</td>
                 <td>{{ print_info.water_value}}</td>
-                <td>10.40</td>
                 <td>{{ print_info.water_fee}}</td>
+                <td>{{ print_info.water_computer_fee}}</td>
               </tr>
               <tr align="left">
                 <td>公共区域（分摊后）</td>
@@ -236,6 +236,7 @@ export default {
       newInfo.currentdate = this.getCurentTime();
       this.formValue(newInfo);
       this.print_info = newInfo;
+      console.log(this.print_info)
     }
   },
   methods: {

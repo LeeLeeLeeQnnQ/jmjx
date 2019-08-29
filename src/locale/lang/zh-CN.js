@@ -54,6 +54,8 @@ export default {
   spreadMiniConfig:'Banner设置',
   spreadUsersList:'公众号成员列表',
   spreadShopMemberList:'商户账号列表',
+  spreadShopEleAuthorize:'商户饿了么授权',
+  spreadShopMeituanAuthorize:'商户美团授权',
   spreadInviteList:'邀请列表',
   
   permission: '设置',

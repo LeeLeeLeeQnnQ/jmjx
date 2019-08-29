@@ -812,6 +812,26 @@ export default [
         component: () => import('@/view/spread/spreadApplyList/main.vue')
       },
       {
+        path: '/spreadShopEleAuthorize',
+        name: 'spreadShopEleAuthorize',
+        meta: {
+          icon: '_anzhuangshigong-xianxing',
+          title: '商户授权',
+          access: [708]
+        },
+        component: () => import('@/view/spread/spreadShopEleAuthorize/main.vue')
+      },
+      {
+        path: '/spreadShopMeituanAuthorize',
+        name: 'spreadShopMeituanAuthorize',
+        meta: {
+          icon: '_anzhuangshigong-xianxing',
+          title: '商户授权',
+          access: [709]
+        },
+        component: () => import('@/view/spread/spreadShopMeituanAuthorize/main.vue')
+      },
+      {
         path: '/spreadMiniConfig',
         name: 'spreadMiniConfig',
         meta: {

@@ -453,3 +453,59 @@ export const getZoneList = (data) => {
 }
 
 
+
+// 获取饿了么列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const getStoreEleList = (data) => {
+  return axios.request({
+    url: 'api/StoreEle/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+export const editStoreEle = (data) => {
+  return axios.request({
+    url: 'api/StoreEle/edit',
+    data,
+    method: 'post'
+  })
+}
+
+
+// 获取饿了么列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const getStoreMeituanList = (data) => {
+  return axios.request({
+    url: 'api/StoreMeituan/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+export const editStoreMeituan = (data) => {
+  return axios.request({
+    url: 'api/StoreMeituan/edit',
+    data,
+    method: 'post'
+  })
+}

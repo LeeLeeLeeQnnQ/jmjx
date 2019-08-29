@@ -38,6 +38,7 @@
           @data-view-img="handleViewImg" 
           @data-handle-return="handleApplyReturn" 
           @data-handle-pass="handleApplyPass" 
+          @data-show-evaluate="handleShowEvaluate"
       />
       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
     </Card>
@@ -51,6 +52,26 @@
           </div>
         </div>
       </div>
+    </Modal>
+    <Modal title="充值凭证预览" v-model="shoEvaluateInfo">
+      <Form :model="shopInfo" :label-width="120" inline>
+        <FormItem label="星数">
+          <Input v-model="evaluateInfo.star" readonly style="width: 300px"></Input>
+        </FormItem>
+        <FormItem label="评价内容">
+          <Input v-model="evaluateInfo.content" type="textarea" :rows="4" readonly style="width: 300px"></Input>
+        </FormItem>
+        <FormItem label="评价图片">
+          <div class="img-upload-list" v-for="item in evaluateImgList">
+            <div>
+              <img :src="item">
+              <div class="img-upload-list-cover">
+                  <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
+              </div>
+            </div>
+          </div>
+        </FormItem>
+      </Form>
     </Modal>
     <!-- 驳回 -->
     <Modal title="驳回申请"
@@ -94,6 +115,16 @@ export default {
       columns: [
         {title: '申领ID', key: 'id', width: 80},
         {title: '申领日期', key: 'create_time'},
+        // {title: '状态', 
+        //   render: (h, params) => {
+        //     let order_state = params.row.order_state*1
+        //     if(order_state == 1){
+        //       return h('span', { style: {color: '#19be6b'}}, '评价数据')
+        //     }else if (order_state == 2) {
+        //       return h('span', { style: {color: '#2d8cf0'}}, '评价截图')
+        //     }
+        //   }
+        // },
         {title: '区域', key: 'area_name'},
         {title: 'openid', key: 'openid'},
         {title: '订单号', key: 'order_sn'},
@@ -117,7 +148,7 @@ export default {
           }
         },
         {title: '实发金额', key: 'order_price'},
-        { title: '审批结果',
+        { title: '审批结果', width : 130 ,
           render: (h, params) => {
             let order_state = params.row.order_state*1
             let remark = params.row.remark
@@ -153,10 +184,42 @@ export default {
                 },
                 on: {
                   'click': () => {
-                    vm.$emit('data-view-img', params)
+                    vm.$emit('data-show-evaluate', params)
                   }
                 }},
-              '查看凭证')
+              '查看评价')
+              // let order_state = params.row.order_state*1
+              // if(order_state == 1){
+              //   return h('Button', {
+              //     style:{
+              //       margin:"0"
+              //     },
+              //     props: {
+              //       type: 'info',
+              //       size: 'small'
+              //     },
+              //     on: {
+              //       'click': () => {
+              //         vm.$emit('data-show-evaluate', params)
+              //       }
+              //     }},
+              //   '查看评价')
+              // }else{
+              //   return h('Button', {
+              //     style:{
+              //       margin:"0"
+              //     },
+              //     props: {
+              //       type: 'info',
+              //       size: 'small'
+              //     },
+              //     on: {
+              //       'click': () => {
+              //         vm.$emit('data-view-img', params)
+              //       }
+              //     }},
+              //   '查看凭证')
+              // }
             }, 
           ]
         },
@@ -206,6 +269,13 @@ export default {
       // 
       showApplyImgList:false,
       applyImgList:[],
+      // 评价信息
+      shoEvaluateInfo:false,
+      evaluateInfo:{
+        star:'5',
+        content:'评价评价评价评价',
+      },
+      evaluateImgList:['https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566984104119&di=cb2695a81e53c95d641b14baac50bf46&imgtype=0&src=http%3A%2F%2Fwww.3d2000.com%2Fwp-content%2Fuploads%2F2016%2F05%2F091U521S-12.jpg','https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566984104119&di=cb2695a81e53c95d641b14baac50bf46&imgtype=0&src=http%3A%2F%2Fwww.3d2000.com%2Fwp-content%2Fuploads%2F2016%2F05%2F091U521S-12.jpg','https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566984104119&di=cb2695a81e53c95d641b14baac50bf46&imgtype=0&src=http%3A%2F%2Fwww.3d2000.com%2Fwp-content%2Fuploads%2F2016%2F05%2F091U521S-12.jpg','https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1566984104119&di=cb2695a81e53c95d641b14baac50bf46&imgtype=0&src=http%3A%2F%2Fwww.3d2000.com%2Fwp-content%2Fuploads%2F2016%2F05%2F091U521S-12.jpg'],
       // 
       showApplyReturnModal:false,
       showApplyPassModal:false,
@@ -272,6 +342,22 @@ export default {
       this.applyImgList = [];
       this.applyImgList = voucher;
       this.showApplyImgList = true;
+    },
+    // 查看评价
+    handleShowEvaluate(params){
+      let voucher = [];
+      if(!!params.row.shop_image){
+        voucher.push(params.row.shop_image)
+      }
+      if(!!params.row.comment_image){
+        voucher.push(params.row.comment_image)
+      }
+      if(!!params.row.order_image){
+        voucher.push(params.row.order_image)
+      }
+      // this.applyImgList = [];
+      // this.applyImgList = voucher;
+      this.shoEvaluateInfo = true;
     },
     // 
     handleApplyReturn(params){

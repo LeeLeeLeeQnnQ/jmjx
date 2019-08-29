@@ -404,8 +404,10 @@ export default {
       const kitchenInfo = this.kitchen.filter(item => {
         return (item.id  == params.row.kitchen_id)
       });
-      let print_energy_info = Object.assign({},params.row,kitchenInfo[0]);
-      print_energy_info.total_fee = print_energy_info.operate_fee*1+print_energy_info.operate_overdue_fee*1 - print_energy_info.operate_exempt_fee*1;
+      let print_energy_info = Object.assign({},kitchenInfo[0],params.row);
+      print_energy_info.water_computer_fee = params.row.water_fee
+      print_energy_info.energy_computer_fee = params.row.energy_fee
+      print_energy_info.total_fee = print_energy_info.operate_fee*1+print_energy_info.operate_overdue_fee*1 - print_energy_info.operate_exempt_fee*1+print_energy_info.fine_fee*1;
       this.$refs.printEnergy.print(print_energy_info , printJS);
     },
     // 打印租金账单
