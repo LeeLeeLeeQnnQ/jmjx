@@ -40,7 +40,7 @@ export default {
     return {
       columns: [
         {title: 'ID', key: 'id', width: 80 },
-        {title: '商铺名称', key: 'shop_name'},
+        {title: '商铺名称', key: 'store_name'},
         {title: '授权状态', 
           render: (h, params) => {
             let status = params.row.status*1

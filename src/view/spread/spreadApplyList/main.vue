@@ -38,31 +38,23 @@
           @data-view-img="handleViewImg" 
           @data-handle-return="handleApplyReturn" 
           @data-handle-pass="handleApplyPass" 
-          @data-show-evaluate="handleShowEvaluate"
       />
       <Page :total="page.total" :page-size="page.list_rows" @on-change="getNewPage" style="margin-top:10px;"/>
     </Card>
     <!-- 申领凭证 -->
     <Modal title="充值凭证预览" v-model="showApplyImgList">
-      <div class="img-upload-list" v-for="item in applyImgList">
-        <div>
-          <img :src="item">
-          <div class="img-upload-list-cover">
-              <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
-          </div>
-        </div>
-      </div>
-    </Modal>
-<!--     <Modal title="充值凭证预览" v-model="shoEvaluateInfo">
-      <Form :model="shopInfo" :label-width="120" inline>
-        <FormItem label="星数">
-          <Input v-model="evaluateInfo.star" readonly style="width: 300px"></Input>
+      <Form :model="evaluateInfo" :label-width="120" inline>
+        <FormItem label="店铺名称">
+          <Input v-model="evaluateInfo.shop_name" type="textarea" :rows="2" readonly style="width: 300px"></Input>
         </FormItem>
-        <FormItem label="评价内容">
-          <Input v-model="evaluateInfo.content" type="textarea" :rows="4" readonly style="width: 300px"></Input>
+        <FormItem label="实付金额">
+          <Input v-model="evaluateInfo.order_total" readonly style="width: 300px"></Input>
         </FormItem>
-        <FormItem label="评价图片">
-          <div class="img-upload-list" v-for="item in evaluateImgList">
+        <FormItem label="订单日期">
+          <Input v-model="evaluateInfo.order_time" readonly style="width: 300px"></Input>
+        </FormItem>
+        <FormItem label="图片凭证">
+          <div class="img-upload-list" v-for="item in applyImgList">
             <div>
               <img :src="item">
               <div class="img-upload-list-cover">
@@ -72,7 +64,7 @@
           </div>
         </FormItem>
       </Form>
-    </Modal> -->
+    </Modal>
     <!-- 驳回 -->
     <Modal title="驳回申请"
       v-model="showApplyReturnModal"
@@ -95,7 +87,7 @@
 // 权限
 // UserOrder/index,UserOrder/state,Area/getAreaList,UserOrder/export
 import Tables from '_c/tables'
-import { getSpreadUserOrderList , changeStateSpreadUserOrdert , getZoneList} from '@/api/spread'
+import { getSpreadUserOrderList , changeStateSpreadUserOrdert , getZoneList , searchByOrdersn} from '@/api/spread'
 export default {
   name: 'spreadApplyList',
   components: {
@@ -224,7 +216,8 @@ export default {
         total: 0
       },
       applyList: [],
-      // 
+      // 评价信息
+      evaluateInfo:{},
       showApplyImgList:false,
       applyImgList:[],
       // 
@@ -280,6 +273,8 @@ export default {
     },
     // 查看凭证
     handleViewImg(params){
+      this.applyImgList = [];
+      this.evaluateInfo= {};
       let voucher = [];
       if(!!params.row.shop_image){
         voucher.push(params.row.shop_image)
@@ -290,27 +285,20 @@ export default {
       if(!!params.row.order_image){
         voucher.push(params.row.order_image)
       }
-      this.applyImgList = [];
       this.applyImgList = voucher;
-      this.showApplyImgList = true;
+      let order_sn = params.row.order_sn
+      searchByOrdersn({order_sn:order_sn}).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.evaluateInfo = dbody.data.order
+        this.showApplyImgList = true;
+      })
     },
-    // 查看评价
-    // handleShowEvaluate(params){
-    //   let voucher = [];
-    //   if(!!params.row.shop_image){
-    //     voucher.push(params.row.shop_image)
-    //   }
-    //   if(!!params.row.comment_image){
-    //     voucher.push(params.row.comment_image)
-    //   }
-    //   if(!!params.row.order_image){
-    //     voucher.push(params.row.order_image)
-    //   }
-    //   // this.applyImgList = [];
-    //   // this.applyImgList = voucher;
-    //   this.shoEvaluateInfo = true;
-    // },
-    // 
     handleApplyReturn(params){
       this.return_remark = {
         id:params.row.id,

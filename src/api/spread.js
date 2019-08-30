@@ -352,6 +352,65 @@ export const getShopUserList = (data) => {
 }
 
 
+// 商户账号列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const getStoreList = (data) => {
+  return axios.request({
+    url: '/api/Store/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+// 商户账号列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const addStoreItem = (data) => {
+  return axios.request({
+    url: '/api/Store/add',
+    data,
+    method: 'post'
+  })
+}
+
+// 商户账号列表
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+// ShopUser列表
+export const editStoreItem = (data) => {
+  return axios.request({
+    url: '/api/Store/edit',
+    data,
+    method: 'post'
+  })
+}
+
+
 
 // 商户下拉
 /*
@@ -449,6 +508,15 @@ export const getZoneList = (data) => {
     url: '/api/Area/getAreaList',
     data,
     method: 'get'
+  })
+}
+
+
+export const searchByOrdersn = (data) => {
+  return axios.request({
+    url: '/api/Order/search',
+    data,
+    method: 'post'
   })
 }
 

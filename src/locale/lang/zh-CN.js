@@ -57,6 +57,7 @@ export default {
   spreadShopEleAuthorize:'商户饿了么授权',
   spreadShopMeituanAuthorize:'商户美团授权',
   spreadInviteList:'邀请列表',
+  spreadStoreList:'店铺列表',
   
   permission: '设置',
   permissionMemberList:'人员列表',

@@ -51,6 +51,9 @@
           <FormItem label="商铺名称">
             <Input v-model="addItem.shop_name" placeholder="输入商铺名称" style="width: 200px"></Input>
           </FormItem>
+          <FormItem label="商铺ID">
+            <Input v-model="addItem.store_id" placeholder="输入商铺ID" style="width: 200px"></Input>
+          </FormItem>
           <FormItem label="经营者">
             <Input v-model="addItem.shopkeeper" placeholder="输入商铺名称" style="width: 200px"></Input>
           </FormItem>
@@ -151,6 +154,9 @@
           </FormItem>
           <FormItem label="商铺名称">
             <Input v-model="editItem.shop_name" placeholder="输入商铺名称" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="商铺ID">
+            <Input v-model="editItem.store_id" placeholder="输入商铺ID" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="经营者">
             <Input v-model="editItem.shopkeeper" placeholder="输入商铺名称" style="width: 200px"></Input>
@@ -349,6 +355,7 @@ export default {
       columns: [
         {title: '推广店铺ID', key: 'id',width:100},
         {title: '店铺名称', key: 'shop_name'},
+        {title: '店铺ID', key: 'store_id'},
         {title: '排序', key: 'sort'},
         {title: '店铺电话', key: 'shop_phone'},
         { title: '余额',
@@ -734,6 +741,12 @@ export default {
       if(!data.shop_name){
         this.$Notice.warning({
           title: '店铺名称错误！'
+        })
+        return false
+      }
+      if(!data.store_id || data.store_id <= 0){
+        this.$Notice.warning({
+          title: '商铺ID错误！'
         })
         return false
       }

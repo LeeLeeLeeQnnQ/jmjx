@@ -792,6 +792,16 @@ export default [
         component: () => import('@/view/spread/spreadShopList/main.vue')
       },
       {
+        path: '/spreadStoreList',
+        name: 'spreadStoreList',
+        meta: {
+          icon: '_anzhuangshigong-xianxing',
+          title: '商户授权',
+          // access: [710]
+        },
+        component: () => import('@/view/spread/spreadStoreList/main.vue')
+      },
+      {
         path: '/spreadShopSort',
         name: 'spreadShopSort',
         meta: {
