@@ -8,6 +8,7 @@
       @data-handle="handleShopCard2"
       @on-sort-change="endShopsSortTables"/>
     <Page
+      :current="end_shops_page.current_page*1"
       :total="end_shops_page.total"
       :page-size="end_shops_page.list_rows"
       style="margin-top:10px;"

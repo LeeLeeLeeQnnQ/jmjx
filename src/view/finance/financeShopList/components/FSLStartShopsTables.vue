@@ -18,6 +18,7 @@
       @data-refund="showStoreRefundModal"
       @on-sort-change="startShopsSortTables"/>
     <Page
+      :current="start_shops_page.current_page*1"
       :total="start_shops_page.total"
       :page-size="start_shops_page.list_rows"
       style="margin-top:10px;"

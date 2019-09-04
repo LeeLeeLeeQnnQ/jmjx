@@ -6,6 +6,7 @@
       @data-view="showShopCard"
       @on-sort-change="refundShopsSortTables"/>
     <Page
+      :current="refund_shops_page.current_page*1"
       :total="refund_shops_page.total"
       :page-size="refund_shops_page.list_rows"
       style="margin-top:10px;"

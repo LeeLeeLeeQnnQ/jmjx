@@ -6,6 +6,7 @@
       @data-view="showShopCard"
       @on-sort-change="normalShopsSortTables"/>
     <Page
+      :current="normal_shops_page.current_page*1"
       :total="normal_shops_page.total"
       :page-size="normal_shops_page.list_rows"
       style="margin-top:10px;"

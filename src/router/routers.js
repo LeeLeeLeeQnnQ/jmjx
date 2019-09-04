@@ -827,7 +827,7 @@ export default [
         meta: {
           icon: '_anzhuangshigong-xianxing',
           title: '商户授权',
-          access: [708]
+          // access: [708]
         },
         component: () => import('@/view/spread/spreadShopEleAuthorize/main.vue')
       },
@@ -837,7 +837,7 @@ export default [
         meta: {
           icon: '_anzhuangshigong-xianxing',
           title: '商户授权',
-          access: [709]
+          // access: [709]
         },
         component: () => import('@/view/spread/spreadShopMeituanAuthorize/main.vue')
       },

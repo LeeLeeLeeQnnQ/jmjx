@@ -8,6 +8,7 @@
       @on-sort-change="eliminateShopsSortTables"/>
     <Page
       style="margin-top:10px;"
+      :current="eliminate_shops_page.current_page*1"
       :total="eliminate_shops_page.total"
       :page-size="eliminate_shops_page.list_rows"
       @on-change="getEliminateShopsNewPage"/>

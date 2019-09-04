@@ -5,18 +5,49 @@
       :columns="normal_shops_columns"
       @data-view="showShopCard"
       @data-edit="editShopCard"
+      @data-change-store="changeShopStore"
       @on-sort-change="normalShopsSortTables"/>
     <Page
+      :current="normal_shops_page.current_page*1"
       :total="normal_shops_page.total"
       :page-size="normal_shops_page.list_rows"
       style="margin-top:10px;"
       @on-change="getNormalShopsNewPage"/>
+    <Modal title="更换档口" v-model="showChangeShopStoreModel"  @on-ok="saveChangeShopStoreInfo">
+      <Form :model="changeInfo" :label-width="120">
+        <FormItem label="">
+          <h3>{{changeInfo.store_name}} ／ {{changeInfo.old_store_no}}</h3>
+        </FormItem>
+        <hr style="margin-bottom:15px;border:1px solid #eee;">
+        <FormItem label="换档时间">
+          <DatePicker :value="changeInfo.change_date" format="yyyy-MM-dd" type="date" placeholder="换档时间" style="width: 300px" @on-change="setChangeDate"></DatePicker>
+        </FormItem>
+        <FormItem label="更换到的档口">
+          <Select v-model="changeInfo.new_store_no" style="width: 300px">
+              <Option v-for="item in shopList" :value="item" :key="item">{{ item }}</Option>
+          </Select>
+        </FormItem>
+        <hr style="margin-bottom:15px;border:1px solid #eee;">
+        <FormItem label="旧档口电表结束值">
+          <Input v-model="changeInfo.end_energy" placeholder="旧档口电表结束值" style="width: 300px"></Input>
+        </FormItem>
+        <FormItem label="旧档口水表结束值">
+          <Input v-model="changeInfo.end_water" placeholder="旧档口水表结束值" style="width: 300px"></Input>
+        </FormItem>
+        <FormItem label="新档口电表起始值">
+          <Input v-model="changeInfo.start_energy" placeholder="新档口电表起始值" style="width: 300px"></Input>
+        </FormItem>
+        <FormItem label="新档口水表起始值">
+          <Input v-model="changeInfo.start_water" placeholder="新档口水表起始值" style="width: 300px"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 </template>
 
 <script>
 import Tables from '_c/tables'
-import { getAllShopList } from '@/api/data'
+import { getAllShopList , getStoreNoList } from '@/api/data'
 export default {
   name: 'KSLNormalShopsTables',
   components: {
@@ -98,6 +129,26 @@ export default {
               '编辑')
             },
           ]
+        },
+        {
+          title: '操作',
+          key: 'handle',
+          button: [
+            // 不带气泡 一层嵌套
+            (h, params, vm) => {
+              return h('Button', {style: {margin: '0'},
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  'click': () => {
+                    vm.$emit('data-change-store', params)
+                  }
+                }},
+              '更换档口')
+            },
+          ]
         }
       ],
       normal_shops_list: [],
@@ -112,10 +163,82 @@ export default {
         order:'',
         key:'',
       },
+      // 更换档口
+      showChangeShopStoreModel:false,
+      changeInfo:{},
+      // 档口列表
+      shopList:{},
     }
   },
   methods: {
-
+    // 提交函数
+    submitValidate(info){
+      if (!info.change_date) {
+        this.$Notice.warning({
+          title: '请选择换档时间！'
+        })
+        return true
+      }
+      if (!info.new_store_no) {
+        this.$Notice.warning({
+          title: '请选择更换到的档口！'
+        })
+        return true
+      }
+      if (!info.end_energy || isNaN(info.end_energy) || info.end_energy<= 0) {
+        this.$Notice.warning({
+          title: '请正确输入旧档口电表结束值！'
+        })
+        return true
+      }
+      if (!info.end_water || isNaN(info.end_water) || info.end_water<= 0) {
+        this.$Notice.warning({
+          title: '请正确输入旧档口水表结束值！'
+        })
+        return true
+      }
+      if (!info.start_energy || isNaN(info.start_energy) || info.start_energy<= 0) {
+        this.$Notice.warning({
+          title: '请正确输入新档口电表起始值！'
+        })
+        return true
+      }
+      if (!info.start_water || isNaN(info.start_water) || info.start_water<= 0) {
+        this.$Notice.warning({
+          title: '请正确输入新档口水表起始值！'
+        })
+        return true
+      }
+    },
+    //更换档口操作
+    changeShopStore( params ){
+      this.changeInfo = {};
+      this.changeInfo.id = params.row.id;
+      this.changeInfo.store_name = params.row.store_name;
+      this.changeInfo.old_store_no_id = params.row.store_no_id;
+      this.changeInfo.old_store_no = params.row.store_no;
+      this.showChangeShopStoreModel = true;
+    },
+    // 保存更换
+    saveChangeShopStoreInfo( ){
+      if(this.submitValidate(this.changeInfo)){
+        return
+      }
+      // 提交修改
+      // this.getNormalShops( { page : this.normal_shops_page.current_page } );
+    },
+    // 获取档口列表
+    getStoreNoList(){
+      let obj = { kitchen_id:this.sreachInfo.kitchen_id }
+      getStoreNoList( obj ).then(res => {
+        const dbody = res.data
+        this.shopList = dbody.data
+      })
+    },
+    // 设置换档时间
+    setChangeDate(date){
+      this.changeInfo.change_date = date;
+    },
     // 获取租赁中
     getNormalShops( data ){
       let info = Object.assign({}, this.sreachInfo , this.normal_sort_data , data)
@@ -171,6 +294,7 @@ export default {
     // init
     initData(){
       this.getNormalShops( {} )
+      this.getStoreNoList()
     },
   },
   mounted () {

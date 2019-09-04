@@ -8,6 +8,7 @@
       @on-sort-change="normalShopsSortTables"/>
     <Page
       style="margin-top:10px;"
+      :current="normal_shops_page.current_page*1"
       :total="normal_shops_page.total"
       :page-size="normal_shops_page.list_rows"
       @on-change="getNormalShopsNewPage"/>

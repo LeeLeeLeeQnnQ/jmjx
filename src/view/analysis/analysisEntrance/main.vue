@@ -3,7 +3,7 @@
     <SreachBox :option="sreach_option" :getSreachInfo="sreachSubmit"></SreachBox>
     <Card shadow style="margin-top: 8px;">
       <Table :data="storeProgressData" :columns="storeProgressColumns"></Table>
-      <Page :total="page.total" :page-size="page.list_rows" style="margin-top:10px;" @on-change="getNewPage"/>
+      <Page :current="page.current_page*1" :total="page.total" :page-size="page.list_rows" style="margin-top:10px;" @on-change="getNewPage"/>
     </Card>
   </div>
 </template>

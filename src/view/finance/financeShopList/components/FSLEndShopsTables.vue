@@ -8,6 +8,7 @@
       @on-sort-change="endShopsSortTables"/>
     <Page
       style="margin-top:10px;"
+      :current="end_shops_page.current_page*1"
       :total="end_shops_page.total"
       :page-size="end_shops_page.list_rows"
       @on-change="getEndShopsNewPage"/>

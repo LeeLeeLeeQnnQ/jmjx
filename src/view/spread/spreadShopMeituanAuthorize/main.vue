@@ -43,12 +43,12 @@ export default {
         {title: '商铺名称', key: 'store_name'},
         {title: '授权状态', 
           render: (h, params) => {
-            let status = params.row.status*1
-            if(status == 0){
-              return h('span', { style: {color: '#19be6b'}}, '未绑定')
-            }else if (status == 1) {
-              return h('span', { style: {color: '#2d8cf0'}}, '已绑定' )
-            }else if (status == 2) {
+            let auth_state = params.row.auth_state*1
+            if(auth_state == 0){
+              return h('span', { style: {color: '#2d8cf0'}}, '未绑定')
+            }else if (auth_state == 1) {
+              return h('span', { style: {color: '#19be6b'}}, '已绑定' )
+            }else if (auth_state == 2) {
               return h('span', { style: {color: '#8b56dd'}}, '已解绑' )
             }
           }
