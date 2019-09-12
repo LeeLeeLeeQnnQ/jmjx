@@ -13,7 +13,7 @@
     </Card>
     <Modal v-model="editMeterModal" title="编辑抄表信息" @on-ok="saveEditMeter">
       <Form :model="editMeterItem" :label-width="80">
-        <FormItem label="电表名">
+        <FormItem label="表名">
           <Input v-model="editMeterItem.meter_name" readonly style="width: 200px"></Input>
         </FormItem>
         <FormItem label="开始值">
@@ -31,10 +31,25 @@
           <span>确认启用新表么？</span>
       </p>
       <Form :model="refreshMeterItem" :label-width="80">
-        <FormItem label="电表名">
+        <FormItem label="表名">
           <Input v-model="refreshMeterItem.meter_name" readonly style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="结束值">
+        <hr style="margin-bottom:15px;border:1px solid #eee;">
+        <FormItem label="换表日期">
+          <DatePicker :value="refreshMeterItem.change_date" format="yyyy-MM-dd" type="date" placeholder="换表日期" style="width: 200px" @on-change="setChangeDate"></DatePicker>
+        </FormItem>
+        <hr style="margin-bottom: 1rem;border:1px solid #eee;">
+        <FormItem label="旧表开始值">
+          <Input v-model="refreshMeterItem.old_start_value" placeholder="输入结束值" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="旧表结束值">
+          <Input v-model="refreshMeterItem.old_end_value" placeholder="输入结束值" style="width: 200px"></Input>
+        </FormItem>
+        <hr style="margin-bottom: 1rem;border:1px solid #eee;">
+        <FormItem label="新表开始值">
+          <Input v-model="refreshMeterItem.start_value" placeholder="输入结束值" style="width: 200px"></Input>
+        </FormItem>
+        <FormItem label="新表开始值">
           <Input v-model="refreshMeterItem.end_value" placeholder="输入结束值" style="width: 200px"></Input>
         </FormItem>
       </Form>
@@ -99,7 +114,17 @@ export default {
         {title: '月份', key: 'month'},
         {title: '电表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
-        {title: '旧电表累计值', key: 'base_value'},
+        {title: '换表增量',
+          render: (h, params) => {
+            let old_end_value = params.row.old_end_value
+            let old_start_value = params.row.old_start_value
+            let val = (old_end_value*1 - old_start_value*1).toFixed(2);
+            if (val == 0){
+              val = 0.00;
+            }
+            return h('span', val)
+          }
+        },
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},
@@ -172,7 +197,17 @@ export default {
         {title: '月份', key: 'month'},
         {title: '水表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
-        {title: '旧水表累计值', key: 'base_value'},
+        {title: '换表增量',
+          render: (h, params) => {
+            let old_end_value = params.row.old_end_value
+            let old_start_value = params.row.old_start_value
+            let val = (old_end_value*1 - old_start_value*1).toFixed(2);
+            if (val == 0){
+              val = 0.00;
+            }
+            return h('span', val)
+          }
+        },
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},
@@ -242,9 +277,16 @@ export default {
     }
   },
   methods: {
+    setChangeDate(date){
+      this.refreshMeterItem.change_date = date;
+    },
     // isCanRefreshMeter 刷新判定
     isCanRefreshMeter(info){
-      if(info.end_value < info.start_value){
+      if(info.end_value*1 < info.start_value*1){
+        return false;
+      }else if(info.old_end_value*1 < info.old_start_value*1){
+        return false;
+      }else if(!info.change_date){
         return false;
       }else{
         return true;
@@ -253,17 +295,20 @@ export default {
     // 表刷新
     showRefreshMeter( params ){
       this.refreshMeterItem = {};
-      this.refreshMeterItem = Object.assign({}, params.row);
+      this.refreshMeterItem.id = params.row.id;
+      this.refreshMeterItem.change_date = '';
+      this.refreshMeterItem.meter_name = params.row.meter_name;
+      this.refreshMeterItem.old_end_value = params.row.end_value;
+      this.refreshMeterItem.old_start_value = params.row.start_value;
+      this.refreshMeterItem.end_value = 0;
+      this.refreshMeterItem.start_value = 0;
       this.refreshMeterModal = true;
     },
     // 弹窗
     refreshMeter(){
       if(this.isCanRefreshMeter(this.refreshMeterItem)){
-         let obj = {};
-         obj.id = this.refreshMeterItem.id;
-         obj.base_value = this.refreshMeterItem.base_value*1 + this.refreshMeterItem.end_value*1;
          // 启用新表操作
-         refreshMeter( obj ).then(res => {
+         refreshMeter( this.refreshMeterItem ).then(res => {
           const dbody = res.data
           if (dbody.code != 0) {
             this.$Notice.warning({
@@ -278,7 +323,7 @@ export default {
          })
       }else{
         this.$Notice.warning({
-          title: "老电表结束值有误！"
+          title: "填写信息有误！"
         })
       }
     },

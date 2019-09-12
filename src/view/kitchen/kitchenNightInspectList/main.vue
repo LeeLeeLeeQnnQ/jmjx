@@ -17,8 +17,18 @@
       </div>
     </div>
     <Card>
-      <tables :stripe="true" ref="tables" v-model="orderList" :columns="columns" @data-view="handleView"/>
-      <Page :total="page.total" :page-size="page.list_rows" style="margin-top:10px;" @on-change="getNewPage"/>
+      <tables 
+        :stripe="true" 
+        ref="tables" 
+        v-model="orderList" 
+        :columns="columns" 
+        @data-view="handleView"/>
+      <Page 
+        :current="page.current_page*1" 
+        :total="page.total" 
+        :page-size="page.list_rows" 
+        style="margin-top:10px;" 
+        @on-change="getNewPage"/>
     </Card>
   </div>
 </template>

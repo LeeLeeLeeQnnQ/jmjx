@@ -51,22 +51,6 @@
     <Modal title="预览图" v-model="visible">
         <img :src="imgUrl" v-if="visible" style="width: 100%">
     </Modal>
-    <Card shadow>
-      <Row :gutter="20">
-        <i-col :xs="5" :md="5" :lg="5">
-          <Select v-model="kitchenKey" @on-change="selectKichen">
-            <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
-          </Select>
-        </i-col>
-      </Row>
-    </Card>
-    <Card style="margin-top: 5px;padding-top: 2em;">
-      <a href="#" slot="extra" @click.prevent="showAddModalFn">
-          添加一个罚款
-      </a>
-      <tables :stripe="true" ref="tables" v-model="fineList" :columns="columns" @data-view="handleItemView" @data-dele="handleDele" />
-      <Page :total="page.total" :page-size="page.list_rows" style="margin-top:10px;" @on-change="getNewPage"/>
-    </Card>
     <Modal v-model="showModal" title="罚款登记">
         <Form :model="showItem" :label-width="80" inline>
           <FormItem label="档口">
@@ -92,6 +76,33 @@
           </FormItem>
         </Form>
     </Modal>
+    <Card shadow>
+      <Row :gutter="20">
+        <i-col :xs="5" :md="5" :lg="5">
+          <Select v-model="kitchenKey" @on-change="selectKichen">
+            <Option v-for="item in kitchenList" :value="item.id" :key="item.id">{{ item.kitchen_name }}</Option>
+          </Select>
+        </i-col>
+      </Row>
+    </Card>
+    <Card style="margin-top: 5px;padding-top: 2em;">
+      <a href="#" slot="extra" @click.prevent="showAddModalFn">
+          添加一个罚款
+      </a>
+      <tables 
+        :stripe="true" 
+        ref="tables" 
+        v-model="fineList" 
+        :columns="columns" 
+        @data-view="handleItemView" 
+        @data-dele="handleDele" />
+      <Page 
+        :current="page.current_page*1" 
+        :total="page.total" 
+        :page-size="page.list_rows" 
+        style="margin-top:10px;" 
+        @on-change="getNewPage"/>
+    </Card>
   </div>
 </template>
 

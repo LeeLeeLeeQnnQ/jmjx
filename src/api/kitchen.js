@@ -226,7 +226,7 @@ export const editMeter = ( data ) => {
 */
 export const refreshMeter = ( data ) => {
   return axios.request({
-    url: '/api/Meter/updateBaseValue',
+    url: '/api/Meter/changeMeter',
     data,
     method: 'post'
   })

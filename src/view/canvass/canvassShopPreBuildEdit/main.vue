@@ -535,6 +535,7 @@ export default {
     // showPreBuildItem
     showPreBuildItem(){
       let obj = { id:this.formItem.id }
+      let that = this
       showPreBuildItem( obj ).then(res => {
         const dbody = res.data
         if (dbody.code != 0) {

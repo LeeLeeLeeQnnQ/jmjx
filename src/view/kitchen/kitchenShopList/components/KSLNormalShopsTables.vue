@@ -17,22 +17,33 @@
       <Form :model="changeInfo" :label-width="120">
         <FormItem label="">
           <h3>{{changeInfo.store_name}} ／ {{changeInfo.old_store_no}}</h3>
+          <h3>月租金：{{changeInfo.month_rent}} 元</h3>
         </FormItem>
         <hr style="margin-bottom:15px;border:1px solid #eee;">
         <FormItem label="换档时间">
-          <DatePicker :value="changeInfo.change_date" format="yyyy-MM-dd" type="date" placeholder="换档时间" style="width: 300px" @on-change="setChangeDate"></DatePicker>
+          <DatePicker :value="changeInfo.change_date" format="yyyy-MM" type="month" placeholder="换档时间" style="width: 300px" @on-change="setChangeDate"></DatePicker>
         </FormItem>
         <FormItem label="更换到的档口">
           <Select v-model="changeInfo.new_store_no" style="width: 300px">
               <Option v-for="item in shopList" :value="item" :key="item">{{ item }}</Option>
           </Select>
         </FormItem>
+        <FormItem label="换档口增补费用">
+          <Input v-model="changeInfo.money" placeholder="换档口增补费用" style="width: 300px"></Input>
+        </FormItem>
         <hr style="margin-bottom:15px;border:1px solid #eee;">
+        <FormItem label="旧档口公摊结束时间">
+          <DatePicker :value="changeInfo.old_share_date" format="yyyy-MM-dd" type="date" placeholder="旧档口公摊结束时间" style="width: 300px" @on-change="setOldShareDate"></DatePicker>
+        </FormItem>
         <FormItem label="旧档口电表结束值">
           <Input v-model="changeInfo.end_energy" placeholder="旧档口电表结束值" style="width: 300px"></Input>
         </FormItem>
         <FormItem label="旧档口水表结束值">
           <Input v-model="changeInfo.end_water" placeholder="旧档口水表结束值" style="width: 300px"></Input>
+        </FormItem>
+        <hr style="margin-bottom:15px;border:1px solid #eee;">
+        <FormItem label="新档口公摊结束时间">
+          <DatePicker :value="changeInfo.new_share_date" format="yyyy-MM-dd" type="date" placeholder="新档口公摊结束时间" style="width: 300px" @on-change="setNewShareDate"></DatePicker>
         </FormItem>
         <FormItem label="新档口电表起始值">
           <Input v-model="changeInfo.start_energy" placeholder="新档口电表起始值" style="width: 300px"></Input>
@@ -217,6 +228,7 @@ export default {
       this.changeInfo.store_name = params.row.store_name;
       this.changeInfo.old_store_no_id = params.row.store_no_id;
       this.changeInfo.old_store_no = params.row.store_no;
+      this.changeInfo.month_rent = params.row.month_rent;
       this.showChangeShopStoreModel = true;
     },
     // 保存更换
@@ -238,6 +250,14 @@ export default {
     // 设置换档时间
     setChangeDate(date){
       this.changeInfo.change_date = date;
+    },
+    // 设置换档时间
+    setOldShareDate(date){
+      this.old_share_date.change_date = date;
+    },
+    // 设置换档时间
+    setNewShareDate(date){
+      this.new_share_date.change_date = date;
     },
     // 获取租赁中
     getNormalShops( data ){
