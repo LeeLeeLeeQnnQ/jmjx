@@ -424,6 +424,14 @@ export const localRead = (key) => {
   return sessionStorage.getItem(key) || ''
 }
 
+/**
+ * @description 本地存储和获取标签导航列表
+ */
+export const setTagNavListInLocalstorage = list => {
+  localStorage.tagNaveList = JSON.stringify(list)
+}
+
+
 // scrollTop animation
 export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
   if (!window.requestAnimationFrame) {
