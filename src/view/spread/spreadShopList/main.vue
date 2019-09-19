@@ -51,7 +51,7 @@
           <FormItem label="商铺名称">
             <Input v-model="addItem.shop_name" placeholder="输入商铺名称" style="width: 200px"></Input>
           </FormItem>
-          <FormItem label="商铺ID">
+          <FormItem label="商铺ID(非必须)">
             <Input v-model="addItem.store_id" placeholder="输入商铺ID" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="经营者">
@@ -788,12 +788,12 @@ export default {
         })
         return false
       }
-      if(!data.store_id || data.store_id <= 0){
-        this.$Notice.warning({
-          title: '商铺ID错误！'
-        })
-        return false
-      }
+      // if(!data.store_id || data.store_id <= 0){
+      //   this.$Notice.warning({
+      //     title: '商铺ID错误！'
+      //   })
+      //   return false
+      // }
       if(!data.shop_phone ){
         this.$Notice.warning({
           title: '店铺电话错误！'
