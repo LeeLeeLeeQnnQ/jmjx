@@ -49,7 +49,7 @@
         <FormItem label="新表开始值">
           <Input v-model="refreshMeterItem.start_value" placeholder="输入结束值" style="width: 200px"></Input>
         </FormItem>
-        <FormItem label="新表开始值">
+        <FormItem label="新表结束值">
           <Input v-model="refreshMeterItem.end_value" placeholder="输入结束值" style="width: 200px"></Input>
         </FormItem>
       </Form>
@@ -114,17 +114,6 @@ export default {
         {title: '月份', key: 'month'},
         {title: '电表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
-        {title: '换表增量',
-          render: (h, params) => {
-            let old_end_value = params.row.old_end_value
-            let old_start_value = params.row.old_start_value
-            let val = (old_end_value*1 - old_start_value*1).toFixed(2);
-            if (val == 0){
-              val = 0.00;
-            }
-            return h('span', val)
-          }
-        },
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},
@@ -197,17 +186,6 @@ export default {
         {title: '月份', key: 'month'},
         {title: '水表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
-        {title: '换表增量',
-          render: (h, params) => {
-            let old_end_value = params.row.old_end_value
-            let old_start_value = params.row.old_start_value
-            let val = (old_end_value*1 - old_start_value*1).toFixed(2);
-            if (val == 0){
-              val = 0.00;
-            }
-            return h('span', val)
-          }
-        },
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},

@@ -16,7 +16,7 @@
     <Modal title="更换档口" v-model="showChangeShopStoreModel"  @on-ok="saveChangeShopStoreInfo">
       <Form :model="changeInfo" :label-width="120">
         <FormItem label="">
-          <h3>{{changeInfo.store_name}} ／ {{changeInfo.old_store_no}}</h3>
+          <h3>{{changeInfo.store_name}} ／ {{changeInfo.before}}</h3>
           <h3>月租金：{{changeInfo.month_rent}} 元</h3>
         </FormItem>
         <hr style="margin-bottom:15px;border:1px solid #eee;">
@@ -24,32 +24,32 @@
           <DatePicker :value="changeInfo.change_date" format="yyyy-MM" type="month" placeholder="换档时间" style="width: 300px" @on-change="setChangeDate"></DatePicker>
         </FormItem>
         <FormItem label="更换到的档口">
-          <Select v-model="changeInfo.new_store_no" style="width: 300px">
+          <Select v-model="changeInfo.after" style="width: 300px">
               <Option v-for="item in shopList" :value="item" :key="item">{{ item }}</Option>
           </Select>
         </FormItem>
         <FormItem label="换档口增补费用">
-          <Input v-model="changeInfo.money" placeholder="换档口增补费用" style="width: 300px"></Input>
+          <Input v-model="changeInfo.append_fee" placeholder="换档口增补费用" style="width: 300px"></Input>
         </FormItem>
         <hr style="margin-bottom:15px;border:1px solid #eee;">
         <FormItem label="旧档口公摊结束时间">
-          <DatePicker :value="changeInfo.old_share_date" format="yyyy-MM-dd" type="date" placeholder="旧档口公摊结束时间" style="width: 300px" @on-change="setOldShareDate"></DatePicker>
+          <DatePicker :value="changeInfo.old_date" format="yyyy-MM-dd" type="date" placeholder="旧档口公摊结束时间" style="width: 300px" @on-change="setOldShareDate"></DatePicker>
         </FormItem>
         <FormItem label="旧档口电表结束值">
-          <Input v-model="changeInfo.end_energy" placeholder="旧档口电表结束值" style="width: 300px"></Input>
+          <Input v-model="changeInfo.old_energy" placeholder="旧档口电表结束值" style="width: 300px"></Input>
         </FormItem>
         <FormItem label="旧档口水表结束值">
-          <Input v-model="changeInfo.end_water" placeholder="旧档口水表结束值" style="width: 300px"></Input>
+          <Input v-model="changeInfo.old_water" placeholder="旧档口水表结束值" style="width: 300px"></Input>
         </FormItem>
         <hr style="margin-bottom:15px;border:1px solid #eee;">
-        <FormItem label="新档口公摊结束时间">
-          <DatePicker :value="changeInfo.new_share_date" format="yyyy-MM-dd" type="date" placeholder="新档口公摊结束时间" style="width: 300px" @on-change="setNewShareDate"></DatePicker>
+        <FormItem label="新档口公摊开始时间">
+          <DatePicker :value="changeInfo.new_date" format="yyyy-MM-dd" type="date" placeholder="新档口公摊结束时间" style="width: 300px" @on-change="setNewShareDate"></DatePicker>
         </FormItem>
         <FormItem label="新档口电表起始值">
-          <Input v-model="changeInfo.start_energy" placeholder="新档口电表起始值" style="width: 300px"></Input>
+          <Input v-model="changeInfo.new_energy" placeholder="新档口电表起始值" style="width: 300px"></Input>
         </FormItem>
         <FormItem label="新档口水表起始值">
-          <Input v-model="changeInfo.start_water" placeholder="新档口水表起始值" style="width: 300px"></Input>
+          <Input v-model="changeInfo.new_water" placeholder="新档口水表起始值" style="width: 300px"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -58,7 +58,7 @@
 
 <script>
 import Tables from '_c/tables'
-import { getAllShopList , getStoreNoList } from '@/api/data'
+import { getAllShopList , getStoreNoList , changeStoreNo } from '@/api/data'
 export default {
   name: 'KSLNormalShopsTables',
   components: {
@@ -190,33 +190,51 @@ export default {
         })
         return true
       }
-      if (!info.new_store_no) {
+      if (!info.after) {
         this.$Notice.warning({
           title: '请选择更换到的档口！'
         })
         return true
       }
-      if (!info.end_energy || isNaN(info.end_energy) || info.end_energy<= 0) {
+      if (info.append_fee*1 < 0) {
+        this.$Notice.warning({
+          title: '请修改正确的增补费用！'
+        })
+        return true
+      }
+      if (!info.old_energy || isNaN(info.old_energy) || info.old_energy<= 0) {
         this.$Notice.warning({
           title: '请正确输入旧档口电表结束值！'
         })
         return true
       }
-      if (!info.end_water || isNaN(info.end_water) || info.end_water<= 0) {
+      if (!info.old_water || isNaN(info.old_water) || info.old_water<= 0) {
         this.$Notice.warning({
           title: '请正确输入旧档口水表结束值！'
         })
         return true
       }
-      if (!info.start_energy || isNaN(info.start_energy) || info.start_energy<= 0) {
+      if (!info.old_date) {
+        this.$Notice.warning({
+          title: '请选择旧档口公摊结束时间！'
+        })
+        return true
+      }
+      if (!info.new_energy || isNaN(info.new_energy) || info.new_energy< 0) {
         this.$Notice.warning({
           title: '请正确输入新档口电表起始值！'
         })
         return true
       }
-      if (!info.start_water || isNaN(info.start_water) || info.start_water<= 0) {
+      if (!info.new_water || isNaN(info.new_water) || info.new_water< 0) {
         this.$Notice.warning({
           title: '请正确输入新档口水表起始值！'
+        })
+        return true
+      }
+      if (!info.new_date) {
+        this.$Notice.warning({
+          title: '请选择新档口水表起始值！'
         })
         return true
       }
@@ -224,10 +242,9 @@ export default {
     //更换档口操作
     changeShopStore( params ){
       this.changeInfo = {};
-      this.changeInfo.id = params.row.id;
+      this.changeInfo.store_id = params.row.store_id;
+      this.changeInfo.before = params.row.store_no;
       this.changeInfo.store_name = params.row.store_name;
-      this.changeInfo.old_store_no_id = params.row.store_no_id;
-      this.changeInfo.old_store_no = params.row.store_no;
       this.changeInfo.month_rent = params.row.month_rent;
       this.showChangeShopStoreModel = true;
     },
@@ -236,8 +253,19 @@ export default {
       if(this.submitValidate(this.changeInfo)){
         return
       }
-      // 提交修改
-      // this.getNormalShops( { page : this.normal_shops_page.current_page } );
+      changeStoreNo( this.changeInfo ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: dbody.msg
+        })
+        this.getNormalShops( { page : this.normal_shops_page.current_page } );
+      })
     },
     // 获取档口列表
     getStoreNoList(){
@@ -253,11 +281,11 @@ export default {
     },
     // 设置换档时间
     setOldShareDate(date){
-      this.old_share_date.change_date = date;
+      this.changeInfo.old_date = date;
     },
     // 设置换档时间
     setNewShareDate(date){
-      this.new_share_date.change_date = date;
+      this.changeInfo.new_date = date;
     },
     // 获取租赁中
     getNormalShops( data ){

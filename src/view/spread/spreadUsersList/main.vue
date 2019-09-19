@@ -91,7 +91,7 @@ export default {
             }
           }
         },
-        {title: '关注时间', key: 'create_time'},
+        {title: '关注时间', key: 'subscribe_time'},
         {title: '首次返现时间', key: 'first_time', width: 100},
         {title: '返现单数', key: 'order_total', width: 80},
         {title: '最后返现时间', key: 'last_time', width: 100},

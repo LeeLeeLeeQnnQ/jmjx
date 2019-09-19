@@ -365,6 +365,19 @@ export const getStoreNoList = ( obj ) => {
   })
 }
 
+
+// api/StoreLease/changeStoreNo
+export const changeStoreNo = ( data ) => {
+  return axios.request({
+    url: '/api/StoreLease/changeStoreNo',
+    data,
+    method: 'post'
+  })
+}
+
+
+
+
 /*
   获取招商经理列表
   固定权限租8

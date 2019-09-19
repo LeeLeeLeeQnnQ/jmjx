@@ -77,6 +77,13 @@
           </FormItem>
         </i-col>
       </Row>
+      <Row type="flex" justify="start" align="middle" :gutter="20">
+        <i-col span="10" >
+          <FormItem label="账户号" >
+            <Input v-model="kitchen.card_no" placeholder="例如：6217 XXXXXXXXXXX" style="width: 200px"></Input>
+          </FormItem>
+        </i-col>
+      </Row>
       <Divider />
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="10">
