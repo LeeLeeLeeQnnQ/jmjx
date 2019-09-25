@@ -68,7 +68,7 @@
       <Row type="flex" justify="start" align="middle" :gutter="20">
         <i-col span="10" >
           <FormItem label="账户名称" >
-            <Input v-model="kitchen.card_name" placeholder="例如：王乙同" style="width: 200px"></Input>
+            <Input v-model="kitchen.card_name" placeholder="账户名称" style="width: 200px"></Input>
           </FormItem>
         </i-col>
         <i-col span="10" offset="2">
@@ -81,6 +81,11 @@
         <i-col span="10" >
           <FormItem label="账户号" >
             <Input v-model="kitchen.card_no" placeholder="例如：6217 XXXXXXXXXXX" style="width: 200px"></Input>
+          </FormItem>
+        </i-col>
+        <i-col span="10" offset="2">
+          <FormItem label="公司名" >
+            <Input v-model="kitchen.company" placeholder="公司名" style="width: 200px"></Input>
           </FormItem>
         </i-col>
       </Row>
@@ -172,12 +177,12 @@ export default {
           })
         return false
       }
-      if(!this.eidtkitchen.start_date){
-        this.$Notice.warning({
-            title: '开业时间必须选择！'
-          })
-        return false
-      }
+      // if(!this.eidtkitchen.start_date){
+      //   this.$Notice.warning({
+      //       title: '开业时间必须选择！'
+      //     })
+      //   return false
+      // }
       if( isNaN(this.eidtkitchen.rent_day) || isNaN(this.eidtkitchen.operate_day)){
         this.$Notice.warning({
             title: '账单日期输入错误'

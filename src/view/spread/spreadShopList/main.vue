@@ -83,7 +83,7 @@
             </Upload>
           </FormItem>
           <FormItem label="返现平台">
-            <Input v-model="addItem.activities" placeholder="返现平台" style="width: 200px"></Input>
+            <Input v-model="addItem.wechat" placeholder="返现平台" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="满减优惠">
             <Input v-model="addItem.activities" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
@@ -95,16 +95,19 @@
             <Input v-model="addItem.coupon_value" placeholder="输入红包金额" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="服务费">
-            <Input v-model="addItem.coupon_value" placeholder="输入单笔服务费" style="width: 200px"></Input>
+            <Input v-model="addItem.shop_service" placeholder="输入单笔服务费" style="width: 200px"></Input>
           </FormItem>
-          <FormItem label="城市坐标">
-            <Input v-model="addItem.coupon_value" placeholder="输入城市坐标" style="width: 200px"></Input>
+          <FormItem label="城市经度">
+            <Input v-model="addItem.latitude" placeholder="输入城市经度" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="城市纬度">
+            <Input v-model="addItem.longitude" placeholder="输入城市纬度" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="开始营业时间">
-            <TimePicker  format="HH:mm" type="time" placeholder="选择开始营业时间" style="width: 200px"></TimePicker>
+            <TimePicker :value="addItem.start_time"  format="HH:mm" type="time" placeholder="选择开始营业时间"  @on-change="selectAddStartTime" style="width: 200px"></TimePicker>
           </FormItem>
           <FormItem label="结束营业时间">
-            <TimePicker format="HH:mm" type="time" placeholder="选择结束营业时间" style="width: 200px"></TimePicker>
+            <TimePicker :value="addItem.end_time"  format="HH:mm" type="time" placeholder="选择结束营业时间"  @on-change="selectAddEndTime" style="width: 200px"></TimePicker>
           </FormItem>
           <FormItem label="美团二维码">
             <div style="width: 200px">
@@ -202,7 +205,7 @@
             </Upload>
           </FormItem>
           <FormItem label="返现平台">
-            <Input v-model="addItem.activities" placeholder="返现平台" style="width: 200px"></Input>
+            <Input v-model="editItem.wechat" placeholder="返现平台" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="满减优惠">
             <Input v-model="editItem.activities" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
@@ -214,16 +217,19 @@
             <Input v-model="editItem.coupon_value" placeholder="输入红包金额" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="服务费">
-            <Input v-model="addItem.coupon_value" placeholder="输入单笔服务费" style="width: 200px"></Input>
+            <Input v-model="editItem.shop_service" placeholder="输入单笔服务费" style="width: 200px"></Input>
           </FormItem>
-          <FormItem label="城市坐标">
-            <Input v-model="addItem.coupon_value" placeholder="输入城市坐标" style="width: 200px"></Input>
+          <FormItem label="城市经度">
+            <Input v-model="editItem.latitude" placeholder="输入城市经度" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="城市纬度">
+            <Input v-model="editItem.longitude" placeholder="输入城市纬度" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="开始营业时间">
-            <TimePicker  format="HH:mm" type="time" placeholder="选择开始营业时间" style="width: 200px"></TimePicker>
+            <TimePicker :value="editItem.start_time"  format="HH:mm" type="time" placeholder="选择开始营业时间"  @on-change="selectAddStartTime" style="width: 200px"></TimePicker>
           </FormItem>
           <FormItem label="结束营业时间">
-            <TimePicker format="HH:mm" type="time" placeholder="选择结束营业时间" style="width: 200px"></TimePicker>
+            <TimePicker :value="editItem.end_time"  format="HH:mm" type="time" placeholder="选择结束营业时间"  @on-change="selectAddEndTime" style="width: 200px"></TimePicker>
           </FormItem>
           <FormItem label="使用美团二维码" >
             <Checkbox v-model="meituanSwitch" style="width: 200px" >使用美团二维码</Checkbox>
@@ -629,6 +635,18 @@ export default {
     sreachKeyword(){
       this.init({ });
     },
+    selectAddStartTime (date) {
+      this.addItem.start_time = date
+    },
+    selectAddEndTime (date) {
+      this.addItem.end_time = date
+    },
+    selectEditStartTime (date) {
+      this.editItem.start_time = date
+    },
+    selectEditEndTime (date) {
+      this.editItem.end_time = date
+    },
     // 图片预览
     handleView (imgUrl) {
       this.imgUrl = imgUrl
@@ -824,9 +842,39 @@ export default {
         })
         return false
       }
-      if(!data.activities){
+      if(!data.wechat){
         this.$Notice.warning({
-          title: '满减优惠错误！'
+          title: '返现平台错误！'
+        })
+        return false
+      }
+      if(!data.latitude){
+        this.$Notice.warning({
+          title: '经度错误！'
+        })
+        return false
+      }
+      if(!data.longitude){
+        this.$Notice.warning({
+          title: '纬度错误！'
+        })
+        return false
+      }
+      if(!data.start_time){
+        this.$Notice.warning({
+          title: '营业开始时间错误！'
+        })
+        return false
+      }
+      if(!data.start_time){
+        this.$Notice.warning({
+          title: '营业开始时间错误！'
+        })
+        return false
+      }
+      if(!data.end_time){
+        this.$Notice.warning({
+          title: '营业结束时间错误！'
         })
         return false
       }
