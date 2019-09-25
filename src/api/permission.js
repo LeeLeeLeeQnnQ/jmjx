@@ -75,6 +75,16 @@ export const getCityList = ( data ) => {
 }
 
 
+
+
+export const deleteAreaItem = ( data ) => {
+  return axios.request({
+    url: '/api/Area/delete',
+    data,
+    method: 'post'
+  })
+}
+
 // addNewCity
 
 /*
@@ -159,6 +169,33 @@ export const getAllBrandQueryList = ( data ) => {
   })
 }
 
+
+// 获取地区列表
+export const getAllAreaList = ( data ) => {
+  return axios.request({
+    url: '/api/Area/index',
+    params: data,
+    method: 'get'
+  })
+}
+
+
+export const addNewArea = ( data ) => {
+  return axios.request({
+    url: '/api/Area/add',
+    data,
+    method: 'post'
+  })
+}
+
+
+export const editArea = ( data ) => {
+  return axios.request({
+    url: '/api/Area/edit',
+    data,
+    method: 'post'
+  })
+}
 
 // addNewCity
 

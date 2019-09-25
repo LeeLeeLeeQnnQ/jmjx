@@ -44,13 +44,13 @@
     <!-- 申领凭证 -->
     <Modal title="充值凭证预览" v-model="showApplyImgList">
       <Form :model="evaluateInfo" :label-width="120" inline>
-        <FormItem label="店铺名称">
+        <FormItem v-if="!!evaluateInfo.shop_name" label="店铺名称">
           <Input v-model="evaluateInfo.shop_name" type="textarea" :rows="2" readonly style="width: 300px"></Input>
         </FormItem>
-        <FormItem label="实付金额">
+        <FormItem v-if="!!evaluateInfo.order_total" label="实付金额">
           <Input v-model="evaluateInfo.order_total" readonly style="width: 300px"></Input>
         </FormItem>
-        <FormItem label="订单日期">
+        <FormItem v-if="!!evaluateInfo.order_time" label="订单日期">
           <Input v-model="evaluateInfo.order_time" readonly style="width: 300px"></Input>
         </FormItem>
         <FormItem label="图片凭证">
@@ -130,6 +130,7 @@ export default {
           }
         },
         {title: '实发金额', key: 'order_price'},
+        {title: '服务费', key: 'shop_service'},
         { title: '审批结果', width : 130 ,
           render: (h, params) => {
             let order_state = params.row.order_state*1

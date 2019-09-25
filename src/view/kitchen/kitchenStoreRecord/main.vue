@@ -114,6 +114,15 @@ export default {
         {title: '月份', key: 'month'},
         {title: '电表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
+        { title: '旧表差值',
+          render: (h, params) => {
+            let start_value = params.row.old_start_value
+            let end_value = params.row.old_end_value
+            let val = (end_value*1 - start_value*1).toFixed(2);
+            return h('span', val)
+          },
+          width: 100
+        },
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},
@@ -186,6 +195,15 @@ export default {
         {title: '月份', key: 'month'},
         {title: '水表名称', key: 'meter_name'},
         {title: '抄表日期', key: 'create_time'},
+        { title: '旧表差值',
+          render: (h, params) => {
+            let start_value = params.row.old_start_value
+            let end_value = params.row.old_end_value
+            let val = (end_value*1 - start_value*1).toFixed(2);
+            return h('span', val)
+          },
+          width: 100
+        },
         {title: '倍率', key: 'multiple'},
         {title: '起始值', key: 'start_value'},
         {title: '结束值', key: 'end_value'},

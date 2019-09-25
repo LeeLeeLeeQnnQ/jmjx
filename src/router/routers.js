@@ -990,6 +990,16 @@ export default [
         },
         component: () => import('@/view/permission/permissionBrandList/main.vue')
       },
+      // {
+      //   path: '/permissionAreaList',
+      //   name: 'permissionAreaList',
+      //   meta: {
+      //     icon: '_tijikongjian',
+      //     title: '地区列表',
+      //     // access: [611],
+      //   },
+      //   component: () => import('@/view/permission/permissionAreaList/main.vue')
+      // },
       {
         path: '/permissionKitchenMemberList',
         name: 'permissionKitchenMemberList',

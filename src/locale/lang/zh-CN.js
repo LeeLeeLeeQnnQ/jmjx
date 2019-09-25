@@ -68,4 +68,5 @@ export default {
   permissionCityList:'城市列表',
   permissionBrandList:'品牌列表',
   permissionKitchenMemberList:'营运人员权限',
+  permissionAreaList:'区域列表',
 }

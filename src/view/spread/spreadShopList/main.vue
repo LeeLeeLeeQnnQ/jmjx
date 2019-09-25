@@ -82,9 +82,9 @@
               </div>
             </Upload>
           </FormItem>
-<!--           <FormItem label="返现平台">
+          <FormItem label="返现平台">
             <Input v-model="addItem.activities" placeholder="返现平台" style="width: 200px"></Input>
-          </FormItem> -->
+          </FormItem>
           <FormItem label="满减优惠">
             <Input v-model="addItem.activities" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
           </FormItem>
@@ -94,7 +94,7 @@
           <FormItem label="红包金额">
             <Input v-model="addItem.coupon_value" placeholder="输入红包金额" style="width: 200px"></Input>
           </FormItem>
-          <!-- <FormItem label="服务费">
+          <FormItem label="服务费">
             <Input v-model="addItem.coupon_value" placeholder="输入单笔服务费" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="城市坐标">
@@ -105,7 +105,7 @@
           </FormItem>
           <FormItem label="结束营业时间">
             <TimePicker format="HH:mm" type="time" placeholder="选择结束营业时间" style="width: 200px"></TimePicker>
-          </FormItem> -->
+          </FormItem>
           <FormItem label="美团二维码">
             <div style="width: 200px">
               <div>
@@ -170,7 +170,7 @@
           <FormItem label="商铺名称">
             <Input v-model="editItem.shop_name" placeholder="输入商铺名称" style="width: 200px"></Input>
           </FormItem>
-          <FormItem label="商铺ID">
+          <FormItem label="商铺ID(非必须)">
             <Input v-model="editItem.store_id" placeholder="输入商铺ID" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="经营者">
@@ -201,9 +201,9 @@
               </div>
             </Upload>
           </FormItem>
-<!--           <FormItem label="返现平台">
+          <FormItem label="返现平台">
             <Input v-model="addItem.activities" placeholder="返现平台" style="width: 200px"></Input>
-          </FormItem> -->
+          </FormItem>
           <FormItem label="满减优惠">
             <Input v-model="editItem.activities" placeholder="输入满减金额（满30-15,满40-15）" style="width: 200px"></Input>
           </FormItem>
@@ -213,7 +213,7 @@
           <FormItem label="红包金额">
             <Input v-model="editItem.coupon_value" placeholder="输入红包金额" style="width: 200px"></Input>
           </FormItem>
-<!--           <FormItem label="服务费">
+          <FormItem label="服务费">
             <Input v-model="addItem.coupon_value" placeholder="输入单笔服务费" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="城市坐标">
@@ -224,7 +224,7 @@
           </FormItem>
           <FormItem label="结束营业时间">
             <TimePicker format="HH:mm" type="time" placeholder="选择结束营业时间" style="width: 200px"></TimePicker>
-          </FormItem> -->
+          </FormItem>
           <FormItem label="使用美团二维码" >
             <Checkbox v-model="meituanSwitch" style="width: 200px" >使用美团二维码</Checkbox>
           </FormItem>
@@ -531,20 +531,20 @@ export default {
                 }},
               '充值')
             },
-            // (h, params, vm) => {
-            //   return h('Button', {
-            //     props: {
-            //       type: 'error',
-            //       size: 'small'
-            //     },
-            //     style: {margin: '5px'},
-            //     on: {
-            //       'click': () => {
-            //         vm.$emit('data-recharge', params)
-            //       }
-            //     }},
-            //   '提现')
-            // },
+            (h, params, vm) => {
+              return h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {margin: '5px'},
+                on: {
+                  'click': () => {
+                    vm.$emit('data-recharge', params)
+                  }
+                }},
+              '提现')
+            },
           ]
         },
       ],
