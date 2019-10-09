@@ -24,6 +24,7 @@
           @data-view-recharge-list="handleViewRechargeList" 
           @data-edit-info="handleEditInfo" 
           @data-recharge="saveRechargeInfo" 
+          @data-payment="savePaymentInfo" 
           @data-edit-tag="handleEditTagModal"
           @data-eidt-status = "handleEditStatus"
           @data-eidt-sort = "handleEditSort"
@@ -316,7 +317,7 @@
     <!-- 充值 -->
     <Modal 
       v-model="showRechargeModal"
-      title="添加推广商户"
+      title="充值"
       @on-ok="saveRechargeModalInfo" >
         <Form :model="rechargeItem" :label-width="120" inline>
           <FormItem label="充值金额">
@@ -324,6 +325,20 @@
           </FormItem>
           <FormItem label="备注">
             <Input v-model="rechargeItem.remark" placeholder="输入金额" style="width: 200px"></Input>
+          </FormItem>
+        </Form>
+    </Modal>
+    <!-- 充值 -->
+    <Modal 
+      v-model="showPaymentModal"
+      title="提现"
+      @on-ok="savePaymentModalInfo" >
+        <Form :model="paymentItem" :label-width="120" inline>
+          <FormItem label="提现金额">
+            <Input v-model="paymentItem.money" placeholder="输入金额" style="width: 200px"></Input>
+          </FormItem>
+          <FormItem label="备注">
+            <Input v-model="paymentItem.remark" placeholder="输入金额" style="width: 200px"></Input>
           </FormItem>
         </Form>
     </Modal>
@@ -370,7 +385,7 @@
 <script>
 // 权限
 // Shop/index,Shop/add,Shop/edit,Shop/state,Area/getAreaList,Shop/deposit,ShopPay/index
-import { getSpreadStoreList , addSpreadStore , editSpreadStore , changeStateSpreadStore , getAreaList , depositSpreadStore , getShopPayList } from '@/api/spread'
+import { getSpreadStoreList , addSpreadStore , editSpreadStore , changeStateSpreadStore , getAreaList , depositSpreadStore, paymentSpreadStore , getShopPayList } from '@/api/spread'
 import Tables from '_c/tables'
 export default {
   name: 'spreadShopList',
@@ -546,7 +561,7 @@ export default {
                 style: {margin: '5px'},
                 on: {
                   'click': () => {
-                    vm.$emit('data-recharge', params)
+                    vm.$emit('data-payment', params)
                   }
                 }},
               '提现')
@@ -574,12 +589,28 @@ export default {
       showRechargeModal:false,
       rechargeItem:{},
       rechargeImgList:[],
+      // 提现
+      showPaymentModal:false,
+      paymentItem:{},
       // 缴费列表
       showRechargeModalList:false,
       rechargeBillList:[],
       // 充值col
       rechargeColumns: [
         {title: '充值时间', key: 'create_time'},
+        {title: '类型', key: 'pay_type'},
+        { title: '状态',
+          render: (h, params) => {
+            let pay_type = params.row.pay_type*1;
+            if(pay_type == 1){
+              return h('span', { style: {color: '#19be6b'}}, '充值')
+            }else if (pay_type == 2) {
+              return h('span', { style: {color: '#2d8cf0'}}, '扣款')
+            }else if (pay_type == 3) {
+              return h('span', { style: {color: 'red'}}, '提现')
+            }
+          }
+        },
         {title: '充值金额', key: 'money'},
         {title: '备注', key: 'remark'},
         // {
@@ -866,12 +897,6 @@ export default {
         })
         return false
       }
-      if(!data.start_time){
-        this.$Notice.warning({
-          title: '营业开始时间错误！'
-        })
-        return false
-      }
       if(!data.end_time){
         this.$Notice.warning({
           title: '营业结束时间错误！'
@@ -953,14 +978,42 @@ export default {
         this.init({ page:this.page.current_page });
       })
     },
+    savePaymentModalInfo(){
+      if(isNaN(this.paymentItem.money)){
+        this.$Notice.warning({
+          title: '提现金额错误！'
+        })
+        return
+      }
+      paymentSpreadStore( this.paymentItem ).then(res => {
+        const dbody = res.data
+        if (dbody.code != 0) {
+          this.$Notice.warning({
+            title: dbody.msg
+          })
+          return
+        }
+        this.$Notice.warning({
+          title: "提现成功！"
+        })
+        this.init({ page:this.page.current_page });
+      })
+    },
     // 商户充值登记
     saveRechargeInfo(params){
       this.recharge_store_id = params.row.id;
-      // this.rechargeImgList = [];
       this.rechargeItem = {
         id:this.recharge_store_id,
       };
       this.showRechargeModal = true;
+    },
+    // 提现登记
+    savePaymentInfo(params){
+      this.recharge_store_id = params.row.id;
+      this.paymentItem = {
+        id:this.recharge_store_id,
+      };
+      this.showPaymentModal = true;
     },
     // 展示凭证
     showStoreBudgetVoucher(params){

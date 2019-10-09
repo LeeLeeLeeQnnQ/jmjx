@@ -131,6 +131,25 @@ export const depositSpreadStore = (data) => {
 }
 
 
+// 提现
+/*
+  推广商户
+*/
+/*
+  id : 1
+*/
+/*
+  
+*/
+export const paymentSpreadStore = (data) => {
+  return axios.request({
+    url: '/api/Shop/payment',
+    data,
+    method: 'post'
+  })
+}
+
+
 
 // 获取充值列表
 /*
