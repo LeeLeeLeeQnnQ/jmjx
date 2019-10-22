@@ -384,7 +384,7 @@
 </template>
 <script>
 // 权限
-// Shop/index,Shop/add,Shop/edit,Shop/state,Area/getAreaList,Shop/deposit,ShopPay/index
+// Shop/index,Shop/add,Shop/edit,Shop/state,Area/getAreaList,Shop/deposit,ShopPay/index,Shop/payment
 import { getSpreadStoreList , addSpreadStore , editSpreadStore , changeStateSpreadStore , getAreaList , depositSpreadStore, paymentSpreadStore , getShopPayList } from '@/api/spread'
 import Tables from '_c/tables'
 export default {
@@ -547,10 +547,10 @@ export default {
                 style: {margin: '5px'},
                 on: {
                   'click': () => {
-                    vm.$emit('data-recharge', params)
+                    vm.$emit('data-payment', params)
                   }
                 }},
-              '充值')
+              '提现')
             },
             (h, params, vm) => {
               return h('Button', {
@@ -561,10 +561,10 @@ export default {
                 style: {margin: '5px'},
                 on: {
                   'click': () => {
-                    vm.$emit('data-payment', params)
+                    vm.$emit('data-recharge', params)
                   }
                 }},
-              '提现')
+              '充值')
             },
           ]
         },

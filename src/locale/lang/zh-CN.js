@@ -19,6 +19,7 @@ export default {
   analysisKitchen:'运营分析',
   analysisKitchenEquipment:'商户设备分析',
   analysisKitchenMember:'商户人员分析',
+  analysisOrders:'区域分析',
 
   kitchenData: '厨房管理',
   kitchenDataKitchenList:'厨房管理',

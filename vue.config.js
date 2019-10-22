@@ -27,6 +27,13 @@ const BASE_URL = process.env.NODE_ENV === 'production'
 //   pwa: {}
 // };
 module.exports = {
+  // 引入高德
+  configureWebpack:{
+    externals: {
+      'AMap': 'AMap',
+      // 'AMapUI': 'AMapUI'
+    }
+  },
   // Project deployment base
   // By default we assume your app will be deployed at the root of a domain,
   // e.g. https://www.my-app.com/

@@ -117,6 +117,16 @@ export default [
         component: () => import('@/view/analysis/analysisEntrance/main.vue')
       },
       {
+        path: '/analysisOrders',
+        name: 'analysisOrders',
+        meta: {
+          icon: '_moduanwangdian',
+          title: '订单数据',
+          access: [802]
+        },
+        component: () => import('@/view/analysis/analysisOrders/main.vue')
+      },
+      {
         path: '/analysisOccupy',
         name: 'analysisOccupy',
         meta: {

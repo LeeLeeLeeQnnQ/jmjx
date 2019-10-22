@@ -579,6 +579,19 @@ export const deletePrebuildItem = (data) => {
 }
 
 
+/*
+  id id 
+*/
+/*
+  
+*/
+export const getMapInfo = (data) => {
+  return axios.request({
+    url: 'api/Crawler/queryPolygon',
+    data,
+    method: 'post'
+  })
+}
 
 
 
